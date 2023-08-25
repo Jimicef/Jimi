@@ -39,7 +39,7 @@ function App() {
   };
 
   React.useEffect(()=> {
-    fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
+    fetch(`https://virtserver.swaggerhub.com/IGY2840_1/Jimi/1.0.0/api/qa`, {
       method: 'POST',
       body: JSON.stringify({
         question: '시작'
