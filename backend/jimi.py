@@ -5,7 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 origins = [
-    "http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com"
+    "http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com",
+    "http://jimi-bucket.s3-website.ap-northeast-2.amazonaws.com"
 ]
 
 app.add_middleware(
