@@ -32,12 +32,7 @@ function App() {
     if (input.trim() !== "") {
       setJimi((existingJimi) => [...existingJimi, {text: input, sender: 'user'}])}
       //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
-      fetch(`http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com/api/qa`, {
-        method: 'POST',
-        body: JSON.stringify({
-          question: input
-        })
-      })
+      fetch(`http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com/api/qa?question=${input}`)
       .then(response => response.json())
       .then(data => {
         setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
