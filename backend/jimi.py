@@ -7,7 +7,7 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
-@app.post("/api/qa")
+@app.get("/api/qa")
 async def get_answer(question:str) -> Dict[str, str]:
     
     answer = "abs"
