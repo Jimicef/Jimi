@@ -35,9 +35,11 @@ function App() {
       fetch(`http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com/api/qa?question=${input}`)
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
       }
       )
+      .catch(error => console.log(error))
       setInput("")
     };
   
