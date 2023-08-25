@@ -2,8 +2,9 @@ import * as React from "react";
 import {Box, TextField, Button, Typography, Avatar, Grid, Paper} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { Message } from "./message";
+import { useEffect, useRef } from "react";
+import logo from './logo.png';
 import './App.css';
-
 
 const messages = [
   { id: 1, text: "Hi there!", sender: "bot" },
@@ -15,12 +16,23 @@ const messages = [
 function App() {
   const [input, setInput] = React.useState("");
   const [jimi, setJimi] = React.useState([]);
+  const messageContainerRef = useRef();
+
+  const scrollToBottom = () => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [jimi]); // jimi 배열이 업데이트될 때마다 스크롤을 아래로 이동
 
   const handleSend = () => {
     if (input.trim() !== "") {
       setJimi((existingJimi) => [...existingJimi, {text: input, sender: 'user'}])}
       //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
-      fetch(`http://jimi-bucket.s3-website.ap-northeast-2.amazonaws.com/api/qa`, {
+      fetch(`http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com/api/qa`, {
         method: 'POST',
         body: JSON.stringify({
           question: input
@@ -33,13 +45,20 @@ function App() {
       )
       setInput("")
     };
+  
+  const handleKeyDown = (event) => {
+    if (event.key == 'Enter'){
+      handleSend()
+    }
+  }
 
   const handleInputChange = (event) => {
     setInput(event.target.value);
   };
 
   React.useEffect(()=> {
-    fetch(`https://virtserver.swaggerhub.com/IGY2840_1/Jimi/1.0.0/api/qa`, {
+    setJimi([])
+    fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
       method: 'POST',
       body: JSON.stringify({
         question: '시작'
@@ -47,7 +66,7 @@ function App() {
     })
     .then(response => response.json())
     .then(data => {
-      setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])}
+      setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])} 
     )
   }, [])
 
@@ -55,8 +74,10 @@ function App() {
     <Box
       sx = {{
         display: 'flex',
-        justifyContent: 'center'
+        flexDirection: 'column',
+        alignItems: 'center'
       }}>
+    
     <Box
       sx={{
         width: '50%',
@@ -65,8 +86,12 @@ function App() {
         flexDirection: "column",
         bgcolor: "grey.200",
       }}
-    >
-      <Box sx={{ flexGrow: 1, overflow: "auto", p: 2 }}>
+    > 
+    <Box sx={{backgroundColor: '#DAD2E9', display: 'flex', justifyContent: 'center'}}>
+
+      <img src={logo} alt="logo" width="30%" height="40px" />
+    </Box>
+      <Box sx={{ flexGrow: 1, overflow: "auto", p: 2 }} ref={messageContainerRef}>
         {jimi.map((message, index) => (
           <Message key={index} message={message} />
         ))}
@@ -81,6 +106,7 @@ function App() {
               variant="outlined"
               value={input}
               onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
             />
           </Grid>
           <Grid item xs={2}>

@@ -16,19 +16,22 @@ export const Message = ({ message }) => {
           sx={{
             display: "flex",
             flexDirection: isBot ? "row" : "row-reverse",
-            alignItems: "center",
+            alignItems: "flex-end",
           }}
         >
-          <Avatar sx={{ bgcolor: isBot ? "primary.main" : "secondary.main" }}>
-            {isBot ? "B" : "U"}
-          </Avatar>
+          {isBot && 
+            <Avatar sx={{ bgcolor: "#8977AD" }}>
+              B
+            </Avatar>
+          }
           <Paper
             variant="outlined"
             sx={{
+              width: '50%',
               p: 2,
               ml: isBot ? 1 : 0,
               mr: isBot ? 0 : 1,
-              backgroundColor: isBot ? "primary.light" : "secondary.light",
+              backgroundColor: isBot ? "white" : "#BDA4D5",
               borderRadius: isBot ? "20px 20px 20px 5px" : "20px 20px 5px 20px",
             }}
           >
