@@ -3,6 +3,10 @@ from typing import Dict
 
 app = FastAPI()
 
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
 @app.post("/api/qa")
 async def get_answer(question:str) -> Dict[str, str]:
     
