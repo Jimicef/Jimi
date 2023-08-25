@@ -10,7 +10,7 @@ async def root():
 @app.post("/api/qa")
 async def get_answer(question:str) -> Dict[str, str]:
     
-    answer = "42"
+    answer = "abs"
     support = "Don't panic and always carry a towel."
     response = {"answer": answer, "support": support}
     return response
