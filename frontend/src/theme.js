@@ -1,9 +1,9 @@
 import { createTheme, alpha, getContrastRatio } from '@mui/material/styles';
 
-const violetBase = '8977AD';
+const violetBase = '#DAD2E9';
 const violetMain = alpha(violetBase, 0.7);
 
-const theme = createTheme({
+export const theme = createTheme({
   palette: {
     violet: {
       main: violetMain,
@@ -12,4 +12,4 @@ const theme = createTheme({
       contrastText: getContrastRatio(violetMain, '#fff') > 4.5 ? '#fff' : '#111',
     },
   },
-})
+});
