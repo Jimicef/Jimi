@@ -76,13 +76,17 @@ function App() {
       setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])} 
     )
     fetch(`${apiEndPoint}/test`, {
-      method: 'POST',
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        "hi": "hi"
+        hi: "hi"
       })
     }).then(response => response.json())
     .then(data => {
-      setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])} 
+      console.log(data)
+    }
     )
   }, [])
 
