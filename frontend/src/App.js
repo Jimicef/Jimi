@@ -40,6 +40,7 @@ function App() {
       .then(data => {
         console.log(data)
         if (data.answer !== null) {
+          console.log(data)
           setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
         }
         else if (data.support !== null) {
@@ -71,6 +72,15 @@ function App() {
     setJimi([])
     fetch(`${apiEndPoint}/api/qa?question="시작"`)
     .then(response => response.json())
+    .then(data => {
+      setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])} 
+    )
+    fetch(`${apiEndPoint}/test`, {
+      method: 'POST',
+      body: JSON.stringify({
+        "hi": "hi"
+      })
+    }).then(response => response.json())
     .then(data => {
       setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])} 
     )
