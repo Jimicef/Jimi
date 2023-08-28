@@ -1,22 +1,25 @@
 import * as React from "react";
-import {Box, TextField, Button, Typography, Avatar, Grid, Paper} from "@mui/material";
+import {Box, TextField, Button, Typography, Avatar, Grid, Paper, ThemeProvider} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { Message } from "./message";
 import { useEffect, useRef } from "react";
+import { theme } from "./theme";
 import logo from './logo.png';
 import './App.css';
-
-const messages = [
-  { id: 1, text: "Hi there!", sender: "bot" },
-  { id: 2, text: "Hello!", sender: "user" },
-  { id: 3, text: "How can I assist you today?", sender: "bot" },
-];
 
 
 function App() {
   const [input, setInput] = React.useState("");
   const [jimi, setJimi] = React.useState([]);
   const messageContainerRef = useRef();
+
+  var apiEndPoint;
+  if (process.env.NODE_ENV == 'development') {
+    apiEndPoint = process.env.REACT_APP_SWAGGER_API
+  }
+  else {
+    apiEndPoint = 'http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com'
+  }
 
   const scrollToBottom = () => {
     if (messageContainerRef.current) {
@@ -32,11 +35,23 @@ function App() {
     if (input.trim() !== "") {
       setJimi((existingJimi) => [...existingJimi, {text: input, sender: 'user'}])}
       //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
-      fetch(`http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com/api/qa?question=${input}`)
+      fetch(`${apiEndPoint}/api/qa?question=${input}`)
       .then(response => response.json())
       .then(data => {
         console.log(data)
-        setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
+        if (data.answer !== null) {
+          console.log(data)
+          setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
+        }
+        else if (data.support !== null) {
+          if (data.support.length === 1) {
+            setJimi((existingJimi) => [...existingJimi, {support : data.support, sender: 'bot'}])
+          }
+          else {
+            setJimi((existingJimi) => [...existingJimi, {support: data.support, sender: 'bot'}])
+          }
+        }
+        //setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
       }
       )
       .catch(error => console.log(error))
@@ -44,7 +59,7 @@ function App() {
     };
   
   const handleKeyDown = (event) => {
-    if (event.key == 'Enter'){
+    if (event.key == 'Enter' && event.nativeEvent.isComposing === false){
       handleSend()
     }
   }
@@ -55,13 +70,17 @@ function App() {
 
   React.useEffect(()=> {
     setJimi([])
-    fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
+    fetch(`${apiEndPoint}/api/qa?question="시작"`)
+    .then(response => response.json())
+    .then(data => {
+      setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])} 
+    )
+    fetch(`${apiEndPoint}/test`, {
       method: 'POST',
       body: JSON.stringify({
-        question: '시작'
+        "hi": "hi"
       })
-    })
-    .then(response => response.json())
+    }).then(response => response.json())
     .then(data => {
       setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])} 
     )
@@ -77,7 +96,7 @@ function App() {
     
     <Box
       sx={{
-        width: '50%',
+        width: '640px',
         height: "100vh",
         display: "flex",
         flexDirection: "column",
@@ -107,15 +126,17 @@ function App() {
             />
           </Grid>
           <Grid item xs={2}>
-            <Button
-              fullWidth
-              color="primary"
-              variant="contained"
-              endIcon={<SendIcon />}
-              onClick={handleSend}
-            >
-              Send
-            </Button>
+            <ThemeProvider theme={theme}>
+              <Button
+                fullWidth
+                color="violet"
+                variant="contained"
+                endIcon={<SendIcon />}
+                onClick={handleSend}
+              >
+                Send
+              </Button>
+            </ThemeProvider>
           </Grid>
         </Grid>
       </Box>
