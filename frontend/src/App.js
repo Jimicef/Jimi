@@ -1,152 +1,49 @@
 import * as React from "react";
-import {Box, TextField, Button, Typography, Avatar, Grid, Paper, ThemeProvider} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import { Message } from "./message";
-import { useEffect, useRef } from "react";
-import { theme } from "./theme";
-import logo from './logo.png';
-import './App.css';
+import { SectionsContainer, Section } from "react-fullpage";
+import Chat from "./Chat";
+import {Intro} from "./Intro";
+import {SupportList} from "./SupportList";
+import { Box } from "@mui/material";
+import './App.css'
+import { BrowserRouter } from "react-router-dom";
 
 
 function App() {
-  const [input, setInput] = React.useState("");
-  const [jimi, setJimi] = React.useState([]);
-  const messageContainerRef = useRef();
+  const [supportList, setSupportList] = React.useState([])
+  const [input, setInput] = React.useState("")
+  const [count, setCount] = React.useState(0)
+  const [services, setServices] = React.useState("")
+  const [region, setRegion] = React.useState("")
+  const [subRegion, setSubRegion] = React.useState("")
 
-  var apiEndPoint;
-  if (process.env.NODE_ENV == 'development') {
-    apiEndPoint = process.env.REACT_APP_SWAGGER_API
-  }
-  else {
-    apiEndPoint = 'http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com'
-  }
-
-  const scrollToBottom = () => {
-    if (messageContainerRef.current) {
-      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-    }
+  let optionsIntro = {
+    anchors: ['sectionOne'],
+    navigation: false,
   };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [jimi]); // jimi 배열이 업데이트될 때마다 스크롤을 아래로 이동
-
-  const handleSend = () => {
-    if (input.trim() !== "") {
-      setJimi((existingJimi) => [...existingJimi, {text: input, sender: 'user'}])}
-      //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
-      fetch(`${apiEndPoint}/api/qa?question=${input}`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        if (data.answer !== null) {
-          console.log(data)
-          setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
-        }
-        else if (data.support !== null) {
-          if (data.support.length === 1) {
-            setJimi((existingJimi) => [...existingJimi, {support : data.support, sender: 'bot'}])
-          }
-          else {
-            setJimi((existingJimi) => [...existingJimi, {support: data.support, sender: 'bot'}])
-          }
-        }
-        //setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
-      }
-      )
-      .catch(error => console.log(error))
-      setInput("")
-    };
-  
-  const handleKeyDown = (event) => {
-    if (event.key == 'Enter' && event.nativeEvent.isComposing === false){
-      handleSend()
-    }
-  }
-
-  const handleInputChange = (event) => {
-    setInput(event.target.value);
+  let options = {
+    anchors: ['sectionOne', 'sectionTwo', 'sectionThree'],
+    navigation: false,
   };
-
-  React.useEffect(()=> {
-    setJimi([])
-    fetch(`${apiEndPoint}/api/qa?question="시작"`)
-    .then(response => response.json())
-    .then(data => {
-      setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])} 
-    )
-    fetch(`${apiEndPoint}/test`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        hi: "hi"
-      })
-    }).then(response => response.json())
-    .then(data => {
-      console.log(data)
-    }
-    )
-  }, [])
-
+  const selectedOptions = supportList.length > 0 ? options : optionsIntro
+  console.log(selectedOptions)
   return (
-    <Box
-      sx = {{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }}>
-    
-    <Box
-      sx={{
-        width: '640px',
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        bgcolor: "grey.200",
-      }}
-    > 
-    <Box sx={{backgroundColor: '#DAD2E9', display: 'flex', justifyContent: 'center'}}>
-
-      <img src={logo} alt="logo" width="30%" height="40px" />
-    </Box>
-      <Box sx={{ flexGrow: 1, overflow: "auto", p: 2 }} ref={messageContainerRef}>
-        {jimi.map((message, index) => (
-          <Message key={index} message={message} />
-        ))}
-      </Box>
-      <Box sx={{ p: 2, backgroundColor: "background.default" }}>
-        <Grid container spacing={2}>
-          <Grid item xs={10}>
-            <TextField
-              size="small"
-              fullWidth
-              placeholder="Type a message"
-              variant="outlined"
-              value={input}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <ThemeProvider theme={theme}>
-              <Button
-                fullWidth
-                color="violet"
-                variant="contained"
-                endIcon={<SendIcon />}
-                onClick={handleSend}
-              >
-                Send
-              </Button>
-            </ThemeProvider>
-          </Grid>
-        </Grid>
-      </Box>
-    </Box>
-    </Box>
-  );
+    <div>
+      <BrowserRouter>
+      <SectionsContainer {...selectedOptions} >
+      <Section><Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion}/></Section>
+      {supportList.length > 0 ? (
+          <Section><SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} /></Section>
+          
+      ): null}
+      {supportList.length > 0 ? (
+          <Section><Chat /></Section>
+          
+      ): null}
+      
+      </SectionsContainer>
+      </BrowserRouter>
+   </div> 
+  )
 };
 
 export default App;
