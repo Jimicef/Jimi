@@ -124,15 +124,14 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
         card_data_list = card_data_list[:6]
     else :
         card_data_list = card_data_list[6:]
-    request = requests.Request('GET', url, params=params)
-    prepared_request = request.prepare()
+    # request = requests.Request('GET', url, params=params)
+    # prepared_request = request.prepare()
 
-    # 최종 요청되는 URL 확인
-    final_url = prepared_request.url
+    # # 최종 요청되는 URL 확인
+    # final_url = prepared_request.url
     return {
         "answer" : f"{keyword}에 대한 {result_count}개의 통합검색 결과입니다.",
         "support" : card_data_list,
-        "lastpage" : last_page,
-        "debug" : final_url
+        "lastpage" : last_page
     }
 
