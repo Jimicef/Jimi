@@ -116,7 +116,7 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
                 card_info["format"] = card_text
                 
             # card_info[strong_text.split()[0]] = card_text
-        if len(card_info.keys()) > 2:
+        if len(card_info.keys()) > 6:
             card_data_list.append(card_info)
         else:
             break
