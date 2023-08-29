@@ -3,7 +3,7 @@ from typing import Dict
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from bs4 import BeautifulSoup
-
+import re
 app = FastAPI()
 
 origins = [
@@ -38,6 +38,7 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
                            chktype1 : str = Query(None,description = "서비스 분야"),
                            siGunGuArea : str = Query(None,description = "시/군/구 코드"),
                            sidocode : str = Query(None,description = "시/도 코드"),
+                           svccd : str = Query(None,description = "사용자 구분"),
                            ):
     url = "https://www.gov.kr/portal/rcvfvrSvc/svcFind/svcSearchAll"
     params = {
@@ -45,7 +46,8 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
         "startCount": 12*count,
         "chktype1" : chktype1,
         "siGunGuArea" : siGunGuArea,
-        "sidocode" : sidocode
+        "sidocode" : sidocode,
+        'svccd' : svccd
     }
     response = requests.get(url,params=params)
 
@@ -56,6 +58,19 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
 
     else : 
         return response.status_code
+    
+    target_p = soup.find('p', class_='guide-desc')
+    # <p> 태그 내부의 텍스트 추출
+    text_inside_p = target_p.get_text(strip=True)
+
+    # '212개'의 정보 추출
+    result_count = int(re.findall(r'\d+', text_inside_p)[0])
+    page_count = result_count // 12
+
+    if count == page_count :
+        last_page = True
+    else:
+        last_page = False
 
     card_data_list = []
     cards = soup.find_all('div', class_='card-item')
@@ -73,11 +88,10 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
         # print("카드 제목:", card_title)
         # print("카드 설명:", card_desc)
         card_info = {
-            "기관종류" : department,
-            "서비스ID" : card_id,
-            "카드제목" : card_title,
-            "카드설명" : card_desc
-
+            "institution" : department,
+            "serviceId" : card_id,
+            "title" : card_title,
+            "description" : card_desc
         }
         for info in card_info_list:
             try:
@@ -89,9 +103,24 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
             except:
                 card_text = None
             # print(strong_text, card_text)
-            card_info[strong_text.split()[0]] = card_text
+            if strong_text.split()[0] == "신청기간":
+                card_info["dueDate"] = card_text
+            elif strong_text.split()[0] == "접수기관":
+                card_info["rcvInstitution"] = card_text
+            elif strong_text.split()[0] == "전화문의":
+                card_info["phone"] = card_text
+            elif strong_text.split()[0] == "지원형태":
+                card_info["format"] = card_text
+                
+            # card_info[strong_text.split()[0]] = card_text
         if len(card_info.keys()) > 2:
             card_data_list.append(card_info)
         else:
             break
-    return {"card_data_list":card_data_list}
+    
+    return {
+        "answer" : f"{keyword}에 대한 {result_count}개의 통합검색 결과입니다.",
+        "support" : card_data_list,
+        "lastpage" : last_page
+    }
+
