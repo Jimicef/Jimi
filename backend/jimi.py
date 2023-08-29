@@ -45,12 +45,12 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     div_count = count // 2
 
     params = {
-        "query": keyword,
-        "startCount": 12*div_count,
-        "chktype1" : chktype1,
         "siGunGuArea" : siGunGuArea,
         "sidocode" : sidocode,
-        'svccd' : svccd
+        'svccd' : svccd,
+        "chktype1" : chktype1,
+        "startCount": 12*div_count,
+        "query": keyword
     }
     response = requests.get(url,params=params)
 
