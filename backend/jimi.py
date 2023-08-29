@@ -41,9 +41,12 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
                            svccd : str = Query(None,description = "사용자 구분"),
                            ):
     url = "https://www.gov.kr/portal/rcvfvrSvc/svcFind/svcSearchAll"
+    
+    div_count = count // 2
+
     params = {
         "query": keyword,
-        "startCount": 12*count,
+        "startCount": 12*div_count,
         "chktype1" : chktype1,
         "siGunGuArea" : siGunGuArea,
         "sidocode" : sidocode,
@@ -67,7 +70,7 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     result_count = int(re.findall(r'\d+', text_inside_p)[0])
     page_count = result_count // 12
 
-    if count == page_count :
+    if div_count == page_count and count % 2 != 0:
         last_page = True
     else:
         last_page = False
@@ -117,7 +120,10 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
             card_data_list.append(card_info)
         else:
             break
-    
+    if count % 2 == 0:
+        card_data_list = card_data_list[:6]
+    else :
+        card_data_list = card_data_list[6:]
     return {
         "answer" : f"{keyword}에 대한 {result_count}개의 통합검색 결과입니다.",
         "support" : card_data_list,
