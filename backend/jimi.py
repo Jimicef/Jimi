@@ -70,7 +70,7 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     result_count = int(re.findall(r'\d+', text_inside_p)[0])
     page_count = result_count // 12
 
-    if div_count == page_count and count % 2 != 0:
+    if (div_count == page_count and count % 2 != 0) or result_count == 0:
         last_page = True
     else:
         last_page = False
