@@ -188,7 +188,7 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                username: "user1",
+                name: "user1",
                 age: 12
             })
         })
