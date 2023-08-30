@@ -90,7 +90,7 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
                         <Typography variant="body2" sx={{ display: "inline-block", borderRadius: 3, bgcolor: "#DAD2E9", px: 1, mb: 1}}>{sup.institution}</Typography>
                         <Box sx={{display: 'flex', flexDirection: 'column', height: "215px"}}>
                         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{sup.title}</Typography>
-                        <Typography variant="body2">{sup.description.length>25?sup.description.slice(0,30)+"···":sup.description}</Typography>
+                        <Typography variant="body2">{sup.description.length>35?sup.description.slice(0,35)+"···":sup.description}</Typography>
                         <br />
                         <Typography variant="body2">🗓️신청기간: {sup.dueDate.length > 12?sup.dueDate.slice(0, 12)+"···":sup.dueDate}</Typography>
                         <Typography variant="body2">⚙️지원형태: {sup.format}</Typography>
