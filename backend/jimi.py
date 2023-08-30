@@ -75,7 +75,7 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     url = "https://www.gov.kr/portal/rcvfvrSvc/svcFind/svcSearchAll"
     
     div_count = count // 2
-    page_count = result_count - 1 // 12
+    
     last_page = False
 
     params = {
@@ -103,7 +103,9 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     # '212개'의 정보 추출
     result_count = re.findall(r'\d+(?:,\d+)*', text_inside_p)[0]
     result_count = int(result_count.replace(",", "")) # 1,234 -> 1234 -> int
-
+    
+    page_count = result_count - 1 // 12
+    
     if result_count == 0:
         last_page = True
     elif div_count  == page_count :
