@@ -160,7 +160,7 @@ async def post_chat(data: dict):
             {"role": "system", "content": MAIN_PROMPT},
             {
                 "role": "user",
-                "content": f"""Please refer to the relevant sections in the service information's key:value pairs that are related to the user's query and provide a response accordingly.
+                "content": f"""Please refer to the relevant sections in the service information's key, value pairs that are related to the user's query and provide a response accordingly.
                         Feel free to generate your response in a casual tone, keeping it succinct and avoiding unnecessary symbols.
 
                         User query: {data["question"]}
