@@ -101,7 +101,7 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
         //         circumstance: input
         //     })
         // })
-        console.log(subRegion, selectedSupports)
+        //console.log(subRegion, selectedSupports)
         setIsLoading(true)
         fetch(`${apiEndPoint}/service_list?keyword=${input}&count=0&chktype1=${selectedSupports}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]?sidoCode[region]:""}&svccd=${user}`)
         .then(response => response.json())
