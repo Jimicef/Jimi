@@ -62,6 +62,12 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
         return response.status_code
     
     target_p = soup.find('p', class_='guide-desc')
+    if target_p is None:
+        return {
+        "answer" : None,
+        "support" : None,
+        "lastpage" : True
+        }
     # <p> 태그 내부의 텍스트 추출
     text_inside_p = target_p.get_text(strip=True)
 
