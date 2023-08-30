@@ -12,6 +12,7 @@ import { FullPage, Slide } from "react-full-page";
 function App() {
   const [answer, setAnswer] = React.useState("")
   const [supportList, setSupportList] = React.useState([])
+  const [isLastPage, setIsLastPage] = React.useState(false)
   const [input, setInput] = React.useState("")
   const [count, setCount] = React.useState(0)
   const [services, setServices] = React.useState([])
@@ -57,11 +58,11 @@ function App() {
       <SectionsContainer {...selectedOptions} >
       {
       // selectedOptions !==options&&
-      <Section ><Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer}/></Section>}
+      <Section ><Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer} setIsLastPage={setIsLastPage}/></Section>}
       {supportList.length > 0 
       // && selectedOptions !==options
       ? (
-          <Section><SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer}/></Section>
+          <Section><SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer} setIsLastPage={setIsLastPage} isLastPage={isLastPage}/></Section>
           
        ): null} 
       {summary !=="" ? (
