@@ -5,6 +5,8 @@ from typing import Dict
 import requests
 from bs4 import BeautifulSoup
 import re
+import openai
+from prompts import MAIN_PROMPT
 
 app = FastAPI()
 
@@ -25,46 +27,6 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
-
-@app.get("/chat")
-async def get_chat(serviceId):
-    cond = serviceId
-    url = f"http://api.odcloud.kr/api/gov24/v3/serviceDetail?page=1&perPage=10&cond%5B%EC%84%9C%EB%B9%84%EC%8A%A4ID%3A%3AEQ%5D={cond}&serviceKey=aVyQkv5W8mV6fweNFyOmB3fvxjmcuMvbOl4fkTCOVH1kCgOCcSkFa8UKeUBljB3Czd5VwvoIYKkH%2FpWWwVvpKQ%3D%3D"
-    response = requests.get(url)
-    res = response.json()
-    ret = {}
-    ret["url"] = "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/"+serviceId
-    for key, value in res['data'][0].items():
-        askey = key
-        if key == '구비서류':
-            askey = "docs"
-        elif key == '소관기관명':
-            askey = "institution"
-        elif key == '서비스ID':
-            askey = "serviceId"
-        elif key == "서비스명":
-            askey = "title"
-        elif key == "서비스목적":
-            askey = "description"
-        elif key == "선정기준":
-            askey = "selection"
-        elif key == "문의처":
-            askey = "rcvInstitution"
-        elif key == "신청기한":
-            askey = "dueDate"
-        elif key == "신청방법":
-            askey = "way"
-        elif key == "지원내용":
-            askey = "content"
-        elif key == "지원대상":
-            askey = "target"
-        elif key == "지원유형":
-            askey = "format"
-        else:
-            askey = key
-        if key != askey :
-            ret[askey] = value
-    return ret
 
 @app.get("/service_list")
 async def get_service_list(keyword : str = Query(None,description = "검색 키워드"),
@@ -117,14 +79,6 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
         # 두번째 페이지가 last인 경우
         elif count % 2 !=0 and result_count - (6 * count) <= 6:
             last_page = True
-        
-    # last 페이지 인 경우
-    # 1. 첫 페이지가 last page인 경우
-    # 2. 
-    # if (div_count == page_count and count % 2 != 0) or result_count == 0 :
-    #     last_page = True
-    # else:
-    #     last_page = False
 
     card_data_list = []
     cards = soup.find_all('div', class_='card-item')
@@ -191,19 +145,60 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
         "lastpage" : last_page
     }
 
-@app.post("/test")
-async def set_user(data: dict):
-    name = data.get("name")
-    age = data.get("age")
-    user_data = f"{name}:{age}"
-    
-    response = JSONResponse(content={"message": "사용자 정보가 저장되었습니다."})
-    response.set_cookie(key="user_info", value=user_data)
-    return response
+@app.post("/chat")
+async def post_chat(data: dict):
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": MAIN_PROMPT},
+            {
+                "role": "user",
+                "content": f"""Please answer the user's query as easily as possible refer to service information. 
+                        User query: {data.question}
+                        service information:\n{data.summary}\nAnswer:\n""",
+            }
+        ],
+        temperature=0,
+        max_tokens = 1000
+    )
+    return {"answer": response["choices"][0]["message"]['content']}
 
-@app.get("/test")
-async def get_user(user_info: str = Cookie(None)):
-    if user_info is None:
-        raise HTTPException(status_code=400, detail="사용자 정보 쿠키가 없습니다.")
-    name, age = user_info.split(":")
-    return {"name": name, "age": int(age)}
+@app.get("/chat")
+async def get_chat(serviceId):
+    cond = serviceId
+    url = f"http://api.odcloud.kr/api/gov24/v3/serviceDetail?page=1&perPage=10&cond%5B%EC%84%9C%EB%B9%84%EC%8A%A4ID%3A%3AEQ%5D={cond}&serviceKey=aVyQkv5W8mV6fweNFyOmB3fvxjmcuMvbOl4fkTCOVH1kCgOCcSkFa8UKeUBljB3Czd5VwvoIYKkH%2FpWWwVvpKQ%3D%3D"
+    response = requests.get(url)
+    res = response.json()
+    ret = {}
+    ret["url"] = "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/"+serviceId
+    for key, value in res['data'][0].items():
+        askey = key
+        if key == '구비서류':
+            askey = "docs"
+        elif key == '소관기관명':
+            askey = "institution"
+        elif key == '서비스ID':
+            askey = "serviceId"
+        elif key == "서비스명":
+            askey = "title"
+        elif key == "서비스목적":
+            askey = "description"
+        elif key == "선정기준":
+            askey = "selection"
+        elif key == "문의처":
+            askey = "rcvInstitution"
+        elif key == "신청기한":
+            askey = "dueDate"
+        elif key == "신청방법":
+            askey = "way"
+        elif key == "지원내용":
+            askey = "content"
+        elif key == "지원대상":
+            askey = "target"
+        elif key == "지원유형":
+            askey = "format"
+        else:
+            askey = key
+        if key != askey :
+            ret[askey] = value
+    return ret
