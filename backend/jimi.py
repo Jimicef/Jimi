@@ -1,9 +1,11 @@
-from fastapi import FastAPI, Query
-from typing import Dict
+from fastapi import FastAPI, Query, HTTPException, Cookie, Depends
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Dict
 import requests
 from bs4 import BeautifulSoup
 import re
+
 app = FastAPI()
 
 origins = [
@@ -189,3 +191,15 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
         "lastpage" : last_page
     }
 
+@app.post("/test")
+async def set_user(name: str, age: int):
+    response = JSONResponse(content={"message": f"사용자 정보가 저장되었습니다."})
+    response.set_cookie(key="user_info", value=f"{name}:{age}")
+    return response
+
+@app.get("/test")
+async def get_user(user_info: str = Cookie(None)):
+    if user_info is None:
+        raise HTTPException(status_code=400, detail="사용자 정보 쿠키가 없습니다.")
+    name, age = user_info.split(":")
+    return {"name": name, "age": int(age)}
