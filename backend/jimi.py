@@ -29,9 +29,40 @@ async def get_chat(serviceId):
     cond = serviceId
     url = f"http://api.odcloud.kr/api/gov24/v3/serviceDetail?page=1&perPage=10&cond%5B%EC%84%9C%EB%B9%84%EC%8A%A4ID%3A%3AEQ%5D={cond}&serviceKey=aVyQkv5W8mV6fweNFyOmB3fvxjmcuMvbOl4fkTCOVH1kCgOCcSkFa8UKeUBljB3Czd5VwvoIYKkH%2FpWWwVvpKQ%3D%3D"
     response = requests.get(url)
-    answer = response.json()
-
-    return answer['data']
+    res = response.json()
+    ret = {}
+    ret["url"] = "https://www.gov.kr/portal/rcvfvrSvc/dtlEx/"+serviceId
+    for key, value in res['data'][0].items():
+        askey = key
+        if key == '구비서류':
+            askey = "docs"
+        elif key == '문의처':
+            askey = "institution"
+        elif key == '서비스ID':
+            askey = "serviceId"
+        elif key == "서비스명":
+            askey = "title"
+        elif key == "서비스목적":
+            askey = "description"
+        elif key == "선정기준":
+            askey = "selection"
+        elif key == "소관기관명":
+            askey = "rcvInstitution"
+        elif key == "신청기한":
+            askey = "dueDate"
+        elif key == "신청방법":
+            askey = "way"
+        elif key == "지원내용":
+            askey = "content"
+        elif key == "지원대상":
+            askey = "target"
+        elif key == "지원유형":
+            askey = "format"
+        else:
+            askey = key
+        if key != askey :
+            ret[askey] = value
+    return ret
 
 @app.get("/service_list")
 async def get_service_list(keyword : str = Query(None,description = "검색 키워드"),
