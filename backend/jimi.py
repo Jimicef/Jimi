@@ -160,7 +160,8 @@ async def post_chat(data: dict):
             {"role": "system", "content": MAIN_PROMPT},
             {
                 "role": "user",
-                "content": f"""Please answer the user's query as easily as possible refer to service information. 
+                "content": f"""Please answer the user's query as easily as possible refer to service information.
+                        you should avoid providing extra explanations for parts not directly asked by the user.
                         User query: {data["question"]}
                         service information:\n{data["summary"]}\nAnswer:\n""",
             }
