@@ -44,7 +44,7 @@ function App() {
   };
   const selectedOptions = supportList.length > 0 ? (summary ===""?optionsSupport:options): optionsIntro
   //const selectedOptions = supportList.length > 0 ? optionsSupport: optionsIntro
-  console.log(selectedOptions)
+  //console.log(selectedOptions)
 
   React.useEffect(async()=>{
     const ipData = await fetch('https://geolocation-db.com/json/');
