@@ -24,13 +24,14 @@ app.add_middleware(
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/api/qa")
-async def get_answer(question:str) -> Dict[str, str]:
-    
-    answer = "abs"
-    support = "Don't panic and always carry a towel."
-    response = {"answer": answer, "support": support}
-    return response
+@app.get("/chat")
+async def get_chat(serviceId):
+    cond = serviceId
+    url = f"http://api.odcloud.kr/api/gov24/v3/serviceDetail?page=1&perPage=10&cond%5B%EC%84%9C%EB%B9%84%EC%8A%A4ID%3A%3AEQ%5D={cond}&serviceKey=aVyQkv5W8mV6fweNFyOmB3fvxjmcuMvbOl4fkTCOVH1kCgOCcSkFa8UKeUBljB3Czd5VwvoIYKkH%2FpWWwVvpKQ%3D%3D"
+    response = requests.get(url)
+    answer = response.json()
+
+    return answer['data']
 
 @app.get("/service_list")
 async def get_service_list(keyword : str = Query(None,description = "검색 키워드"),
@@ -67,7 +68,9 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     text_inside_p = target_p.get_text(strip=True)
 
     # '212개'의 정보 추출
-    result_count = int(re.findall(r'\d+', text_inside_p)[0])
+    num_str_with_comma = re.findall(r'\d+', text_inside_p)[0]
+    result_count = int(num_str_with_comma.replace(",", "")) # 1,234 -> 1234 -> int
+
     page_count = result_count // 12
 
     if (div_count == page_count and count % 2 != 0) or result_count == 0:
