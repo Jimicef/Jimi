@@ -36,7 +36,7 @@ async def get_chat(serviceId):
         askey = key
         if key == '구비서류':
             askey = "docs"
-        elif key == '문의처':
+        elif key == '소관기관명':
             askey = "institution"
         elif key == '서비스ID':
             askey = "serviceId"
@@ -46,7 +46,7 @@ async def get_chat(serviceId):
             askey = "description"
         elif key == "선정기준":
             askey = "selection"
-        elif key == "소관기관명":
+        elif key == "문의처":
             askey = "rcvInstitution"
         elif key == "신청기한":
             askey = "dueDate"
