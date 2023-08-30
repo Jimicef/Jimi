@@ -109,9 +109,27 @@ function Chat({summary}) {
     // )
   }, [summary])
 
-  const handleCheckTarget = () => {
-    setJimi((existingJimi) => [...existingJimi, {text: "지원대상 확인하기", sender: 'user'}])
-  }
+  const handleQuestion = (quest) => {
+    setJimi((existingJimi) => [...existingJimi, {text: quest, sender: 'user'}])
+    fetch(`${apiEndPoint}/chat`,
+      {
+        method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                question: quest
+            })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
+      }
+      )
+      .catch(error => console.log(error))
+    };
+  
 
   const handleTarget = () => {
     setJimi((existingJimi) => [...existingJimi, {text: "지원대상 원문보기", sender: 'user'}])
@@ -123,6 +141,11 @@ function Chat({summary}) {
     setJimi((existingJimi) => [...existingJimi, {text: "지원내용 원문보기", sender: 'user'}])
     setJimi((existingJimi) => [...existingJimi, {text: summary.content, sender: 'bot'}])
     
+  }
+
+  const handleDocs = () => {
+    setJimi((existingJimi) => [...existingJimi, {text: "제출서류 보기", sender: 'user'}])
+    setJimi((existingJimi) => [...existingJimi, {text: summary.docs, sender: 'bot'}])
   }
 
   const handleScroll = (event) => {
@@ -152,18 +175,19 @@ function Chat({summary}) {
         overflow: "auto"
       }}
     > 
-    <Box sx={{backgroundColor: '#DAD2E9', display: 'flex', justifyContent: 'center'}}>
+    {/* <Box sx={{backgroundColor: '#DAD2E9', display: 'flex', justifyContent: 'center'}}>
 
       <img src={logo} alt="logo" width="30%" height="40px" />
-    </Box>
+    </Box> */}
       <Box sx={{ flexGrow: 1, overflow: "auto", p: 2 }} ref={messageContainerRef}>
         {jimi.map((message, index) => (
-          <Message key={index} message={message} handleCheckTarget={handleCheckTarget} handleTarget={handleTarget} handleContent={handleContent}/>
+          <Message key={index} message={message} handleQuestion={handleQuestion} handleTarget={handleTarget} handleContent={handleContent}
+          handleDocs={handleDocs}/>
         ))}
       </Box>
       <Box sx={{ p: 2, backgroundColor: "background.default" }}>
         <Grid container spacing={2}>
-          <Grid item xs={10}>
+          <Grid item xs={11}>
             <TextField
               size="small"
               fullWidth
@@ -174,7 +198,7 @@ function Chat({summary}) {
               onKeyDown={handleKeyDown}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={1}>
             <ThemeProvider theme={theme}>
               <Button
                 fullWidth
@@ -182,9 +206,9 @@ function Chat({summary}) {
                 variant="contained"
                 endIcon={<SendIcon />}
                 onClick={handleSend}
-              >
-                Send
-              </Button>
+              />
+      
+              
             </ThemeProvider>
           </Grid>
         </Grid>
