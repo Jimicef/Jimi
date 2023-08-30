@@ -71,25 +71,24 @@ function Chat({summary, goToChat, setGoToChat}) {
                 console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
                 console.log(decodedChunk)
-                setPartData(prevValue => `${prevValue}${decodedChunk}`, ()=> {
+                // setPartData(prevValue => `${prevValue}${decodedChunk}`)
+                // console.log(partData)
+                setJimi((existingJimi) => {
+                    // 마지막 요소
+                    const lastItem = existingJimi[existingJimi.length - 1];
+                    console.log("last:", lastItem)
+                    // 마지막 요소의 sender에 따라 다르게 처리
+                    if (lastItem.sender === 'bot') {
+                        // 마지막 요소가 'bot'인 경우, 마지막 요소를 제외한 배열에 새 요소 추가
+                        const previousData = lastItem.text
+                        const updatedJimi = existingJimi.slice(0, -1);
+                        return [...updatedJimi, { text: previousData+decodedChunk, sender: 'bot' }];
+                    } else if (lastItem.sender === 'user') {
+                        // 마지막 요소가 'user'인 경우, 그대로 추가
+                        return [...existingJimi, { text: decodedChunk, sender: 'bot' }];
+                    }
 
-                    console.log("part:", partData)
-                    setJimi((existingJimi) => {
-                        // 마지막 요소
-                        const lastItem = existingJimi[existingJimi.length - 1];
-                        console.log("last:", lastItem)
-                        // 마지막 요소의 sender에 따라 다르게 처리
-                        if (lastItem.sender === 'bot') {
-                            // 마지막 요소가 'bot'인 경우, 마지막 요소를 제외한 배열에 새 요소 추가
-                            const updatedJimi = existingJimi.slice(0, -1);
-                            return [...updatedJimi, { text: partData, sender: 'bot' }];
-                        } else if (lastItem.sender === 'user') {
-                            // 마지막 요소가 'user'인 경우, 그대로 추가
-                            return [...existingJimi, { text: partData, sender: 'bot' }];
-                        }
-    
-                        return existingJimi; // 예외 상황 처리
-                })
+                    return existingJimi; // 예외 상황 처리
                 })
             }
         } catch(error) {
