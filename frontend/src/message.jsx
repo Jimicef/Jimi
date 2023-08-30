@@ -1,6 +1,8 @@
 import * as React from "react";
 import {Box, TextField, Button, Typography, Avatar, Grid, Paper, Card, ThemeProvider} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import ChatIcon from '@mui/icons-material/Chat';
+import FaceIcon from '@mui/icons-material/Face';
 import { theme } from "./theme";
 
 export const Message = ({ message, handleQuestion, handleTarget, handleContent, handleDocs }) => {
@@ -34,10 +36,10 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
         >
           {isBot ?
             <Avatar sx={{ bgcolor: "#8977AD", mr: 1, width: "30px", height: "30px" }}>
-              B
+              <ChatIcon sx={{fontSize: "18px"}}/>
             </Avatar>
             : <Avatar sx={{ bgcolor: "white", color: "#8977AD", mr: 1, width: "30px", height: "30px" }}>
-            U
+              <FaceIcon />
           </Avatar>
           }
           <Box> 

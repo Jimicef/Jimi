@@ -11,6 +11,7 @@ import './App.css';
 function Chat({summary}) {
   const [input, setInput] = React.useState("");
   const [jimi, setJimi] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false)
   const messageContainerRef = useRef();
 
   var apiEndPoint;
@@ -42,48 +43,55 @@ function Chat({summary}) {
 
   const handleSend = () => {
     if (input.trim() !== "") {
-      setJimi((existingJimi) => [...existingJimi, {text: input, sender: 'user'}])}
-      //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
-      fetch(`${apiEndPoint}/chat`,
-      {
-        method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: sessionStorage.getItem("username"),
-                question: input,
-                history: jimi.length>11?jimi.filter(item => !item.support).slice(-11):jimi.filter(item => !item.support),
-                summary: summary
-            })
-      })
-      .then(response => response.json())
-      .then(data => {
-        //console.log(data)
-        setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
-        // sessionStorage.setItem("history", JSON.stringify(jimi))
-        // console.log(sessionStorage.getItem('history'))
-        // if (data.answer !== null) {
-        //   console.log(data)
-        //   setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
-        // }
-        // if (data.support !== null) {
-        //   if (data.support.length === 1) {
-        //     setJimi((existingJimi) => [...existingJimi, {support : data.support, sender: 'bot'}])
-        //   }
-        //   else {
-        //     setJimi((existingJimi) => [...existingJimi, {support: data.support, sender: 'bot'}])
-        //   }
-        // }
-        //setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
-      }
-      )
-      .catch(error => console.log(error))
-      setInput("")
+        console.log("랄랄라")
+        setJimi((existingJimi) => [...existingJimi, {text: input, sender: 'user'}])
+        //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
+        setIsLoading(true)
+        fetch(`${apiEndPoint}/chat`,
+        {
+            method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: sessionStorage.getItem("username"),
+                    question: input,
+                    history: jimi.length>11?jimi.filter(item => !item.support).slice(-11):jimi.filter(item => !item.support),
+                    summary: summary
+                })
+        })
+        .then(response => response.json())
+        .then(data => {
+            //console.log(data)
+            setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
+            // sessionStorage.setItem("history", JSON.stringify(jimi))
+            // console.log(sessionStorage.getItem('history'))
+            // if (data.answer !== null) {
+            //   console.log(data)
+            //   setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
+            // }
+            // if (data.support !== null) {
+            //   if (data.support.length === 1) {
+            //     setJimi((existingJimi) => [...existingJimi, {support : data.support, sender: 'bot'}])
+            //   }
+            //   else {
+            //     setJimi((existingJimi) => [...existingJimi, {support: data.support, sender: 'bot'}])
+            //   }
+            // }
+            //setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
+        }
+        )
+        .catch(error => console.log(error))
+        .finally(()=>{
+            setIsLoading(false)
+        })}
+        window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
+        setInput("")
+    
     };
   
   const handleKeyDown = (event) => {
-    if (event.key == 'Enter' && event.nativeEvent.isComposing === false){
+    if (event.key == 'Enter' && event.nativeEvent.isComposing === false && isLoading === false){
       handleSend()
     }
   }
@@ -206,13 +214,20 @@ function Chat({summary}) {
           </Grid>
           <Grid item xs={1}>
             <ThemeProvider theme={theme}>
-              <Button
+
+              {isLoading?<Button
+                fullWidth
+                color="violet"
+                variant="contained"
+                endIcon={<SendIcon />}
+                disabled
+              />:<Button
                 fullWidth
                 color="violet"
                 variant="contained"
                 endIcon={<SendIcon />}
                 onClick={handleSend}
-              />
+              />}
       
               
             </ThemeProvider>
