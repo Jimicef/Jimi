@@ -163,11 +163,14 @@ async def post_chat(data: dict):
         max_tokens = 1000,
         stream=True
     )
-    def generate_stream():
-        # ChatGPT API 응답을 스트림으로 전송
-        yield response["choices"][0]["message"]['content']
-        
-    return StreamingResponse(generate_stream(), media_type="text/plain")
+    def generate_chunks():
+        for chunk in response:
+            yield chunk["choices"][0]["message"]['content']
+
+    return StreamingResponse(
+        content=generate_chunks(),
+        media_type="text/plain"
+    )
     # return {"answer": response["choices"][0]["message"]['content']}
 
 @app.get("/chat")
