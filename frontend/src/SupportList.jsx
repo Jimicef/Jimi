@@ -90,9 +90,9 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
         })
     }
 
-    React.useEffect(()=> {
-        console.log(supportList)
-    },[])
+    // React.useEffect(()=> {
+    //     console.log(supportList)
+    // },[])
   return (
     <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
         <Card sx={{width: '60%', height: '85%', bgcolor: "grey.200"}}>

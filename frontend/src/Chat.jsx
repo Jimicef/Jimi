@@ -68,15 +68,15 @@ function Chat({summary, goToChat, setGoToChat}) {
                 if (done) {
                     break
                 }
-                console.log(value)
+                //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
-                console.log(decodedChunk)
+                //console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 // console.log(partData)
                 setJimi((existingJimi) => {
                     // 마지막 요소
                     const lastItem = existingJimi[existingJimi.length - 1];
-                    console.log("last:", lastItem)
+                    //console.log("last:", lastItem)
                     // 마지막 요소의 sender에 따라 다르게 처리
                     if (lastItem.sender === 'bot') {
                         // 마지막 요소가 'bot'인 경우, 마지막 요소를 제외한 배열에 새 요소 추가
@@ -201,7 +201,7 @@ function Chat({summary, goToChat, setGoToChat}) {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        //console.log(data)
         setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
       }
       )
