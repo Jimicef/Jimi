@@ -43,7 +43,6 @@ function Chat({summary, goToChat, setGoToChat}) {
 
   const handleSend =async() => {
     if (input.trim() !== "") {
-        console.log("랄랄라")
         setJimi((existingJimi) => [...existingJimi, {text: input, sender: 'user'}])
         //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
         setIsLoading(true)
@@ -69,7 +68,9 @@ function Chat({summary, goToChat, setGoToChat}) {
                 if (done) {
                     break
                 }
+                console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
+                console.log(decodedChunk)
                 setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 setJimi((existingJimi) => {
                     // 마지막 요소
