@@ -51,13 +51,18 @@ function Chat({summary}) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                question: input
+                username: sessionStorage.getItem("username"),
+                question: input,
+                history: jimi.length>11?jimi.filter(item => !item.support).slice(-11):jimi.filter(item => !item.support),
+                summary: summary
             })
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        //console.log(data)
         setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
+        // sessionStorage.setItem("history", JSON.stringify(jimi))
+        // console.log(sessionStorage.getItem('history'))
         // if (data.answer !== null) {
         //   console.log(data)
         //   setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])

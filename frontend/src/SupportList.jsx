@@ -66,6 +66,7 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
         .then(response => response.json())
         .then(data => {
             setSummary(data)
+            sessionStorage.setItem("summary", JSON.stringify(data))
             window.location.href = '/#sectionThree'
         })
         .catch(error => {
