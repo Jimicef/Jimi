@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Query, HTTPException, Cookie, Depends
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Dict
 import requests
@@ -162,7 +162,12 @@ async def post_chat(data: dict):
         temperature=0,
         max_tokens = 1000
     )
-    return {"answer": response["choices"][0]["message"]['content']}
+    def generate_stream():
+        # ChatGPT API 응답을 스트림으로 전송
+        yield response.choices[0].text
+        
+    return StreamingResponse(generate_stream(), media_type="text/plain")
+    # return {"answer": response["choices"][0]["message"]['content']}
 
 @app.get("/chat")
 async def get_chat(serviceId):
