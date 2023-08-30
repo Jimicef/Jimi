@@ -6,6 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
+import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate } from "react-router-dom";
 
 
@@ -23,6 +24,7 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
     const [support, setSupport] = useState({
         "전체": false, "생활안정": false, "주거·자립": false, "보육·교육": false, "고용·창업": false, "보건·의료": false, "행정·안전": false, "임신·출산": false, "보호·돌봄": false, "문화·환경": false, "농림축산어업": false
     })
+    const [isLoading, setIsLoading] = useState(false)
     //const [input, setInput] = React.useState("");
     const navigate = useNavigate();
     //const [isNav, setIsNav] = useState(false)
@@ -37,7 +39,7 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
     // };
 
     useEffect(()=>{
-        window.location.href="/#section"
+        //window.location.href="/#section"
     },[])
 
     const handleChangeRegion = (event) => {
@@ -78,7 +80,7 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
     }
 
     const handleEnter = (event) => {
-        if (event.key == 'Enter' && event.nativeEvent.isComposing === false) {
+        if (event.key == 'Enter' && event.nativeEvent.isComposing === false && isLoading === false) {
             handleSubmit()
         }
     }
@@ -100,6 +102,7 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
         //     })
         // })
         console.log(subRegion, selectedSupports)
+        setIsLoading(true)
         fetch(`${apiEndPoint}/service_list?keyword=${input}&count=0&chktype1=${selectedSupports}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]?sidoCode[region]:""}&svccd=${user}`)
         .then(response => response.json())
         .then(data => {
@@ -108,16 +111,19 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
             setSupportList(data.support)
             setAnswer(data.answer)
             setIsLastPage(data.lastpage)
-            if (data.support.length > 0){
-                window.location.href = '/#sectionTwo'
-            } else {
-                alert("검색 결과가 없습니다.")
-            }
-            setServices(selectedSupports)
+
+            return Promise.resolve();
             //setIsNav(!isNav)
+        })
+        .then(() => {
+            
+            setServices(selectedSupports)
         })
         .catch(error => {
             console.error("에러:", error)
+        })
+        .finally(()=> {
+            setIsLoading(false)
         })
     }
 
@@ -207,21 +213,21 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
     }
   return (
     <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}} >
-        <Card sx={{p:3, width: '60%', height: '80%', bgcolor: "grey.200"}}>
-            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>    
+        <Card sx={{width: '60%', height: '85%', bgcolor: "grey.200"}}>
+            <Box sx={{display: 'flex', alignItems: 'center', m:3}}>    
                 <Avatar sx={{ bgcolor: "#8977AD" ,mr: 1}}>
-                B
+                    <ChatIcon sx={{fontSize: "23px"}}/>
                 </Avatar>
                 <Typography variant='h6'>
                 안녕하세요! 👋 저는 지원금 찾기 도우미, 지미입니다.
                 </Typography>
             </Box>
-            <Typography variant='body1' sx={{m: 2}}>
+            <Typography variant='body1' sx={{m: 4}}>
                 사용자님이 신청할 수 있는 지원금 제도를 쉽게 찾아드려요! <br/><br/>
                 먼저, 지원금을 빠르고 간편하게 찾아보세요!<br/>
                 지역, 서비스 분야, 사용자 구분, 검색어를 선택적으로 입력하시면 관련된 지원금 제도를 찾아드릴게요.
             </Typography>
-            <Box sx={{height: "65%", display: 'flex', alignItems:'center'}}>
+            <Box sx={{height: "60%", display: 'flex', alignItems:'center', m: 2}}>
             <Card sx={{m: 2, p:1, bgcolor: "white"}}>
                 <Typography sx={{fontWeight: 'bold'}}>지역</Typography>
                 <Box sx={{display: 'flex', m: 1, mb: 2}}>
@@ -345,8 +351,8 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
             </Card>
             
             </Box>
-            <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                <Button variant='contained' color="secondary" onClick={handleSubmit}>지원금 추천받기</Button>
+            <Box sx={{display: 'flex', justifyContent: 'flex-end', m:2}}>
+                {isLoading?<Button disabled variant='contained' color="secondary">지원금 추천받기</Button>:<Button variant='contained' color="secondary" onClick={handleSubmit}>지원금 추천받기</Button>}
             </Box>
         </Card>
         

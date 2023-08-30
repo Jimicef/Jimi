@@ -1,6 +1,8 @@
 import * as React from "react";
 import {Box, TextField, Button, Typography, Avatar, Grid, Paper, Card, ThemeProvider} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import ChatIcon from '@mui/icons-material/Chat';
+import FaceIcon from '@mui/icons-material/Face';
 import { theme } from "./theme";
 
 export const Message = ({ message, handleQuestion, handleTarget, handleContent, handleDocs }) => {
@@ -18,29 +20,29 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
           mb: 2,
         }}
       >
-        <Box
+        <Paper
+          variant="outlined"
           sx={{
             display: "flex",
-            flexDirection: isBot ? "row" : "row-reverse",
-            alignItems: "flex-end",
+            //flexDirection: isBot ? "row" : "row-reverse",
+            alignItems: "flex-start",
+            width: '100%',
+              p: 2,
+              ml: isBot ? 0 : 0,
+              mr: isBot ? 0 : 0,
+              backgroundColor: isBot ? "white" : "#DAD2E9",
+              borderRadius: isBot ? "20px 20px 20px 20px" : "20px 20px 20px 20px",
           }}
         >
-          {isBot && 
-            <Avatar sx={{ bgcolor: "#8977AD" }}>
-              B
+          {isBot ?
+            <Avatar sx={{ bgcolor: "#8977AD", mr: 1, width: "30px", height: "30px" }}>
+              <ChatIcon sx={{fontSize: "18px"}}/>
             </Avatar>
+            : <Avatar sx={{ bgcolor: "white", color: "#8977AD", mr: 1, width: "30px", height: "30px" }}>
+              <FaceIcon />
+          </Avatar>
           }
-          <Paper
-            variant="outlined"
-            sx={{
-              width: '80%',
-              p: 2,
-              ml: isBot ? 1 : 0,
-              mr: isBot ? 0 : 1,
-              backgroundColor: isBot ? "white" : "#BDA4D5",
-              borderRadius: isBot ? "20px 20px 20px 5px" : "20px 20px 5px 20px",
-            }}
-          > 
+          <Box> 
             {message.text && 
               <Typography variant="body1">{message.text}</Typography>
             }
@@ -86,8 +88,8 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
                 
               ):null}
             
-          </Paper>
-        </Box>
+          </Box>
+        </Paper>
       </Box>
     );
   };
