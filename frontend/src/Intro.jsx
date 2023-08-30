@@ -37,7 +37,7 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
     // };
 
     useEffect(()=>{
-        window.location.href="/#section"
+        //window.location.href="/#section"
     },[])
 
     const handleChangeRegion = (event) => {
@@ -108,13 +108,13 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
             setSupportList(data.support)
             setAnswer(data.answer)
             setIsLastPage(data.lastpage)
-            if (data.support.length > 0){
-                window.location.href = '/#sectionTwo'
-            } else {
-                alert("검색 결과가 없습니다.")
-            }
-            setServices(selectedSupports)
+
+            return Promise.resolve();
             //setIsNav(!isNav)
+        })
+        .then(() => {
+            
+            setServices(selectedSupports)
         })
         .catch(error => {
             console.error("에러:", error)
@@ -207,8 +207,8 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
     }
   return (
     <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}} >
-        <Card sx={{p:3, width: '60%', height: '80%', bgcolor: "grey.200"}}>
-            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>    
+        <Card sx={{width: '60%', height: '85%', bgcolor: "grey.200"}}>
+            <Box sx={{display: 'flex', alignItems: 'center', m:3}}>    
                 <Avatar sx={{ bgcolor: "#8977AD" ,mr: 1}}>
                 B
                 </Avatar>
@@ -216,12 +216,12 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
                 안녕하세요! 👋 저는 지원금 찾기 도우미, 지미입니다.
                 </Typography>
             </Box>
-            <Typography variant='body1' sx={{m: 2}}>
+            <Typography variant='body1' sx={{m: 4}}>
                 사용자님이 신청할 수 있는 지원금 제도를 쉽게 찾아드려요! <br/><br/>
                 먼저, 지원금을 빠르고 간편하게 찾아보세요!<br/>
                 지역, 서비스 분야, 사용자 구분, 검색어를 선택적으로 입력하시면 관련된 지원금 제도를 찾아드릴게요.
             </Typography>
-            <Box sx={{height: "65%", display: 'flex', alignItems:'center'}}>
+            <Box sx={{height: "60%", display: 'flex', alignItems:'center', m: 2}}>
             <Card sx={{m: 2, p:1, bgcolor: "white"}}>
                 <Typography sx={{fontWeight: 'bold'}}>지역</Typography>
                 <Box sx={{display: 'flex', m: 1, mb: 2}}>
@@ -345,7 +345,7 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
             </Card>
             
             </Box>
-            <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+            <Box sx={{display: 'flex', justifyContent: 'flex-end', m:2}}>
                 <Button variant='contained' color="secondary" onClick={handleSubmit}>지원금 추천받기</Button>
             </Box>
         </Card>

@@ -67,16 +67,22 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
         .then(data => {
             setSummary(data)
             sessionStorage.setItem("summary", JSON.stringify(data))
-            window.location.href = '/#sectionThree'
+            //window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
+            //window.location.href = '/'
+            //window.location.href = '/chat'
         })
         .catch(error => {
             console.error("에러:", error)
         })
     }
+
+    React.useEffect(()=> {
+        console.log(supportList)
+    },[])
   return (
     <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <Card sx={{p:3, width: '60%', height: '80%', bgcolor: "grey.200"}}>
-            <Box sx={{display: 'flex', alignItems: 'center', mb: 3}}>    
+        <Card sx={{width: '60%', height: '85%', bgcolor: "grey.200"}}>
+            <Box sx={{display: 'flex', alignItems: 'center', m: 3}}>    
                 <Avatar sx={{ bgcolor: "#8977AD",mr: 1}}>
                 B
                 </Avatar>
@@ -87,9 +93,9 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
             <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'}}>
             <Box sx={{display: 'flex', flexWrap: "wrap", justifyContent: 'center', alignItems: 'center'}}>
                 {supportList.map((sup, idx) => (
-                    <Card sx={{width: "26%", mr: 3, p: 1, mb: 3, height: "250px"}} key={sup.serviceId}>
+                    <Card sx={{width: "26%", mr: 3, p: 1, mb: 3, height: "240px"}} key={sup.serviceId}>
                         <Typography variant="body2" sx={{ display: "inline-block", borderRadius: 3, bgcolor: "#DAD2E9", px: 1, mb: 1}}>{sup.institution}</Typography>
-                        <Box sx={{display: 'flex', flexDirection: 'column', height: "215px"}}>
+                        <Box sx={{display: 'flex', flexDirection: 'column', height: "212px"}}>
                         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{sup.title}</Typography>
                         <Typography variant="body2">{sup.description.length>35?sup.description.slice(0,35)+"···":sup.description}</Typography>
                         <br />
@@ -110,18 +116,18 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
             
             <>
             <Box sx={{display: 'flex', justifyContent: 'center'}}>{count+1}</Box>
-            {isLastPage?(count>0?<Box sx={{display: 'flex', justifyContent: 'flex-start'}}>
+            {isLastPage?(count>0?<Box sx={{display: 'flex', justifyContent: 'flex-start', m: 2}}>
                 <Button variant="contained" color="secondary" startIcon={<NavigateNextIcon style={{ transform: "rotate(180deg)" }}/>} onClick={handlePrevPage}>
                     이전 페이지
                 </Button>
-            </Box>:null):(count>0 ?<Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+            </Box>:null):(count>0 ?<Box sx={{display: 'flex', justifyContent: 'space-between', m: 2}}>
                 <Button variant="contained" color="secondary" startIcon={<NavigateNextIcon style={{ transform: "rotate(180deg)" }}/>} onClick={handlePrevPage}>
                     이전 페이지
                 </Button>
                 <Button variant="contained" color="secondary" endIcon={<NavigateNextIcon />} onClick={handleNextPage}>
                     다음 페이지
                 </Button>
-            </Box>:<Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+            </Box>:<Box sx={{display: 'flex', justifyContent: 'flex-end', m: 2}}>
                 <Button variant="contained" color="secondary" endIcon={<NavigateNextIcon />} onClick={handleNextPage}>
                     다음 페이지
                 </Button>

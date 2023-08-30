@@ -172,8 +172,9 @@ function Chat({summary}) {
     
     <Card
       sx={{
+
         width: '60%',
-        height: "80%",
+        height: "85%",
         display: "flex",
         flexDirection: "column",
         bgcolor: "grey.200",
@@ -196,7 +197,7 @@ function Chat({summary}) {
             <TextField
               size="small"
               fullWidth
-              placeholder="Type a message"
+              placeholder="메시지를 입력해주세요"
               variant="outlined"
               value={input}
               onChange={handleInputChange}

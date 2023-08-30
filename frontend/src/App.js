@@ -36,12 +36,13 @@ function App() {
   };
   let options = {
     //이렇게 될시 /#section
-    anchors: ['sectionOne', 'sectionTwo', 'sectionThree'],
+    //anchors: ['sectionOne', 'sectionTwo', 'sectionThree'],
     //activeSection: 'sectionTwo',
-    //scrollBar: true,
+    scrollBar: true,
     navigation: false,
   };
   const selectedOptions = supportList.length > 0 ? (summary ===""?optionsSupport:options): optionsIntro
+  //const selectedOptions = supportList.length > 0 ? optionsSupport: optionsIntro
   console.log(selectedOptions)
 
   React.useEffect(async()=>{
@@ -49,12 +50,32 @@ function App() {
     const locationIp = await ipData.json();
     sessionStorage.setItem("username", locationIp.IPv4)
   }, [])
+
+  React.useEffect(()=> {
+    if (supportList.length > 0){
+      window.scrollTo({top: window.innerHeight, behavior: 'smooth' })
+      //window.location.href = '/#sectionTwo'
+      //window.location.href = '/supportlist'
+  } else if(supportList === {}){
+      alert("검색 결과가 없습니다.")
+  }
+  }, [supportList])
+
+  React.useEffect(()=> {
+    if (summary !==""){
+      window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
+      //window.location.href = '/#sectionTwo'
+      //window.location.href = '/supportlist'
+  } 
+  }, [summary])
   return (
     <div>
       <BrowserRouter>
-      <Routes>
+      {/* <Routes>
+        <Route path="/" element={<Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer} setIsLastPage={setIsLastPage}/>} />
         <Route path="/chat" element={<Chat summary={summary}/>} />
-      </Routes>
+        <Route path="/supportlist" element={<SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer} setIsLastPage={setIsLastPage} isLastPage={isLastPage}/>} />
+      </Routes> */}
       {/* <FullPage controls>
         <Slide>
           <h1>Inner slide content</h1>
@@ -63,8 +84,19 @@ function App() {
           <h1>Another slide content</h1>
         </Slide>
       </FullPage> */}
+      <Box sx={{overflow: 'auto'}}>
+        <Box sx={{height: "100vh"}}>
+          <Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer} setIsLastPage={setIsLastPage}/>
+        </Box>
+        {supportList.length > 0 && <Box sx={{height: "100vh"}}>
+          <SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer} setIsLastPage={setIsLastPage} isLastPage={isLastPage}/>
+        </Box>}
+        {summary !=="" && <Box sx={{height: "100vh"}}>
+          <Chat summary={summary}/>
+        </Box>}
+      </Box>
 
-      <SectionsContainer {...selectedOptions} >
+      {/* <SectionsContainer {...options} >
       {
       // selectedOptions !==options&&
       <Section ><Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer} setIsLastPage={setIsLastPage}/></Section>}
@@ -79,7 +111,7 @@ function App() {
           
        ): null}
       
-      </SectionsContainer>
+      </SectionsContainer> */}
       </BrowserRouter>
    </div> 
   )
