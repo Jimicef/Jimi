@@ -43,6 +43,12 @@ function App() {
   };
   const selectedOptions = supportList.length > 0 ? (summary ===""?optionsSupport:options): optionsIntro
   console.log(selectedOptions)
+
+  React.useEffect(async()=>{
+    const ipData = await fetch('https://geolocation-db.com/json/');
+    const locationIp = await ipData.json();
+    sessionStorage.setItem("username", locationIp.IPv4)
+  }, [])
   return (
     <div>
       <BrowserRouter>
