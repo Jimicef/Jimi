@@ -163,8 +163,13 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
 
     # # 최종 요청되는 URL 확인
     # final_url = prepared_request.url
+    if keyword:
+        message = f"{keyword}에 대한 {result_count}개의 통합검색 결과입니다."
+    else:
+        message = f"선택한 조건에 대한 {result_count}개의 통합검색 결과입니다."
+    
     return {
-        "answer" : f"{keyword}에 대한 {result_count}개의 통합검색 결과입니다.",
+        "answer" : message,
         "support" : card_data_list,
         "lastpage" : last_page
     }
