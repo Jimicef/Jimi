@@ -75,6 +75,8 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     url = "https://www.gov.kr/portal/rcvfvrSvc/svcFind/svcSearchAll"
     
     div_count = count // 2
+    page_count = result_count - 1 // 12
+    last_page = False
 
     params = {
         "siGunGuArea" : siGunGuArea,
@@ -102,12 +104,23 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     result_count = re.findall(r'\d+(?:,\d+)*', text_inside_p)[0]
     result_count = int(result_count.replace(",", "")) # 1,234 -> 1234 -> int
 
-    page_count = result_count // 12
-
-    if (div_count == page_count and count % 2 != 0) or result_count == 0:
+    if result_count == 0:
         last_page = True
-    else:
-        last_page = False
+    elif div_count  == page_count :
+        # 첫페이지가 last인 경우
+        if count % 2 == 0 and result_count - (6 * count) <= 6:
+            last_page = True
+        # 두번째 페이지가 last인 경우
+        elif count % 2 !=0 and result_count - (6 * count) <= 6:
+            last_page = True
+        
+    # last 페이지 인 경우
+    # 1. 첫 페이지가 last page인 경우
+    # 2. 
+    # if (div_count == page_count and count % 2 != 0) or result_count == 0 :
+    #     last_page = True
+    # else:
+    #     last_page = False
 
     card_data_list = []
     cards = soup.find_all('div', class_='card-item')
