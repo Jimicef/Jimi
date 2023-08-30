@@ -86,16 +86,16 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
             <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'}}>
             <Box sx={{display: 'flex', flexWrap: "wrap", justifyContent: 'center', alignItems: 'center'}}>
                 {supportList.map((sup, idx) => (
-                    <Card sx={{width: "26%", mr: 3, p: 1, mb: 3, height: "240px"}} key={sup.serviceId}>
+                    <Card sx={{width: "26%", mr: 3, p: 1, mb: 3, height: "250px"}} key={sup.serviceId}>
                         <Typography variant="body2" sx={{ display: "inline-block", borderRadius: 3, bgcolor: "#DAD2E9", px: 1, mb: 1}}>{sup.institution}</Typography>
-                        <Box sx={{display: 'flex', flexDirection: 'column', height: "208px"}}>
+                        <Box sx={{display: 'flex', flexDirection: 'column', height: "215px"}}>
                         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{sup.title}</Typography>
-                        <Typography variant="body2">{sup.description.length>25?sup.description.slice(0,25)+"···":sup.description}</Typography>
+                        <Typography variant="body2">{sup.description.length>25?sup.description.slice(0,30)+"···":sup.description}</Typography>
                         <br />
                         <Typography variant="body2">🗓️신청기간: {sup.dueDate.length > 12?sup.dueDate.slice(0, 12)+"···":sup.dueDate}</Typography>
                         <Typography variant="body2">⚙️지원형태: {sup.format}</Typography>
-                        {sup.rcvInstitution && <Typography variant="body2">🏠접수기관: {sup.rcvInstitution.length>20?sup.rcvInstitution.slice(0,20)+"···":sup.rcvInstitution}</Typography>}
-                        <Typography variant="body2">📞전화문의: {sup.phone.length>20?sup.phone.slice(0,20)+"···":sup.phone}</Typography>
+                        {sup.rcvInstitution && <Typography variant="body2">🏠접수기관: {sup.rcvInstitution.length>12?sup.rcvInstitution.slice(0,12)+"···":sup.rcvInstitution}</Typography>}
+                        <Typography variant="body2">📞전화문의: {sup.phone.length>12?sup.phone.slice(0,12)+"···":sup.phone}</Typography>
                         <Box sx={{display: 'flex', justifyContent: 'flex-end', marginTop: 'auto'}}>
                             <Button variant='outlined' color='secondary' size='small' sx={{mt: 1}} onClick={()=>goToChat(sup.serviceId)}>자세히 보기</Button>
                         </Box>
