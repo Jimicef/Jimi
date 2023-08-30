@@ -22,7 +22,7 @@ const sidoCode = {
     "강원특별자치도": "tab5100000000"
 };
 
-export const SupportList = ({supportList, setSupportList, input, count, setCount, services, region, subRegion, user, setSummary, answer}) => {
+export const SupportList = ({supportList, setSupportList, input, count, setCount, services, region, subRegion, user, setSummary, answer, isLastPage, setIsLastPage}) => {
     var apiEndPoint;
     if (process.env.NODE_ENV == 'development') {
         apiEndPoint = process.env.REACT_APP_SWAGGER_API
@@ -37,6 +37,7 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
         .then(data => {
             setSupportList(data.support)
             setCount(count+1)
+            setIsLastPage(data.lastpage)
             //window.location.href = '/#sectionTwo'
             //setIsNav(!isNav)
         })
@@ -51,6 +52,7 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
         .then(data => {
             setSupportList(data.support)
             setCount(count-1)
+            setIsLastPage(data.lastpage)
             //window.location.href = '/#sectionTwo'
             //setIsNav(!isNav)
         })
@@ -84,17 +86,19 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
             <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'}}>
             <Box sx={{display: 'flex', flexWrap: "wrap", justifyContent: 'center', alignItems: 'center'}}>
                 {supportList.map((sup, idx) => (
-                    <Card sx={{width: "26%", mr: 3, p: 1, mb: 3}} key={sup.serviceId}>
+                    <Card sx={{width: "26%", mr: 3, p: 1, mb: 3, height: "240px"}} key={sup.serviceId}>
                         <Typography variant="body2" sx={{ display: "inline-block", borderRadius: 3, bgcolor: "#DAD2E9", px: 1, mb: 1}}>{sup.institution}</Typography>
-                        <Typography variant="body1" sx={{fontWeight: 'bold'}}>{sup.title}</Typography>
-                        <Typography variant="body1">{sup.description}</Typography>
+                        <Box sx={{display: 'flex', flexDirection: 'column', height: "208px"}}>
+                        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{sup.title}</Typography>
+                        <Typography variant="body2">{sup.description.length>25?sup.description.slice(0,25)+"···":sup.description}</Typography>
                         <br />
-                        <Typography variant="body2">🗓️신청기간: {sup.dueDate.length > 12?sup.dueDate.slice(0, 12):sup.dueDate}</Typography>
+                        <Typography variant="body2">🗓️신청기간: {sup.dueDate.length > 12?sup.dueDate.slice(0, 12)+"···":sup.dueDate}</Typography>
                         <Typography variant="body2">⚙️지원형태: {sup.format}</Typography>
-                        <Typography variant="body2">🏠접수기관: {sup.rcvInstitution}</Typography>
-                        <Typography variant="body2">📞전화문의: {sup.phone}</Typography>
-                        <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                        {sup.rcvInstitution && <Typography variant="body2">🏠접수기관: {sup.rcvInstitution.length>20?sup.rcvInstitution.slice(0,20)+"···":sup.rcvInstitution}</Typography>}
+                        <Typography variant="body2">📞전화문의: {sup.phone.length>20?sup.phone.slice(0,20)+"···":sup.phone}</Typography>
+                        <Box sx={{display: 'flex', justifyContent: 'flex-end', marginTop: 'auto'}}>
                             <Button variant='outlined' color='secondary' size='small' sx={{mt: 1}} onClick={()=>goToChat(sup.serviceId)}>자세히 보기</Button>
+                        </Box>
                         </Box>
                         {/* <Box><Typography variant="body2" sx={{borderBottom: "1px solid", diplay: "inline-block", width: 'fit-content', color: 'violet'}}>👤지원대상</Typography></Box>
                         <Box><Typography variant="body2" sx={{borderBottom: "1px solid", diplay: "inline-block", width: 'fit-content', color: 'violet'}}>✍🏻지원내용</Typography></Box>
@@ -105,7 +109,23 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
             
             <>
             <Box sx={{display: 'flex', justifyContent: 'center'}}>{count+1}</Box>
-            {count>0 ?<Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+            {isLastPage?(count>0?<Box sx={{display: 'flex', justifyContent: 'flex-start'}}>
+                <Button variant="contained" color="secondary" startIcon={<NavigateNextIcon style={{ transform: "rotate(180deg)" }}/>} onClick={handlePrevPage}>
+                    이전 페이지
+                </Button>
+            </Box>:null):(count>0 ?<Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Button variant="contained" color="secondary" startIcon={<NavigateNextIcon style={{ transform: "rotate(180deg)" }}/>} onClick={handlePrevPage}>
+                    이전 페이지
+                </Button>
+                <Button variant="contained" color="secondary" endIcon={<NavigateNextIcon />} onClick={handleNextPage}>
+                    다음 페이지
+                </Button>
+            </Box>:<Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Button variant="contained" color="secondary" endIcon={<NavigateNextIcon />} onClick={handleNextPage}>
+                    다음 페이지
+                </Button>
+            </Box>)}
+            {/* {count>0 ?<Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                 <Button variant="contained" color="secondary" startIcon={<NavigateNextIcon style={{ transform: "rotate(180deg)" }}/>} onClick={handlePrevPage}>
                     이전 페이지
                 </Button>
@@ -117,7 +137,7 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
                     다음 페이지
                 </Button>
             </Box>
-            }
+            } */}
             </>
             </Box>
         </Card>
