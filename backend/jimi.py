@@ -174,7 +174,7 @@ async def post_chat(data: dict):
             try :
                 yield chunk["choices"][0]["delta"].content
             except :
-                yield "."
+                yield None
 
     return StreamingResponse(
         content=generate_chunks(),
