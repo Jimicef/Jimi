@@ -7,9 +7,10 @@ from bs4 import BeautifulSoup
 import re
 import openai
 from prompts import MAIN_PROMPT
+import os
 
 app = FastAPI()
-
+openai.api_key = os.environ["OPENAI_API_KEY"]
 origins = [
     "http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com",
     "http://jimi-bucket.s3-website.ap-northeast-2.amazonaws.com"
