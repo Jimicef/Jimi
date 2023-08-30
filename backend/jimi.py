@@ -68,8 +68,8 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     text_inside_p = target_p.get_text(strip=True)
 
     # '212개'의 정보 추출
-    num_str_with_comma = re.findall(r'\d+', text_inside_p)[0]
-    result_count = int(num_str_with_comma.replace(",", "")) # 1,234 -> 1234 -> int
+    result_count = re.findall(r'\d+(?:,\d+)*', text_inside_p)[0]
+    result_count = int(result_count.replace(",", "")) # 1,234 -> 1234 -> int
 
     page_count = result_count // 12
 
