@@ -165,7 +165,7 @@ async def post_chat(data: dict):
     )
     def generate_chunks():
         for chunk in response:
-            yield chunk["choices"][0]["delta"]['content']
+            yield chunk["choices"][0]["delta"].content
 
     return StreamingResponse(
         content=generate_chunks(),
