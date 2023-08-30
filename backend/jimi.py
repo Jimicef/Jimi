@@ -192,9 +192,13 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     }
 
 @app.post("/test")
-async def set_user(name: str, age: int):
-    response = JSONResponse(content={"message": f"사용자 정보가 저장되었습니다."})
-    response.set_cookie(key="user_info", value=f"{name}:{age}")
+async def set_user(data: dict):
+    username = data.get("username")
+    age = data.get("age")
+    user_data = f"{username}:{age}"
+    
+    response = JSONResponse(content={"message": "사용자 정보가 저장되었습니다."})
+    response.set_cookie(key="user_info", value=user_data)
     return response
 
 @app.get("/test")
