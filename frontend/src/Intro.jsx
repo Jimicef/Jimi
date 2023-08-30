@@ -193,11 +193,13 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
             })
         })
         .then(response => response.json())
+        sessionStorage.setItem("username", "user1")
     }
 
     const handletest2 = () => {
         fetch(`${apiEndPoint}/test`)
         .then(response => response.json())
+        console.log(sessionStorage.getItem("username"))
     }
   return (
     <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}} >

@@ -5,7 +5,7 @@ import {Intro} from "./Intro";
 import {SupportList} from "./SupportList";
 import { Box } from "@mui/material";
 import './App.css'
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Switc, Routes } from "react-router-dom";
 import { FullPage, Slide } from "react-full-page";
 
 
@@ -46,6 +46,9 @@ function App() {
   return (
     <div>
       <BrowserRouter>
+      <Routes>
+        <Route path="/chat" element={<Chat summary={summary}/>} />
+      </Routes>
       {/* <FullPage controls>
         <Slide>
           <h1>Inner slide content</h1>
