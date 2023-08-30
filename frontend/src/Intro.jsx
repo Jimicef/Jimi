@@ -180,8 +180,33 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
        "소상공인": "business",
        "법인": "owner"
     }
+
+    const handletest1 = () => {
+        fetch(`${apiEndPoint}/test`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: "user1",
+                age: 12
+            })
+        })
+        .then(response => response.json())
+    }
+
+    const handletest2 = () => {
+        fetch(`${apiEndPoint}/test`)
+        .then(response => response.json())
+    }
   return (
     <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}} >
+        <Button onClick={handletest1}>
+            1
+        </Button>
+        <Button onClick={handletest2}>
+            2
+        </Button>
         <Card sx={{p:3, width: '60%', height: '80%', bgcolor: "grey.200"}}>
             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>    
                 <Avatar sx={{ bgcolor: "#8977AD" ,mr: 1}}>
