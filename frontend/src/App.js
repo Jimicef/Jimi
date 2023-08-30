@@ -20,6 +20,7 @@ function App() {
   const [subRegion, setSubRegion] = React.useState("")
   const [user, setUser] = React.useState("")
   const [summary, setSummary] = React.useState("")
+  const [goToChat, setGoToChat] = React.useState(false)
 
   // npm react-full-page로 바꾸기
   // 스크롤의 위치에 따라 액션 다르게
@@ -89,10 +90,10 @@ function App() {
           <Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer} setIsLastPage={setIsLastPage}/>
         </Box>
         {supportList.length > 0 && <Box sx={{height: "100vh"}}>
-          <SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer} setIsLastPage={setIsLastPage} isLastPage={isLastPage}/>
+          <SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer} setIsLastPage={setIsLastPage} isLastPage={isLastPage} setGoToChat={setGoToChat}/>
         </Box>}
         {summary !=="" && <Box sx={{height: "100vh"}}>
-          <Chat summary={summary}/>
+          <Chat summary={summary} goToChat={goToChat} setGoToChat={setGoToChat}/>
         </Box>}
       </Box>
 

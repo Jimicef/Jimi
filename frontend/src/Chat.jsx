@@ -8,9 +8,10 @@ import logo from './logo.png';
 import './App.css';
 
 
-function Chat({summary}) {
+function Chat({summary, goToChat, setGoToChat}) {
   const [input, setInput] = React.useState("");
   const [jimi, setJimi] = React.useState([]);
+  const [partData, setPartData] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false)
   const messageContainerRef = useRef();
 
@@ -33,58 +34,119 @@ function Chat({summary}) {
   }, [jimi]); // jimi 배열이 업데이트될 때마다 스크롤을 아래로 이동
 
   useEffect(()=>{
-    const handleScroll = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
+    if(goToChat){
+        setJimi([])
+        setGoToChat(false)
     }
+  }, [goToChat])
 
-    window.addEventListener("scroll", handleScroll);
-  }, [])
 
-  const handleSend = () => {
+  const handleSend =async() => {
     if (input.trim() !== "") {
         console.log("랄랄라")
         setJimi((existingJimi) => [...existingJimi, {text: input, sender: 'user'}])
         //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
         setIsLoading(true)
-        fetch(`${apiEndPoint}/chat`,
-        {
-            method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username: sessionStorage.getItem("username"),
-                    question: input,
-                    history: jimi.length>11?jimi.filter(item => !item.support).slice(-11):jimi.filter(item => !item.support),
-                    summary: summary
+        try {
+            const response = await fetch(`${apiEndPoint}/chat`,
+            {
+                method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        username: sessionStorage.getItem("username"),
+                        question: input,
+                        history: jimi.length>11?jimi.filter(item => !item.support).slice(-11):jimi.filter(item => !item.support),
+                        summary: summary
+                    })
+            })
+            const reader = response.body.getReader()
+            const decoder = new TextDecoder()
+            
+            while (true) {
+                const { value, done } = await reader.read()
+                if (done) {
+                    break
+                }
+                const decodedChunk = decoder.decode(value, { stream: true });
+                setPartData(prevValue => `${prevValue}${decodedChunk}`)
+                setJimi((existingJimi) => {
+                    // 마지막 요소
+                    const lastItem = existingJimi[existingJimi.length - 1];
+
+                    // 마지막 요소의 sender에 따라 다르게 처리
+                    if (lastItem.sender === 'bot') {
+                        // 마지막 요소가 'bot'인 경우, 마지막 요소를 제외한 배열에 새 요소 추가
+                        const updatedJimi = existingJimi.slice(0, -1);
+                        return [...updatedJimi, { text: partData, sender: 'bot' }];
+                    } else if (lastItem.sender === 'user') {
+                        // 마지막 요소가 'user'인 경우, 그대로 추가
+                        return [...existingJimi, { text: partData, sender: 'bot' }];
+                    }
+
+                    return existingJimi; // 예외 상황 처리
                 })
-        })
-        .then(response => response.json())
-        .then(data => {
-            //console.log(data)
-            setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
-            // sessionStorage.setItem("history", JSON.stringify(jimi))
-            // console.log(sessionStorage.getItem('history'))
-            // if (data.answer !== null) {
-            //   console.log(data)
-            //   setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
-            // }
-            // if (data.support !== null) {
-            //   if (data.support.length === 1) {
-            //     setJimi((existingJimi) => [...existingJimi, {support : data.support, sender: 'bot'}])
-            //   }
-            //   else {
-            //     setJimi((existingJimi) => [...existingJimi, {support: data.support, sender: 'bot'}])
-            //   }
-            // }
-            //setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
-        }
-        )
-        .catch(error => console.log(error))
-        .finally(()=>{
+            }
+        } catch(error) {
+            console.log(error)
+        } finally {
+            setPartData("")
             setIsLoading(false)
-        })}
+        }
+    }
+        // fetch(`${apiEndPoint}/chat`,
+        // {
+        //     method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         },
+        //         body: JSON.stringify({
+        //             username: sessionStorage.getItem("username"),
+        //             question: input,
+        //             history: jimi.length>11?jimi.filter(item => !item.support).slice(-11):jimi.filter(item => !item.support),
+        //             summary: summary
+        //         })
+        // })
+        // // .then(response => response.json())
+        // // .then(data => {
+        // //     setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
+        // // }
+        // // )
+        // .then(response => {
+        //     const reader = response.body.getReader()
+        //     const decoder = new TextDecoder()
+            
+        //     while (true) {
+        //         const { value, done } = await reader.read()
+        //         if (done) {
+        //             break
+        //         }
+        //         const decodedChunk = decoder.decode(value, { stream: true });
+        //         setPartData(prevValue => `${prevValue}${decodedChunk}`)
+        //         setJimi((existingJimi) => {
+        //             // 마지막 요소
+        //             const lastItem = existingJimi[existingJimi.length - 1];
+
+        //             // 마지막 요소의 sender에 따라 다르게 처리
+        //             if (lastItem.sender === 'bot') {
+        //                 // 마지막 요소가 'bot'인 경우, 마지막 요소를 제외한 배열에 새 요소 추가
+        //                 const updatedJimi = existingJimi.slice(0, -1);
+        //                 return [...updatedJimi, { text: partData, sender: 'bot' }];
+        //             } else if (lastItem.sender === 'user') {
+        //                 // 마지막 요소가 'user'인 경우, 그대로 추가
+        //                 return [...existingJimi, { text: data.answer, sender: 'bot' }];
+        //             }
+
+        //             return existingJimi; // 예외 상황 처리
+        //         })
+        //     }
+        // })
+        // .catch(error => console.log(error))
+        // .finally(()=>{
+        //     setPartData("")
+        //     setIsLoading(false)
+        // })}
         window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
         setInput("")
     

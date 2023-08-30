@@ -23,7 +23,7 @@ const sidoCode = {
     "강원특별자치도": "tab5100000000"
 };
 
-export const SupportList = ({supportList, setSupportList, input, count, setCount, services, region, subRegion, user, setSummary, answer, isLastPage, setIsLastPage}) => {
+export const SupportList = ({supportList, setSupportList, input, count, setCount, services, region, subRegion, user, setSummary, answer, isLastPage, setIsLastPage, setGoToChat}) => {
     const [isLoadingPage, setIsLoadingPage] = React.useState(false)
     const [isLoadingChat, setIsLoadingChat] = React.useState(false)
     var apiEndPoint;
@@ -76,7 +76,8 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
         .then(response => response.json())
         .then(data => {
             setSummary(data)
-            sessionStorage.setItem("summary", JSON.stringify(data))
+            setGoToChat(true)
+            //sessionStorage.setItem("summary", JSON.stringify(data))
             //window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
             //window.location.href = '/'
             //window.location.href = '/chat'
