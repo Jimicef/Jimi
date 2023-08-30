@@ -155,8 +155,8 @@ async def post_chat(data: dict):
             {
                 "role": "user",
                 "content": f"""Please answer the user's query as easily as possible refer to service information. 
-                        User query: {data.question}
-                        service information:\n{data.summary}\nAnswer:\n""",
+                        User query: {data["question"]}
+                        service information:\n{data["summary"]}\nAnswer:\n""",
             }
         ],
         temperature=0,
