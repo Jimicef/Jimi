@@ -32,8 +32,13 @@ function Chat({summary}) {
   }, [jimi]); // jimi 배열이 업데이트될 때마다 스크롤을 아래로 이동
 
   useEffect(()=>{
-    
-  })
+    const handleScroll = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    window.addEventListener("scroll", handleScroll);
+  }, [])
 
   const handleSend = () => {
     if (input.trim() !== "") {
@@ -120,7 +125,13 @@ function Chat({summary}) {
     
   }
 
+  const handleScroll = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+}
+
   return (
+    <div onScroll={handleScroll}>
     <Box
       sx = {{
         height: "100vh",
@@ -128,7 +139,8 @@ function Chat({summary}) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-      }}>
+      }}
+     >
     
     <Card
       sx={{
@@ -178,7 +190,9 @@ function Chat({summary}) {
         </Grid>
       </Box>
     </Card>
+    
     </Box>
+    </div>
   );
 };
 

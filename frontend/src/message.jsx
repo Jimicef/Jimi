@@ -54,10 +54,10 @@ export const Message = ({ message, handleCheckTarget, handleTarget, handleConten
                   {/* {message.support[0].way && <Typography variant="body2" sx={{fontWeight: 'bold'}}>📑신청방법<br/></Typography>} */}
                   {/* {message.support[0].dueDate && <Typography variant="body2">🗓️신청기간: {message.support[0].dueDate}<br/></Typography>} */}
                   {message.support.way && <Typography variant="body2">✳️신청방법: {message.support.way}<br/><br/></Typography>}
-                  {message.support.rcvInstitution && <Typography variant="body2">🏠접수센터: {message.support.rcvInstitution}<br/></Typography>}
-                  <Typography variant="body2" onClick={handleCheckTarget}>지원대상이 맞는지 확인하기</Typography>
-                  <Typography variant="body2" onClick={handleTarget}>지원대상 원문보기</Typography>
-                  <Typography variant="body2" onClick={handleContent}>지원내용 원문보기</Typography>
+                  {message.support.rcvInstitution && <Typography variant="body2">🏠접수센터: {message.support.rcvInstitution}<br/><br/></Typography>}
+                  <Typography variant="body2" onClick={handleCheckTarget} sx={{"&:hover": {color: "violet", cursor: 'pointer'}}}>▶️지원대상이 맞는지 확인하기</Typography>
+                  <Typography variant="body2" onClick={handleTarget}>▶️지원대상 원문보기</Typography>
+                  <Typography variant="body2" onClick={handleContent}>▶️지원내용 원문보기</Typography>
                   {/* {message.support[0].docs && <Typography variant="body2">📎제출서류:</Typography>} 
                   {message.support[0].docs && message.support[0].docs.map((doc) => (
                     <Box sx={{display: 'flex'}}><Typography variant="body2">-</Typography><Typography variant="body2" sx={{borderBottom: "1px solid", diplay: "inline-block", width: 'fit-content', color: 'violet'}}>{doc}</Typography></Box>
