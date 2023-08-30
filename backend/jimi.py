@@ -161,7 +161,8 @@ async def post_chat(data: dict):
             {
                 "role": "user",
                 "content": f"""Please refer to the relevant sections in the service information's key:value pairs that are related to the user's query and provide a response accordingly.
-                        do not providing extra explanations for parts not directly asked by the user.
+                        Please refrain from generating unnecessary symbols (e.g., ":", " -") in the response.
+
                         User query: {data["question"]}
                         service information:\n{data["summary"]}\nAnswer:\n""",
             }
