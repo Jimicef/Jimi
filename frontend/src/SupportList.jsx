@@ -110,13 +110,13 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
                     <Card sx={{width: "225px", mx: 1, p: 1, mb: 3, height: "255px"}} key={sup.serviceId}>
                         <Typography variant="body2" sx={{ display: "inline-block", borderRadius: 3, bgcolor: "#DAD2E9", px: 1, mb: 1}}>{sup.institution}</Typography>
                         <Box sx={{display: 'flex', flexDirection: 'column', height: "225px"}}>
-                        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{sup.title.length>25?sup.title.slice(0,25)+"···":sup.title}</Typography>
-                        <Typography variant="body2">{sup.description.length>40?sup.description.slice(0,40)+"···":sup.description}</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{sup.title.length>25?sup.title.slice(0,25)+"⋯":sup.title}</Typography>
+                        <Typography variant="body2">{sup.description.length>35?sup.description.slice(0,35)+"⋯":sup.description}</Typography>
                         <br />
-                        <Typography variant="body2">🗓️신청기간: {sup.dueDate.length > 12?sup.dueDate.slice(0, 12)+"···":sup.dueDate}</Typography>
+                        <Typography variant="body2">🗓️신청기간: {sup.dueDate.length > 12?sup.dueDate.slice(0, 12)+"⋯":sup.dueDate}</Typography>
                         <Typography variant="body2">⚙️지원형태: {sup.format}</Typography>
-                        {sup.rcvInstitution && <Typography variant="body2">🏠접수기관: {sup.rcvInstitution.length>12?sup.rcvInstitution.slice(0,12)+"···":sup.rcvInstitution}</Typography>}
-                        <Typography variant="body2">📞전화문의: {sup.phone.length>12?sup.phone.slice(0,12)+"···":sup.phone}</Typography>
+                        {sup.rcvInstitution && <Typography variant="body2">🏠접수기관: {sup.rcvInstitution.length>12?sup.rcvInstitution.slice(0,12)+"⋯":sup.rcvInstitution}</Typography>}
+                        <Typography variant="body2">📞전화문의: {sup.phone.length>12?sup.phone.slice(0,12)+"⋯":sup.phone}</Typography>
                         <Box sx={{display: 'flex', justifyContent: 'flex-end', marginTop: 'auto'}}>
                             <Button disabled={isLoadingChat} variant='outlined' color='secondary' size='small' sx={{mt: 1}} onClick={()=>goToChat(sup.serviceId)}>자세히 보기</Button>
                         </Box>
