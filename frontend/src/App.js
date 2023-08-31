@@ -53,15 +53,16 @@ function App() {
   }, [])
 
   React.useEffect(()=> {
-    if (supportList.length > 0){
+    if(supportList === null){
+      alert("검색 결과가 없습니다.")
+    }
+    else if (supportList.length > 0){
       window.scrollTo({top: window.innerHeight, behavior: 'smooth' })
       //window.location.href = '/#sectionTwo'
       //window.location.href = '/supportlist'
-  } else if(supportList === {}){
+    } else if(supportList === {}){
       alert("검색 결과가 없습니다.")
-  } else if(supportList === null){
-    alert("최소 하나 이상 항목을 선택하세요")
-  }
+    } 
   }, [supportList])
 
   React.useEffect(()=> {
