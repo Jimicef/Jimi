@@ -231,10 +231,11 @@ function Chat({summary, goToChat, setGoToChat}) {
     setJimi((existingJimi) => [...existingJimi, {text: "선정기준 전체보기", sender: 'user'}])
     setJimi((existingJimi) => [...existingJimi, {text: summary.selection, sender: 'bot'}])
   }
-  const handleScroll = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-}
+
+  const handleWay = () => {
+    setJimi((existingJimi) => [...existingJimi, {text: "신청방법 전체보기", sender: 'user'}])
+    setJimi((existingJimi) => [...existingJimi, {text: summary.way, sender: 'bot'}])
+  }
 
   return (
     
@@ -266,7 +267,7 @@ function Chat({summary, goToChat, setGoToChat}) {
       <Box sx={{ flexGrow: 1, overflow: "auto", p: 2, minWidth: 120 }} ref={messageContainerRef}>
         {jimi.map((message, index) => (
           <Message key={index} message={message} handleQuestion={handleQuestion} handleTarget={handleTarget} handleContent={handleContent}
-          handleDocs={handleDocs} handleSelection={handleSelection}/>
+          handleDocs={handleDocs} handleSelection={handleSelection} handleWay={handleWay}/>
         ))}
       </Box>
       <Box sx={{display:'flex', p: 2, backgroundColor: "background.default", minWidth: 120 }}>
