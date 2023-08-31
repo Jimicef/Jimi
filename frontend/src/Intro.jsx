@@ -229,7 +229,7 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
                 지역, 서비스 분야, 사용자 구분, 검색어를 선택적으로 입력하시면 관련된 지원금 제도를 찾아드릴게요.
             </Typography>
             <Box sx={{height: "60%", display: 'flex', alignItems:'center', m: 2}}>
-            <Card sx={{m: 2, p:1, bgcolor: "white"}}>
+            <Box sx={{m: 2, p:3, bgcolor: "white", borderRadius: '30px', boxShadow: '5px 5px 10px grey'}}>
                 <Typography sx={{fontWeight: 'bold'}}>지역</Typography>
                 <Box sx={{display: 'flex', m: 1, mb: 2}}>
                     
@@ -349,7 +349,7 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
                     onKeyDown={handleEnter}
                     />
                 </Box>
-            </Card>
+            </Box>
             
             </Box>
             <Box sx={{display: 'flex', justifyContent: 'flex-end', m:2}}>
