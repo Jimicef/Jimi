@@ -20,7 +20,8 @@ function Chat({summary, goToChat, setGoToChat}) {
     apiEndPoint = process.env.REACT_APP_SWAGGER_API
   }
   else {
-    apiEndPoint = process.env.REACT_APP_AWS_SERVER
+    //apiEndPoint = process.env.REACT_APP_AWS_SERVER
+    apiEndPoint = 'http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com'
   }
 
   const scrollToBottom = () => {
