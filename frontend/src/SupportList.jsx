@@ -95,7 +95,7 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
     // },[])
   return (
     <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <Card sx={{width: '60%', height: '85%', bgcolor: "grey.200"}}>
+        <Card sx={{width: '820px', height: '760px', bgcolor: "grey.200", overflow: 'auto'}}>
             <Box sx={{display: 'flex', alignItems: 'center', m: 3}}>    
                 <Avatar sx={{ bgcolor: "#8977AD",mr: 1}}>
                 <ChatIcon sx={{fontSize: "23px"}}/>
@@ -107,11 +107,11 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
             <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'}}>
             <Box sx={{display: 'flex', flexWrap: "wrap", justifyContent: 'center', alignItems: 'center'}}>
                 {supportList.map((sup, idx) => (
-                    <Card sx={{width: "26%", mr: 3, p: 1, mb: 3, height: "240px"}} key={sup.serviceId}>
+                    <Card sx={{width: "225px", mx: 1, p: 1, mb: 3, height: "255px"}} key={sup.serviceId}>
                         <Typography variant="body2" sx={{ display: "inline-block", borderRadius: 3, bgcolor: "#DAD2E9", px: 1, mb: 1}}>{sup.institution}</Typography>
-                        <Box sx={{display: 'flex', flexDirection: 'column', height: "212px"}}>
-                        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{sup.title}</Typography>
-                        <Typography variant="body2">{sup.description.length>35?sup.description.slice(0,35)+"···":sup.description}</Typography>
+                        <Box sx={{display: 'flex', flexDirection: 'column', height: "225px"}}>
+                        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{sup.title.length>25?sup.title.slice(0,25)+"···":sup.title}</Typography>
+                        <Typography variant="body2">{sup.description.length>40?sup.description.slice(0,40)+"···":sup.description}</Typography>
                         <br />
                         <Typography variant="body2">🗓️신청기간: {sup.dueDate.length > 12?sup.dueDate.slice(0, 12)+"···":sup.dueDate}</Typography>
                         <Typography variant="body2">⚙️지원형태: {sup.format}</Typography>
@@ -130,18 +130,18 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
             
             <>
             <Box sx={{display: 'flex', justifyContent: 'center'}}>{count+1}</Box>
-            {isLastPage?(count>0?<Box sx={{display: 'flex', justifyContent: 'flex-start', m: 2}}>
+            {isLastPage?(count>0?<Box sx={{display: 'flex', justifyContent: 'flex-start', m: 1}}>
                 <Button disabled={isLoadingPage} variant="contained" color="secondary" startIcon={<NavigateNextIcon style={{ transform: "rotate(180deg)" }}/>} onClick={handlePrevPage}>
                     이전 페이지
                 </Button>
-            </Box>:null):(count>0 ?<Box sx={{display: 'flex', justifyContent: 'space-between', m: 2}}>
+            </Box>:null):(count>0 ?<Box sx={{display: 'flex', justifyContent: 'space-between', m:1}}>
                 <Button disabled={isLoadingPage} variant="contained" color="secondary" startIcon={<NavigateNextIcon style={{ transform: "rotate(180deg)" }}/>} onClick={handlePrevPage}>
                     이전 페이지
                 </Button>
                 <Button disabled={isLoadingPage} variant="contained" color="secondary" endIcon={<NavigateNextIcon />} onClick={handleNextPage}>
                     다음 페이지
                 </Button>
-            </Box>:<Box sx={{display: 'flex', justifyContent: 'flex-end', m: 2}}>
+            </Box>:<Box sx={{display: 'flex', justifyContent: 'flex-end', m:1}}>
                 <Button disabled={isLoadingPage} variant="contained" color="secondary" endIcon={<NavigateNextIcon />} onClick={handleNextPage}>
                     다음 페이지
                 </Button>

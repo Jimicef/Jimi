@@ -12,4 +12,8 @@ export const theme = createTheme({
       contrastText: getContrastRatio(violetMain, '#fff') > 4.5 ? '#fff' : '#111',
     },
   },
+  typography: {
+    fontFamily: "'Noto Sans KR', serif",
+    // 여기에 다른 폰트 관련 설정도 추가할 수 있습니다.
+  }
 });

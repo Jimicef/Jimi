@@ -211,9 +211,10 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
         const locationIp = await ipData.json();
         console.log(locationIp.IPv4);
     }
+
   return (
     <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}} >
-        <Card sx={{width: '60%', height: '85%', bgcolor: "grey.200"}}>
+        <Card sx={{width: '820px', height: '760px', bgcolor: "grey.200", overflow: 'auto'}}>
             <Box sx={{display: 'flex', alignItems: 'center', m:3}}>    
                 <Avatar sx={{ bgcolor: "#8977AD" ,mr: 1}}>
                     <ChatIcon sx={{fontSize: "23px"}}/>
