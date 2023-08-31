@@ -59,6 +59,8 @@ function App() {
       //window.location.href = '/supportlist'
   } else if(supportList === {}){
       alert("검색 결과가 없습니다.")
+  } else if(supportList === null){
+    alert("최소 하나 이상 항목을 선택하세요")
   }
   }, [supportList])
 
@@ -69,6 +71,7 @@ function App() {
       //window.location.href = '/supportlist'
   } 
   }, [summary])
+
   return (
     <div>
       <BrowserRouter>

@@ -46,6 +46,7 @@ function Chat({summary, goToChat, setGoToChat}) {
         setJimi((existingJimi) => [...existingJimi, {text: input, sender: 'user'}])
         //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
         setIsLoading(true)
+        setInput("")
         try {
             const response = await fetch(`${apiEndPoint}/chat`,
             {
@@ -151,7 +152,7 @@ function Chat({summary, goToChat, setGoToChat}) {
         //     setIsLoading(false)
         // })}
         window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
-        setInput("")
+        
     
     };
   
@@ -210,29 +211,33 @@ function Chat({summary, goToChat, setGoToChat}) {
   
 
   const handleTarget = () => {
-    setJimi((existingJimi) => [...existingJimi, {text: "지원대상 원문보기", sender: 'user'}])
+    setJimi((existingJimi) => [...existingJimi, {text: "지원대상 전체보기", sender: 'user'}])
     setJimi((existingJimi) => [...existingJimi, {text: summary.target, sender: 'bot'}])
     
   }
 
   const handleContent = () => {
-    setJimi((existingJimi) => [...existingJimi, {text: "지원내용 원문보기", sender: 'user'}])
+    setJimi((existingJimi) => [...existingJimi, {text: "지원내용 전체보기", sender: 'user'}])
     setJimi((existingJimi) => [...existingJimi, {text: summary.content, sender: 'bot'}])
     
   }
 
   const handleDocs = () => {
-    setJimi((existingJimi) => [...existingJimi, {text: "제출서류 보기", sender: 'user'}])
+    setJimi((existingJimi) => [...existingJimi, {text: "제출서류 전체보기", sender: 'user'}])
     setJimi((existingJimi) => [...existingJimi, {text: summary.docs, sender: 'bot'}])
   }
 
+  const handleSelection = () => {
+    setJimi((existingJimi) => [...existingJimi, {text: "선정기준 전체보기", sender: 'user'}])
+    setJimi((existingJimi) => [...existingJimi, {text: summary.selection, sender: 'bot'}])
+  }
   const handleScroll = (event) => {
     event.preventDefault();
     event.stopPropagation();
 }
 
   return (
-    <div onScroll={handleScroll}>
+    
     <Box
       sx = {{
         height: "100vh",
@@ -246,8 +251,8 @@ function Chat({summary, goToChat, setGoToChat}) {
     <Card
       sx={{
 
-        width: '60%',
-        height: "85%",
+        width: ['100%', '100%', '820px'],
+        height: "760px",
         display: "flex",
         flexDirection: "column",
         bgcolor: "grey.200",
@@ -258,15 +263,15 @@ function Chat({summary, goToChat, setGoToChat}) {
 
       <img src={logo} alt="logo" width="30%" height="40px" />
     </Box> */}
-      <Box sx={{ flexGrow: 1, overflow: "auto", p: 2 }} ref={messageContainerRef}>
+      <Box sx={{ flexGrow: 1, overflow: "auto", p: 2, minWidth: 120 }} ref={messageContainerRef}>
         {jimi.map((message, index) => (
           <Message key={index} message={message} handleQuestion={handleQuestion} handleTarget={handleTarget} handleContent={handleContent}
-          handleDocs={handleDocs}/>
+          handleDocs={handleDocs} handleSelection={handleSelection}/>
         ))}
       </Box>
-      <Box sx={{ p: 2, backgroundColor: "background.default" }}>
-        <Grid container spacing={2}>
-          <Grid item xs={11}>
+      <Box sx={{display:'flex', p: 2, backgroundColor: "background.default", minWidth: 120 }}>
+        {/* <Grid container spacing={2}> */}
+          <Box sx={{width: "90%", mr: 2}}>
             <TextField
               size="small"
               fullWidth
@@ -276,8 +281,8 @@ function Chat({summary, goToChat, setGoToChat}) {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
             />
-          </Grid>
-          <Grid item xs={1}>
+          </Box>
+          <Box >
             <ThemeProvider theme={theme}>
 
               {isLoading?<Button
@@ -296,13 +301,13 @@ function Chat({summary, goToChat, setGoToChat}) {
       
               
             </ThemeProvider>
-          </Grid>
-        </Grid>
+          </Box>
+        {/* </Grid> */}
       </Box>
     </Card>
     
     </Box>
-    </div>
+    
   );
 };
 
