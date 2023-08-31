@@ -187,31 +187,6 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
        "법인": "owner"
     }
 
-    const handletest1 = () => {
-        // fetch(`${apiEndPoint}/test`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify({
-        //         name: "user1",
-        //         age: 12
-        //     })
-        // })
-        // .then(response => response.json())
-        sessionStorage.setItem("username", "user1")
-    }
-
-    const handletest2 = async() => {
-        // fetch(`${apiEndPoint}/test`)
-        // .then(response => response.json())
-        console.log(sessionStorage.getItem("username"))
-        console.log(window.navigator.userAgent)
-        const ipData = await fetch('https://geolocation-db.com/json/');
-        const locationIp = await ipData.json();
-        console.log(locationIp.IPv4);
-    }
-
   return (
     <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}} >
         <Card sx={{width: '820px', height: '760px', bgcolor: "grey.200", overflow: 'auto'}}>

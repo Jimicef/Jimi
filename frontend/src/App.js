@@ -42,7 +42,7 @@ function App() {
     scrollBar: true,
     navigation: false,
   };
-  const selectedOptions = supportList.length > 0 ? (summary ===""?optionsSupport:options): optionsIntro
+  const selectedOptions = supportList ? (summary ===""?optionsSupport:options): optionsIntro
   //const selectedOptions = supportList.length > 0 ? optionsSupport: optionsIntro
   //console.log(selectedOptions)
 
@@ -93,7 +93,7 @@ function App() {
         <Box sx={{height: "100vh"}}>
           <Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer} setIsLastPage={setIsLastPage}/>
         </Box>
-        {supportList.length > 0 && <Box sx={{height: "100vh"}}>
+        {supportList && <Box sx={{height: "100vh"}}>
           <SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer} setIsLastPage={setIsLastPage} isLastPage={isLastPage} setGoToChat={setGoToChat}/>
         </Box>}
         {summary !=="" && <Box sx={{height: "100vh"}}>
