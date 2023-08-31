@@ -5,7 +5,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import FaceIcon from '@mui/icons-material/Face';
 import { theme } from "./theme";
 
-export const Message = ({ message, handleQuestion, handleTarget, handleContent, handleDocs, handleSelection }) => {
+export const Message = ({ message, handleQuestion, handleTarget, handleContent, handleDocs, handleSelection, handleWay }) => {
     const isBot = message.sender === "bot";
 
     const handleClickUrl = (url) => {
@@ -59,29 +59,33 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
                   {message.support.format && <Typography variant="body2">⚙️지원형태: {message.support.format}<br/><br/></Typography>}
                   
                   {message.support.selection && <Typography variant="body2">✔선정기준: {message.support.selection.length>150?message.support.selection.slice(0, 150)+"⋯":message.support.selection}<br/></Typography>}
-                  {message.support.selection.length>150 &&<Typography variant="body2" onClick={handleSelection}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "flex", alignItems:'center', color:"#682699"}}><SendIcon sx={{fontSize: "14px", color: "#682699"}}/>선정기준 전체보기</Typography>}
+                  {message.support.selection.length>150 &&<><Typography variant="body2" onClick={handleSelection}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#682699"}}><SendIcon sx={{fontSize: "14px", color: "#682699"}}/>선정기준 전체보기</Typography><br/></>}
                   <br/>
                   {message.support.target && <Typography variant="body2">👤지원대상: {message.support.target.length>150?message.support.target.slice(0, 150)+"⋯":message.support.target}<br/></Typography>}
-                  {message.support.target.length>150 && <Typography variant="body2" onClick={handleTarget}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "flex", alignItems:'center', color:"#682699"}}><SendIcon sx={{fontSize: "14px", color: "#682699"}}/>지원대상 전체보기</Typography>}
+                  {message.support.target.length>150 && <><Typography variant="body2" onClick={handleTarget}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#682699"}}><SendIcon sx={{fontSize: "14px", color: "#682699"}}/>지원대상 전체보기</Typography><br/></>}
                   <br/>
                   {message.support.content && <Typography variant="body2">✍🏻지원내용: {message.support.content.length>150?message.support.content.slice(0, 150)+"⋯":message.support.content}</Typography>}
-                  {message.support.content.length>150 && <Typography variant="body2" onClick={handleContent}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "flex", alignItems:'center', color:"#682699"}}><SendIcon sx={{fontSize: "14px", color: "#682699"}}/>지원내용 전체보기</Typography>}
+                  {message.support.content.length>150 && <><Typography variant="body2" onClick={handleContent}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#682699"}}><SendIcon sx={{fontSize: "14px", color: "#682699"}}/>지원내용 전체보기</Typography><br/></>}
                   <br/>
                   {/* {message.support[0].way && <Typography variant="body2" sx={{fontWeight: 'bold'}}>📑신청방법<br/></Typography>} */}
                   {/* {message.support[0].dueDate && <Typography variant="body2">🗓️신청기간: {message.support[0].dueDate}<br/></Typography>} */}
                   {message.support.rcvInstitution && <Typography variant="body2">🏠접수센터: {message.support.rcvInstitution}<br/><br/></Typography>}
-                  {message.support.way && <Typography variant="body2">✳️신청방법: {message.support.way}<br/><br/></Typography>}
+                  {message.support.way && <Typography variant="body2">✳️신청방법: {message.support.way.length>150?message.support.way.slice(0, 150)+"⋯":message.support.way}</Typography>}
+                  {message.support.way.length>150 && <><Typography variant="body2" onClick={handleWay}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#682699"}}><SendIcon sx={{fontSize: "14px", color: "#682699"}}/>신청방법 전체보기</Typography><br/></>}
+                  <br/>
                   {message.support.url && <Typography variant="body2" sx={{ display: 'flex', whiteSpace: 'nowrap'}} ><Box>📎</Box> <Box sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}}} onClick={()=>handleClickUrl(message.support.url)}>{message.support.url}</Box><br/><br/></Typography>}
                   {message.support.docs && <Typography variant="body2">📑제출서류: {message.support.docs.length>150?message.support.docs.slice(0, 150)+"⋯":message.support.docs}</Typography>} 
-                  {message.support.docs.length>150 &&<Typography variant="body2" onClick={handleDocs}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "flex", alignItems:'center', color:"#682699"}}><SendIcon sx={{fontSize: "14px", color: "#682699"}}/>제출서류 전체보기</Typography>}
+                  {message.support.docs.length>150 &&<><Typography variant="body2" onClick={handleDocs}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#682699"}}><SendIcon sx={{fontSize: "14px", color: "#682699"}}/>제출서류 전체보기</Typography><br/></>}
                   <br/>
 
-                    <Typography variant="body2" onClick={()=>handleQuestion("지원대상이 맞는지 확인하기")} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "flex", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>
+                    <Typography variant="body2" onClick={()=>handleQuestion("지원대상이 맞는지 확인하기")} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>
                     지원대상이 맞는지 확인하기
                     </Typography>
-                  <Typography variant="body2" onClick={()=>handleQuestion("지원대상 쉽게보기")} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "flex", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>
+                    <br/>
+                  <Typography variant="body2" onClick={()=>handleQuestion("지원대상 쉽게보기")} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>
                     지원대상 쉽게보기                   </Typography>
-                  <Typography variant="body2" onClick={()=>handleQuestion("지원내용 쉽게보기")}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "flex", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>지원내용 쉽게보기</Typography>
+                    <br/>
+                  <Typography variant="body2" onClick={()=>handleQuestion("지원내용 쉽게보기")}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>지원내용 쉽게보기</Typography>
                     
                   
                   {/* {message.support[0].docs && <Typography variant="body2">📎제출서류:</Typography>} 
