@@ -17,6 +17,9 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 18
+    - name: Generate environment variables file for production
+      run: |
+        echo "REACT_APP_AWS_SERVER=${{ secrets.REACT_APP_AWS_SERVER }}" >> $GITHUB_ENV
         
     - name: npm install, build
       run: |
