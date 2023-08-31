@@ -61,19 +61,18 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     else : 
         return response.status_code
     
-    target_p = soup.find('p', class_='guide-desc')
-    if target_p is None:
+    
+    option_tag = soup.select_one('#orgSel option')
+    text = option_tag.text  # '전체 (9,880)'
+
+    # 괄호 안의 숫자를 추출
+    result_count = int(''.join(filter(str.isdigit, text)))
+    if result_count == 0:
         return {
         "answer" : None,
         "support" : None,
         "lastpage" : True
         }
-    # <p> 태그 내부의 텍스트 추출
-    text_inside_p = target_p.get_text(strip=True)
-
-    # '212개'의 정보 추출
-    result_count = re.findall(r'\d+(?:,\d+)*', text_inside_p)[0]
-    result_count = int(result_count.replace(",", "")) # 1,234 -> 1234 -> int
     
     page_count = (result_count - 1) // 12
 
