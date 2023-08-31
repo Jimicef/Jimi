@@ -20,8 +20,8 @@ function Chat({summary, goToChat, setGoToChat}) {
     apiEndPoint = process.env.REACT_APP_SWAGGER_API
   }
   else {
-    //apiEndPoint = process.env.REACT_APP_AWS_SERVER
-    apiEndPoint = 'http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com'
+    apiEndPoint = `${process.env.REACT_APP_AWS_SERVER}`
+    //apiEndPoint = 'http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com'
   }
 
   const scrollToBottom = () => {
@@ -172,7 +172,7 @@ function Chat({summary, goToChat, setGoToChat}) {
   }, [summary])
 
   const handleQuestion = async(quest) => {
-    setJimi((existingJimi) => [...existingJimi, {text: input, sender: 'user'}])
+    setJimi((existingJimi) => [...existingJimi, {text: quest, sender: 'user'}])
         //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
         setIsLoading(true)
         setInput("")
