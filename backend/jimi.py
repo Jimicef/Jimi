@@ -152,7 +152,7 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     }
 
 @app.post("/chat")
-async def post_chat(data: dict):
+def post_chat(data: dict):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -191,7 +191,7 @@ async def post_chat(data: dict):
     return StreamingResponse(
         content=generate_chunks(),
         media_type="text/plain"
-    ),"hello"
+    ),link_data
 
     # return {"answer": response["choices"][0]["message"]['content']}
 
