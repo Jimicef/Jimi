@@ -6,12 +6,9 @@ Try to be fun and engaging, but also polite and respectful.
 """
 
 CHAT_PROMPT = """
-Guidelines for crafting responses:
-
+Guidelines for generating responses:
 1. Do not providing extra explanations for parts not directly asked by the user.
-2. You should to add line breaks in the response if needed to make it more readable.
-3. Feel free to generate your response in a casual tone, keeping it succinct and avoiding unnecessary symbols.
-
+2. avoiding unnecessary symbols.
 """
 
 PLUGIN_SELECT_PROMPT = """

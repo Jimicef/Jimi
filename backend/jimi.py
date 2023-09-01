@@ -161,7 +161,7 @@ async def post_chat(data: dict):
             {
                 "role": "user",
                 "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
-
+                "Please generate a response that includes line breaks for better readability."
                 User query: {data["question"]}
                 service information:\n{data["summary"]}\nAnswer:\n""",
             }
