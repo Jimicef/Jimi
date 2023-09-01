@@ -200,12 +200,12 @@ function Chat({summary, goToChat, setGoToChat}) {
                 })
             }
 
-            setJimi((existingJimi) => {
-                const lastItem = existingJimi[existingJimi.length - 1];
-                const previousData = lastItem.text
-                const updatedJimi = existingJimi.slice(0, -1);
-                return [...updatedJimi, { text: previousData, link: arrayData, sender: 'bot' }];
-            })
+            // setJimi((existingJimi) => {
+            //     const lastItem = existingJimi[existingJimi.length - 1];
+            //     const previousData = lastItem.text
+            //     const updatedJimi = existingJimi.slice(0, -1);
+            //     return [...updatedJimi, { text: previousData, link: arrayData, sender: 'bot' }];
+            // })
         } catch(error) {
             console.log(error)
         } finally {
