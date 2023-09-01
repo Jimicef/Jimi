@@ -6,11 +6,15 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import openai
-from prompts import MAIN_PROMPT, CHAT_PROMPT
+from prompts import MAIN_PROMPT, CHAT_PROMPT, FUNCTIONS
 import os
 import json
+
 app = FastAPI()
 openai.api_key = os.environ["OPENAI_API_KEY"]
+Google_API_KEY = os.environ["Google_API_KEY"]
+Google_SEARCH_ENGINE_ID = os.environ["Google_SEARCH_ENGINE_ID"]
+
 origins = [
     "http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com",
     "http://jimi-bucket.s3-website.ap-northeast-2.amazonaws.com"
@@ -232,41 +236,92 @@ async def get_chat(serviceId):
             ret[askey] = value
     return ret
 
-
 @app.post("/chat")
 async def post_chat(data: dict):
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+    
+    def generate_chunks():
+        for chunk in response:
+            try :
+                yield chunk["choices"][0]["delta"].content
+            except :
+                yield f"ˇ{result[0]['link']}˘{result[1]['link']}˘{result[2]['link']}"
+    def generate_chunks_default():
+        for chunk in response:
+            yield chunk
+
+    first_response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
         messages=[
-            {"role": "system", "content": MAIN_PROMPT},
-            {"role": "system", "content": CHAT_PROMPT},
-            {
-                "role": "user",
-                "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
-                "Please generate a response that includes line breaks for better readability."
-                User query: {data["question"]}
-                service information:\n{data["summary"]}\nAnswer:\n""",
-            }
+        {"role": "system", "content": f"You can use this service information {data['summary']}"},
+        {"role": "user","content": f"user query : {data['question']}"}
         ],
         temperature=0,
-        max_tokens = 1000
+        functions=FUNCTIONS
     )
-    
-    link_data = [
-        {'link': 'https://www.mma.go.kr/contents.do?mc=usr0000146','title': '병적증명서 등 발급안내 - 병역이행안내 - 병무청'},
-        {'link': 'http://m.blog.naver.com/allminwon3/221622331226','title': '제대 후 복학신청! 병적증명서가 뭐야? : 네이버 블로그'},
-        {'link': 'https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A01002&CappBizCD=13000000016','title': '병적증명서 발급 | 민원안내 및 신청 | 정부24'}
-        ]
+    if first_response['choices'][0]['finish_reason'] == 'function_call':
         
+        full_message = response["choices"][0]
+        if full_message["message"]["function_call"]["name"] == "answer_with_service_info":
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": MAIN_PROMPT},
+                    {"role": "system", "content": CHAT_PROMPT},
+                    {
+                        "role": "user",
+                        "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
+                        "Please generate a response that includes line breaks for better readability."
+                        User query: {data['question']}
+                        service information:\n{data['summary']}\nAnswer:\n""",
+                    }
+                ],
+                temperature=0,
+                max_tokens = 1000,
+                stream=True
+            )
+        elif full_message["message"]["function_call"]["name"] == "get_search_info":
+            parsed_output = json.loads(full_message["message"]["function_call"]["arguments"])
+            search_query = parsed_output["keyword"]
+            url = f"https://www.googleapis.com/customsearch/v1?key={Google_API_KEY}&cx={Google_SEARCH_ENGINE_ID}&q={search_query}"
+            res = requests.get(url).json()
 
-    # json_data = await generate_json_data()
-    def generate_chunks():
-        for chunk in response['choices'][0]['message']['content']:
-            try :
-                yield chunk
-            except :
-                yield f"ˇ{link_data[0]['link']}˘{link_data[1]['link']}˘{link_data[2]['link']}"
-    
+            search_result = res.get("items")
+
+            result = []
+            for i in range(3):
+                search_info = {}
+
+                search_info['link'] = search_result[i]['link'] 
+                search_info['title'] = search_result[i]['title'] 
+                search_info['snippet'] = search_result[i]['snippet']
+                result.append(search_info)
+
+            response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": MAIN_PROMPT},
+                        {
+                            "role": "user",
+                            "content": f"""Please generate your response by referring specifically to google search result's key-value pairs that directly relate to the user's query.
+                            Feel free to generate your response in a casual tone, keeping it succinct and avoiding unnecessary symbols.
+
+                            User query: {data['question']}
+                            Google search result:\n{result}\nAnswer:\n""",
+                        }
+                    ],
+                    temperature=0,
+                    max_tokens=1000,
+                    stream=True
+                )
+        else:
+            raise Exception("Function does not exist and cannot be called")
+
+    else:
+        response = response['choices'][0]['message']['content']
+        return StreamingResponse(
+            content=generate_chunks_default(),
+            media_type="text/plain"
+        )    
     return StreamingResponse(
         content=generate_chunks(),
         media_type="text/plain"
