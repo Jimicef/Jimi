@@ -238,7 +238,7 @@ async def get_chat(serviceId):
 
 @app.post("/chat")
 async def post_chat(data: dict):
-    result = []
+    result = [{'link':None},{'link':None},{'link':None}]
     first_response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         messages=[
@@ -284,7 +284,8 @@ async def post_chat(data: dict):
                 search_info['link'] = search_result[i]['link'] 
                 search_info['title'] = search_result[i]['title'] 
                 search_info['snippet'] = search_result[i]['snippet']
-                result.append(search_info)
+                # result.append(search_info)
+                result[i] = search_info
 
             response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
