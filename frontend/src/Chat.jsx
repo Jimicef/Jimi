@@ -296,7 +296,7 @@ function Chat({summary, goToChat, setGoToChat}) {
             <TextField
               size="small"
               fullWidth
-              placeholder="메시지를 입력해주세요"
+              placeholder="해당 지원금 제도에 대해 무엇이든 질문해주세요"
               variant="outlined"
               value={input}
               onChange={handleInputChange}
