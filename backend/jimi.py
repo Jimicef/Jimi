@@ -250,7 +250,7 @@ async def post_chat(data: dict):
     )
     if first_response['choices'][0]['finish_reason'] == 'function_call':
         
-        full_message = response["choices"][0]
+        full_message = first_response["choices"][0]
         if full_message["message"]["function_call"]["name"] == "answer_with_service_info":
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -307,7 +307,7 @@ async def post_chat(data: dict):
             raise Exception("Function does not exist and cannot be called")
 
     else:
-        response = response['choices'][0]['message']['content']
+        response = first_response['choices'][0]['message']['content']
         return StreamingResponse(
             content=generate_chunks_default(),
             media_type="text/plain"
