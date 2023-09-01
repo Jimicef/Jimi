@@ -47,9 +47,9 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
               <><Typography variant="body1">{message.text}</Typography></>
             }
             <Box>
-              {(message.link && message.link.length > 0) && <br/> }
+              {(message.link && message.link.length > 0 && message.link[0] !== 'None') && <br/> }
               {(message.link && message.link.length > 0) && message.link.map((link)=>(
-                link !== 'None' &&<Box sx={{bgColor: "#DAD2E9"}}><Typography variant="body2" onClick={()=>{window.open(link)}} sx={{display: "inline-block", mr: 2, px:1}}>{link}</Typography><br/></Box>
+                link !== 'None' &&<Box sx={{}}><Typography variant="body2" onClick={()=>{window.open(link)}} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}}}>📎{link}</Typography></Box>
               ))}
             </Box>
             {/* {console.log(Boolean(message.support)== false)} */}
