@@ -238,7 +238,7 @@ async def get_chat(serviceId):
 
 @app.post("/chat")
 async def post_chat(data: dict):
-    
+    result = []
     first_response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         messages=[
@@ -277,7 +277,7 @@ async def post_chat(data: dict):
 
             search_result = res.get("items")
 
-            result = []
+            
             for i in range(3):
                 search_info = {}
 
