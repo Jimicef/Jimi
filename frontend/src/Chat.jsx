@@ -187,9 +187,11 @@ function Chat({summary, goToChat, setGoToChat}) {
                         // 마지막 요소가 'bot'인 경우, 마지막 요소를 제외한 배열에 새 요소 추가
                         const previousData = lastItem.text
                         const updatedJimi = existingJimi.slice(0, -1);
-                        if (decodedChunk === 'ˇ') {
+                        if (decodedChunk[0] ==='ˇ') {
                             console.log("it is end of answer")
                             setIsAnswerEnd(true)
+                            const decodedChunkArray = decodedChunk.slice(1).split("˘")
+                            return [...updatedJimi, { text: previousData, link: decodedChunkArray, sender: 'bot' }]
                         }
                         else {
                             return [...updatedJimi, { text: previousData+decodedChunk, link:[], sender: 'bot' }];
