@@ -189,11 +189,11 @@ async def post_chat(data: dict):
                 yield chunk["choices"][0]["delta"].content
             except :
                 yield " "
-
+    json_data = await generate_json_data()
     return StreamingResponse(
         content=generate_chunks(),
         media_type="text/plain"
-    ),JSONResponse(content=await generate_json_data())
+    ),JSONResponse(content=json_data)
 
     # return {"answer": response["choices"][0]["message"]['content']}
 
