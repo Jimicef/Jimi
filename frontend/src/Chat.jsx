@@ -160,7 +160,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                 }
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
-                //console.log(decodedChunk)
+                console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 // console.log(partData)
                 setJimi((existingJimi) => {
@@ -172,12 +172,13 @@ function Chat({summary, goToChat, setGoToChat}) {
                         if (decodedChunk === '˘') {
                             console.log('Link 구분')
                             setLinks((prev)=> [...prev, partLink])
-                            setPartLink([])
+                            
                             const previousData = lastItem.text
                             var previousLink = lastItem.link
                             const updatedJimi = existingJimi.slice(0, -1);
                             previousLink[previousLink.length] = partLink
-                            return [...updatedJimi, { text: previousData, link: previousLink,sender: 'bot' }];
+                            setPartLink([])
+                            return [...updatedJimi, { text: previousData, link: previousLink, sender: 'bot' }];
                         }
                         setPartLink((previousItem) => (previousItem+decodedChunk))
                         //setIsAnswerEnd(false)
