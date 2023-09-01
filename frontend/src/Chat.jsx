@@ -135,6 +135,19 @@ function Chat({summary, goToChat, setGoToChat}) {
         setIsLoading(true)
         setInput("")
         try {
+            const modifiedJimi = jimi.filter(item => !item.support).map(item => {
+                // 'text'를 'content'로 변경
+                const content = item.text;
+                
+                // 'sender'를 'role'로 변경, 'bot'은 'assistant'로 변경
+                const role = item.sender === 'bot' ? 'assistant' : item.sender;
+            
+                // 수정된 데이터를 포함하는 객체를 반환
+                return { content, role}; // 여기서 link도 함께 복사하거나 유지합니다.
+            });
+
+            console.log(modifiedJimi)
+            
             const response = await fetch(`${apiEndPoint}/chat`,
             {
                 method: "POST",
@@ -144,7 +157,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                     body: JSON.stringify({
                         username: sessionStorage.getItem("username"),
                         question: quest,
-                        history: jimi.length>11?jimi.filter(item => !item.support).slice(-11):jimi.filter(item => !item.support),
+                        history: modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi,
                         summary: summary
                     })
             })
