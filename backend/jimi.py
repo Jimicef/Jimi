@@ -151,47 +151,46 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
         "lastpage" : last_page
     }
 
-@app.post("/chat")
-async def post_chat(data: dict):
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": MAIN_PROMPT},
-            {"role": "system", "content": CHAT_PROMPT},
-            {
-                "role": "user",
-                "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
-                "Please generate a response that includes line breaks for better readability."
-                User query: {data["question"]}
-                service information:\n{data["summary"]}\nAnswer:\n""",
-            }
-        ],
-        temperature=0,
-        max_tokens = 1000,
-        stream=True
-    )
+# @app.post("/chat")
+# async def post_chat(data: dict):
+#     response = openai.ChatCompletion.create(
+#         model="gpt-3.5-turbo",
+#         messages=[
+#             {"role": "system", "content": MAIN_PROMPT},
+#             {"role": "system", "content": CHAT_PROMPT},
+#             {
+#                 "role": "user",
+#                 "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
+#                 "Please generate a response that includes line breaks for better readability."
+#                 User query: {data["question"]}
+#                 service information:\n{data["summary"]}\nAnswer:\n""",
+#             }
+#         ],
+#         temperature=0,
+#         max_tokens = 1000,
+#         stream=True
+#     )
     
-    link_data = [
-        {'link': 'https://www.mma.go.kr/contents.do?mc=usr0000146','title': '병적증명서 등 발급안내 - 병역이행안내 - 병무청'},
-        {'link': 'http://m.blog.naver.com/allminwon3/221622331226','title': '제대 후 복학신청! 병적증명서가 뭐야? : 네이버 블로그'},
-        {'link': 'https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A01002&CappBizCD=13000000016','title': '병적증명서 발급 | 민원안내 및 신청 | 정부24'}
-        ]
+#     link_data = [
+#         {'link': 'https://www.mma.go.kr/contents.do?mc=usr0000146','title': '병적증명서 등 발급안내 - 병역이행안내 - 병무청'},
+#         {'link': 'http://m.blog.naver.com/allminwon3/221622331226','title': '제대 후 복학신청! 병적증명서가 뭐야? : 네이버 블로그'},
+#         {'link': 'https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A01002&CappBizCD=13000000016','title': '병적증명서 발급 | 민원안내 및 신청 | 정부24'}
+#         ]
         
 
-    # json_data = await generate_json_data()
-    def generate_chunks():
-        for chunk in response:
-            try :
-                yield chunk["choices"][0]["delta"].content
-            except :
-                yield f"ˇ{link_data[0]['link']}˘{link_data[1]['link']}˘{link_data[2]['link']}"
+#     # json_data = await generate_json_data()
+#     def generate_chunks():
+#         for chunk in response:
+#             try :
+#                 yield chunk["choices"][0]["delta"].content
+#             except :
+#                 yield f"ˇ{link_data[0]['link']}˘{link_data[1]['link']}˘{link_data[2]['link']}"
     
-    return StreamingResponse(
-        content=generate_chunks(),
-        media_type="text/plain"
-    )
+#     return StreamingResponse(
+#         content=generate_chunks(),
+#         media_type="text/plain"
+#     )
 
-    # return {"answer": response["choices"][0]["message"]['content']}
 
 @app.get("/chat")
 async def get_chat(serviceId):
@@ -232,3 +231,43 @@ async def get_chat(serviceId):
         if key != askey :
             ret[askey] = value
     return ret
+
+
+@app.post("/chat")
+async def post_chat(data: dict):
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": MAIN_PROMPT},
+            {"role": "system", "content": CHAT_PROMPT},
+            {
+                "role": "user",
+                "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
+                "Please generate a response that includes line breaks for better readability."
+                User query: {data["question"]}
+                service information:\n{data["summary"]}\nAnswer:\n""",
+            }
+        ],
+        temperature=0,
+        max_tokens = 1000
+    )
+    
+    link_data = [
+        {'link': 'https://www.mma.go.kr/contents.do?mc=usr0000146','title': '병적증명서 등 발급안내 - 병역이행안내 - 병무청'},
+        {'link': 'http://m.blog.naver.com/allminwon3/221622331226','title': '제대 후 복학신청! 병적증명서가 뭐야? : 네이버 블로그'},
+        {'link': 'https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A01002&CappBizCD=13000000016','title': '병적증명서 발급 | 민원안내 및 신청 | 정부24'}
+        ]
+        
+
+    # json_data = await generate_json_data()
+    def generate_chunks():
+        for chunk in response['choices'][0]['message']['content']:
+            try :
+                yield chunk
+            except :
+                yield f"ˇ{link_data[0]['link']}˘{link_data[1]['link']}˘{link_data[2]['link']}"
+    
+    return StreamingResponse(
+        content=generate_chunks(),
+        media_type="text/plain"
+    )
