@@ -47,7 +47,7 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
               <><Typography variant="body1">{message.text}</Typography></>
             }
             <Box sx={{display: 'flex'}}>
-              {message.link.length > 0 && message.link.map((link)=>(
+              {(message.link && message.link.length > 0) && message.link.map((link)=>(
                 <Typography variant="body2" onClick={()=>{window.open(link)}} sx={{display: "inline-block", mr: 2, px:1, bgColor: "#DAD2E9"}}>{link}</Typography>
               ))}
             </Box>
