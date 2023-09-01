@@ -152,7 +152,7 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     }
 
 @app.post("/chat")
-def post_chat(data: dict):
+async def post_chat(data: dict):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
