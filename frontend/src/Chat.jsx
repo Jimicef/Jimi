@@ -11,7 +11,6 @@ import './App.css';
 function Chat({summary, goToChat, setGoToChat}) {
   const [input, setInput] = React.useState("");
   const [jimi, setJimi] = React.useState([]);
-  const [partData, setPartData] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false)
   const messageContainerRef = useRef();
 
@@ -95,62 +94,9 @@ function Chat({summary, goToChat, setGoToChat}) {
         } catch(error) {
             console.log(error)
         } finally {
-            setPartData("")
             setIsLoading(false)
         }
     }
-        // fetch(`${apiEndPoint}/chat`,
-        // {
-        //     method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json"
-        //         },
-        //         body: JSON.stringify({
-        //             username: sessionStorage.getItem("username"),
-        //             question: input,
-        //             history: jimi.length>11?jimi.filter(item => !item.support).slice(-11):jimi.filter(item => !item.support),
-        //             summary: summary
-        //         })
-        // })
-        // // .then(response => response.json())
-        // // .then(data => {
-        // //     setJimi((existingJimi) => [...existingJimi, {text: data.answer, sender: 'bot'}])
-        // // }
-        // // )
-        // .then(response => {
-        //     const reader = response.body.getReader()
-        //     const decoder = new TextDecoder()
-            
-        //     while (true) {
-        //         const { value, done } = await reader.read()
-        //         if (done) {
-        //             break
-        //         }
-        //         const decodedChunk = decoder.decode(value, { stream: true });
-        //         setPartData(prevValue => `${prevValue}${decodedChunk}`)
-        //         setJimi((existingJimi) => {
-        //             // 마지막 요소
-        //             const lastItem = existingJimi[existingJimi.length - 1];
-
-        //             // 마지막 요소의 sender에 따라 다르게 처리
-        //             if (lastItem.sender === 'bot') {
-        //                 // 마지막 요소가 'bot'인 경우, 마지막 요소를 제외한 배열에 새 요소 추가
-        //                 const updatedJimi = existingJimi.slice(0, -1);
-        //                 return [...updatedJimi, { text: partData, sender: 'bot' }];
-        //             } else if (lastItem.sender === 'user') {
-        //                 // 마지막 요소가 'user'인 경우, 그대로 추가
-        //                 return [...existingJimi, { text: data.answer, sender: 'bot' }];
-        //             }
-
-        //             return existingJimi; // 예외 상황 처리
-        //         })
-        //     }
-        // })
-        // .catch(error => console.log(error))
-        // .finally(()=>{
-        //     setPartData("")
-        //     setIsLoading(false)
-        // })}
         window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
         
     
@@ -220,10 +166,21 @@ function Chat({summary, goToChat, setGoToChat}) {
                     return existingJimi; // 예외 상황 처리
                 })
             }
+
+            const arrayResponse = await fetch(`${apiEndPoint}/chat`);
+            const arrayData = await arrayResponse.json();
+
+            console.log(arrayData)
+
+            setJimi((existingJimi) => {
+                const lastItem = existingJimi[existingJimi.length - 1];
+                const previousData = lastItem.text
+                const updatedJimi = existingJimi.slice(0, -1);
+                return [...updatedJimi, { text: previousData, link: arrayData, sender: 'bot' }];
+            })
         } catch(error) {
             console.log(error)
         } finally {
-            setPartData("")
             setIsLoading(false)
         }
         window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
