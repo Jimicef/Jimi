@@ -172,16 +172,13 @@ async def post_chat(data: dict):
         stream=True
     )
     
-    
-    async def generate_json_data():
-        link_data = [{'link': 'https://www.mma.go.kr/contents.do?mc=usr0000146',
-  'title': '병적증명서 등 발급안내 - 병역이행안내 - 병무청'},
- {'link': 'http://m.blog.naver.com/allminwon3/221622331226',
-  'title': '제대 후 복학신청! 병적증명서가 뭐야? : 네이버 블로그'},
- {'link': 'https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A01002&CappBizCD=13000000016',
-  'title': '병적증명서 발급 | 민원안내 및 신청 | 정부24'}]
-        json_data = json.dumps(link_data, ensure_ascii=False)
-        return json_data
+    link_data = {'link1': 'https://www.mma.go.kr/contents.do?mc=usr0000146',
+                 'title1': '병적증명서 등 발급안내 - 병역이행안내 - 병무청',
+                 'link2': 'http://m.blog.naver.com/allminwon3/221622331226',
+                 'title2': '제대 후 복학신청! 병적증명서가 뭐야? : 네이버 블로그',
+                 'link3': 'https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A01002&CappBizCD=13000000016',
+                 'title3': '병적증명서 발급 | 민원안내 및 신청 | 정부24'}
+        
 
     # json_data = await generate_json_data()
     def generate_chunks():
@@ -194,7 +191,7 @@ async def post_chat(data: dict):
     return StreamingResponse(
         content=generate_chunks(),
         media_type="text/plain"
-    ),JSONResponse(content=await generate_json_data())
+    ),link_data
 
     # return {"answer": response["choices"][0]["message"]['content']}
 
