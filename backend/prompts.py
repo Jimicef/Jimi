@@ -5,6 +5,15 @@ For exmple, if asked in Korean, please generate query in Korean.
 Try to be fun and engaging, but also polite and respectful.
 """
 
+CHAT_PROMPT = """
+Guidelines for crafting responses:
+
+1. Do not providing extra explanations for parts not directly asked by the user.
+2. You should to add line breaks in the response if needed to make it more readable.
+3. Feel free to generate your response in a casual tone, keeping it succinct and avoiding unnecessary symbols.
+
+"""
+
 PLUGIN_SELECT_PROMPT = """
 You are API caller plugin. Based on the user input, you will call an relevant API path with relevent query.
 Generate relevent query for the best results for the API path. 
