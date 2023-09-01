@@ -173,7 +173,7 @@ async def post_chat(data: dict):
     )
     
     
-    def generate_json_data():
+    async def generate_json_data():
         link_data = [{'link': 'https://www.mma.go.kr/contents.do?mc=usr0000146',
   'title': '병적증명서 등 발급안내 - 병역이행안내 - 병무청'},
  {'link': 'http://m.blog.naver.com/allminwon3/221622331226',
@@ -194,7 +194,7 @@ async def post_chat(data: dict):
     return StreamingResponse(
         content=generate_chunks(),
         media_type="text/plain"
-    ),JSONResponse(content=generate_json_data())
+    ),JSONResponse(content=await generate_json_data())
 
     # return {"answer": response["choices"][0]["message"]['content']}
 
