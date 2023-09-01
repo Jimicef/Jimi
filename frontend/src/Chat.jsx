@@ -12,6 +12,9 @@ function Chat({summary, goToChat, setGoToChat}) {
   const [input, setInput] = React.useState("");
   const [jimi, setJimi] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false)
+  const [isAnswerEnd, setIsAnswerEnd] = React.useState(false)
+  const [links, setLinks] = React.useState([])
+  const [partLink, setPartLink] = React.useState("")
   const messageContainerRef = useRef();
 
   var apiEndPoint;
@@ -165,11 +168,29 @@ function Chat({summary, goToChat, setGoToChat}) {
                     const lastItem = existingJimi[existingJimi.length - 1];
                     //console.log("last:", lastItem)
                     // 마지막 요소의 sender에 따라 다르게 처리
-                    if (lastItem.sender === 'bot') {
+                    if (isAnswerEnd) {
+                        if (decodedChunk === '˘') {
+                            setLinks((prev)=> [...prev, partLink])
+                            setPartLink([])
+                            const previousData = lastItem.text
+                            var previousLink = lastItem.link
+                            const updatedJimi = existingJimi.slice(0, -1);
+                            previousLink[previousLink.length] = partLink
+                            return [...updatedJimi, { text: previousData, link: previousLink,sender: 'bot' }];
+                        }
+                        setPartLink((previousItem) => (previousItem+decodedChunk))
+                        //setIsAnswerEnd(false)
+                    }
+                    else if (lastItem.sender === 'bot') {
                         // 마지막 요소가 'bot'인 경우, 마지막 요소를 제외한 배열에 새 요소 추가
                         const previousData = lastItem.text
                         const updatedJimi = existingJimi.slice(0, -1);
-                        return [...updatedJimi, { text: previousData+decodedChunk, sender: 'bot' }];
+                        if (decodedChunk === 'ˇ') {
+                            setIsAnswerEnd(true)
+                        }
+                        else {
+                            return [...updatedJimi, { text: previousData+decodedChunk, link:[], sender: 'bot' }];
+                        }
                     } else if (lastItem.sender === 'user') {
                         // 마지막 요소가 'user'인 경우, 그대로 추가
                         return [...existingJimi, { text: decodedChunk, sender: 'bot' }];
@@ -178,11 +199,6 @@ function Chat({summary, goToChat, setGoToChat}) {
                     return existingJimi; // 예외 상황 처리
                 })
             }
-
-            //const arrayResponse = await fetch(`${apiEndPoint}/chat`);
-            const arrayData = await response.json();
-
-            console.log(arrayData)
 
             setJimi((existingJimi) => {
                 const lastItem = existingJimi[existingJimi.length - 1];
@@ -194,6 +210,7 @@ function Chat({summary, goToChat, setGoToChat}) {
             console.log(error)
         } finally {
             setIsLoading(false)
+            setIsAnswerEnd(false)
         }
         window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
     };
