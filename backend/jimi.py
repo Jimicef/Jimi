@@ -171,14 +171,15 @@ async def post_chat(data: dict):
         max_tokens = 1000,
         stream=True
     )
-    link_data = [{'link': 'https://www.mma.go.kr/contents.do?mc=usr0000146',
+    
+    
+    def generate_json_data():
+        link_data = [{'link': 'https://www.mma.go.kr/contents.do?mc=usr0000146',
   'title': '병적증명서 등 발급안내 - 병역이행안내 - 병무청'},
  {'link': 'http://m.blog.naver.com/allminwon3/221622331226',
   'title': '제대 후 복학신청! 병적증명서가 뭐야? : 네이버 블로그'},
  {'link': 'https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A01002&CappBizCD=13000000016',
   'title': '병적증명서 발급 | 민원안내 및 신청 | 정부24'}]
-    
-    def generate_json_data():
         json_data = json.dumps(link_data, ensure_ascii=False)
         return json_data
 
@@ -189,11 +190,11 @@ async def post_chat(data: dict):
                 yield chunk["choices"][0]["delta"].content
             except :
                 yield " "
-    json_data = await generate_json_data()
+    
     return StreamingResponse(
         content=generate_chunks(),
         media_type="text/plain"
-    ),JSONResponse(content=json_data)
+    ),JSONResponse(content=generate_json_data())
 
     # return {"answer": response["choices"][0]["message"]['content']}
 
