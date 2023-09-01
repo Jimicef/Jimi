@@ -73,7 +73,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                 }
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
-                //console.log(decodedChunk)
+                console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 // console.log(partData)
                 setJimi((existingJimi) => {
@@ -158,7 +158,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                 }
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
-                //console.log(decodedChunk)
+                console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 // console.log(partData)
                 setJimi((existingJimi) => {
