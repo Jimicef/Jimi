@@ -170,6 +170,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                     // 마지막 요소의 sender에 따라 다르게 처리
                     if (isAnswerEnd) {
                         if (decodedChunk === '˘') {
+                            console.log('Link 구분')
                             setLinks((prev)=> [...prev, partLink])
                             setPartLink([])
                             const previousData = lastItem.text
@@ -186,6 +187,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                         const previousData = lastItem.text
                         const updatedJimi = existingJimi.slice(0, -1);
                         if (decodedChunk === 'ˇ') {
+                            console.log("it is end of answer")
                             setIsAnswerEnd(true)
                         }
                         else {
