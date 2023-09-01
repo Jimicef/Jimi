@@ -91,6 +91,18 @@ function Chat({summary, goToChat, setGoToChat}) {
                     return existingJimi; // 예외 상황 처리
                 })
             }
+
+            //const arrayResponse = await fetch(`${apiEndPoint}/chat`);
+            const arrayData = await response.json();
+
+            console.log(arrayData)
+
+            setJimi((existingJimi) => {
+                const lastItem = existingJimi[existingJimi.length - 1];
+                const previousData = lastItem.text
+                const updatedJimi = existingJimi.slice(0, -1);
+                return [...updatedJimi, { text: previousData, link: arrayData, sender: 'bot' }];
+            })
         } catch(error) {
             console.log(error)
         } finally {
@@ -167,8 +179,8 @@ function Chat({summary, goToChat, setGoToChat}) {
                 })
             }
 
-            const arrayResponse = await fetch(`${apiEndPoint}/chat`);
-            const arrayData = await arrayResponse.json();
+            //const arrayResponse = await fetch(`${apiEndPoint}/chat`);
+            const arrayData = await response.json();
 
             console.log(arrayData)
 
