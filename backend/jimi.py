@@ -161,6 +161,7 @@ async def post_chat(data: dict):
                 "role": "user",
                 "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
                 Do not providing extra explanations for parts not directly asked by the user.
+                You should to add line breaks in the response if needed to make it more readable.
                 Feel free to generate your response in a casual tone, keeping it succinct and avoiding unnecessary symbols.
 
                 User query: {data["question"]}
