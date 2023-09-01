@@ -49,7 +49,7 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
             <Box>
               {(message.link && message.link.length > 0 && message.link[0] !== 'None') && <br/> }
               {(message.link && message.link.length > 0) && message.link.map((link)=>(
-                link !== 'None' &&<Box sx={{}}><Typography variant="body2" onClick={()=>{window.open(link)}} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}}}>📎{link}</Typography></Box>
+                link !== 'None' &&<Box sx={{}}><Typography variant="body2" onClick={()=>{window.open(link)}} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, wordBreak: 'break-word'}}>📎{link}</Typography></Box>
               ))}
             </Box>
             {/* {console.log(Boolean(message.support)== false)} */}
