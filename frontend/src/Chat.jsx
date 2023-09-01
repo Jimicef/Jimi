@@ -85,7 +85,15 @@ function Chat({summary, goToChat, setGoToChat}) {
                         // 마지막 요소가 'bot'인 경우, 마지막 요소를 제외한 배열에 새 요소 추가
                         const previousData = lastItem.text
                         const updatedJimi = existingJimi.slice(0, -1);
-                        return [...updatedJimi, { text: previousData+decodedChunk, sender: 'bot' }];
+                        if (decodedChunk[0] ==='ˇ') {
+                            console.log("it is end of answer")
+                            setIsAnswerEnd(true)
+                            const decodedChunkArray = decodedChunk.slice(1).split("˘")
+                            return [...updatedJimi, { text: previousData, link: decodedChunkArray, sender: 'bot' }]
+                        }
+                        else {
+                            return [...updatedJimi, { text: previousData+decodedChunk, link:[], sender: 'bot' }];
+                        }
                     } else if (lastItem.sender === 'user') {
                         // 마지막 요소가 'user'인 경우, 그대로 추가
                         return [...existingJimi, { text: decodedChunk, sender: 'bot' }];
@@ -95,17 +103,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                 })
             }
 
-            //const arrayResponse = await fetch(`${apiEndPoint}/chat`);
-            const arrayData = await response.json();
-
-            console.log(arrayData)
-
-            setJimi((existingJimi) => {
-                const lastItem = existingJimi[existingJimi.length - 1];
-                const previousData = lastItem.text
-                const updatedJimi = existingJimi.slice(0, -1);
-                return [...updatedJimi, { text: previousData, link: arrayData, sender: 'bot' }];
-            })
+            
         } catch(error) {
             console.log(error)
         } finally {
@@ -160,7 +158,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                 }
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
-                console.log(decodedChunk)
+                //console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 // console.log(partData)
                 setJimi((existingJimi) => {
@@ -168,22 +166,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                     const lastItem = existingJimi[existingJimi.length - 1];
                     //console.log("last:", lastItem)
                     // 마지막 요소의 sender에 따라 다르게 처리
-                    if (isAnswerEnd) {
-                        if (decodedChunk === '˘') {
-                            console.log('Link 구분')
-                            setLinks((prev)=> [...prev, partLink])
-                            
-                            const previousData = lastItem.text
-                            var previousLink = lastItem.link
-                            const updatedJimi = existingJimi.slice(0, -1);
-                            previousLink[previousLink.length] = partLink
-                            setPartLink([])
-                            return [...updatedJimi, { text: previousData, link: previousLink, sender: 'bot' }];
-                        }
-                        setPartLink((previousItem) => (previousItem+decodedChunk))
-                        //setIsAnswerEnd(false)
-                    }
-                    else if (lastItem.sender === 'bot') {
+                    if (lastItem.sender === 'bot') {
                         // 마지막 요소가 'bot'인 경우, 마지막 요소를 제외한 배열에 새 요소 추가
                         const previousData = lastItem.text
                         const updatedJimi = existingJimi.slice(0, -1);
