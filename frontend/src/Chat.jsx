@@ -92,8 +92,8 @@ function Chat({summary, goToChat, setGoToChat}) {
                 })
             }
 
-            const arrayResponse = await fetch(`${apiEndPoint}/chat`);
-            const arrayData = await arrayResponse.json();
+            //const arrayResponse = await fetch(`${apiEndPoint}/chat`);
+            const arrayData = await response.json();
 
             console.log(arrayData)
 
@@ -179,8 +179,8 @@ function Chat({summary, goToChat, setGoToChat}) {
                 })
             }
 
-            const arrayResponse = await fetch(`${apiEndPoint}/chat`);
-            const arrayData = await arrayResponse.json();
+            //const arrayResponse = await fetch(`${apiEndPoint}/chat`);
+            const arrayData = await response.json();
 
             console.log(arrayData)
 
