@@ -8,7 +8,7 @@ import re
 import openai
 from prompts import MAIN_PROMPT
 import os
-
+import json
 app = FastAPI()
 openai.api_key = os.environ["OPENAI_API_KEY"]
 origins = [
@@ -177,6 +177,7 @@ async def post_chat(data: dict):
   'title': '제대 후 복학신청! 병적증명서가 뭐야? : 네이버 블로그'},
  {'link': 'https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A01002&CappBizCD=13000000016',
   'title': '병적증명서 발급 | 민원안내 및 신청 | 정부24'}]
+    json_data = json.dumps(data, ensure_ascii=False)
     def generate_chunks():
         for chunk in response:
             try :
@@ -187,7 +188,7 @@ async def post_chat(data: dict):
     return StreamingResponse(
         content=generate_chunks(),
         media_type="text/plain"
-    ),JSONResponse(content=link_data)
+    ),JSONResponse(content=json_data)
 
     # return {"answer": response["choices"][0]["message"]['content']}
 
