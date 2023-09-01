@@ -186,12 +186,13 @@ def post_chat(data: dict):
             try :
                 yield chunk["choices"][0]["delta"].content
             except :
-                yield " "
+                # yield " "
+                yield link_data
     
     return StreamingResponse(
         content=generate_chunks(),
         media_type="text/plain"
-    ),link_data
+    )
 
     # return {"answer": response["choices"][0]["message"]['content']}
 
