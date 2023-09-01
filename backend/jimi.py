@@ -191,7 +191,7 @@ async def post_chat(data: dict):
     return StreamingResponse(
         content=generate_chunks(),
         media_type="text/plain"
-    ),link_data
+    )
 
     # return {"answer": response["choices"][0]["message"]['content']}
 
