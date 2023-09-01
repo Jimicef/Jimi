@@ -201,7 +201,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                             setIsAnswerEnd(true)
                             const idx = decodedChunk.indexOf('ˇ')
                             const decodedChunkArray = decodedChunk.slice(idx+1).split("˘")
-                            return [...updatedJimi, { text: previousData+decodedChunk.slice(0, idx+1), link: decodedChunkArray, sender: 'bot' }]
+                            return [...updatedJimi, { text: previousData+decodedChunk.slice(0, idx), link: decodedChunkArray, sender: 'bot' }]
                         }
                         else {
                             return [...updatedJimi, { text: previousData+decodedChunk, link:[], sender: 'bot' }];
