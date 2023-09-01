@@ -239,16 +239,6 @@ async def get_chat(serviceId):
 @app.post("/chat")
 async def post_chat(data: dict):
     
-    def generate_chunks():
-        for chunk in response:
-            try :
-                yield chunk["choices"][0]["delta"].content
-            except :
-                yield f"ˇ{result[0]['link']}˘{result[1]['link']}˘{result[2]['link']}"
-    def generate_chunks_default():
-        for chunk in response:
-            yield chunk
-
     first_response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         messages=[
@@ -321,7 +311,18 @@ async def post_chat(data: dict):
         return StreamingResponse(
             content=generate_chunks_default(),
             media_type="text/plain"
-        )    
+        )
+    
+    def generate_chunks():
+        for chunk in response:
+            try :
+                yield chunk["choices"][0]["delta"].content
+            except :
+                yield f"ˇ{result[0]['link']}˘{result[1]['link']}˘{result[2]['link']}"
+    def generate_chunks_default():
+        for chunk in response:
+            yield chunk
+    
     return StreamingResponse(
         content=generate_chunks(),
         media_type="text/plain"
