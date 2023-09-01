@@ -172,12 +172,11 @@ def post_chat(data: dict):
         stream=True
     )
     
-    link_data = {'link1': 'https://www.mma.go.kr/contents.do?mc=usr0000146',
-                 'title1': '병적증명서 등 발급안내 - 병역이행안내 - 병무청',
-                 'link2': 'http://m.blog.naver.com/allminwon3/221622331226',
-                 'title2': '제대 후 복학신청! 병적증명서가 뭐야? : 네이버 블로그',
-                 'link3': 'https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A01002&CappBizCD=13000000016',
-                 'title3': '병적증명서 발급 | 민원안내 및 신청 | 정부24'}
+    link_data = [
+        {'link': 'https://www.mma.go.kr/contents.do?mc=usr0000146','title': '병적증명서 등 발급안내 - 병역이행안내 - 병무청'},
+        {'link': 'http://m.blog.naver.com/allminwon3/221622331226','title': '제대 후 복학신청! 병적증명서가 뭐야? : 네이버 블로그'},
+        {'link': 'https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=A01002&CappBizCD=13000000016','title': '병적증명서 발급 | 민원안내 및 신청 | 정부24'}
+        ]
         
 
     # json_data = await generate_json_data()
@@ -186,8 +185,7 @@ def post_chat(data: dict):
             try :
                 yield chunk["choices"][0]["delta"].content
             except :
-                # yield " "
-                yield link_data
+                yield f"@@@@{link_data[0]['title']}<->{link_data[0]['link']}, {link_data[1]['title']}<->{link_data[1]['link']}, {link_data[2]['title']}<->{link_data[2]['link']}"
     
     return StreamingResponse(
         content=generate_chunks(),
