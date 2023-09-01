@@ -308,6 +308,10 @@ async def post_chat(data: dict):
 
     else:
         response = first_response['choices'][0]['message']['content']
+        def generate_chunks_default():
+            for chunk in response:
+                yield chunk
+                
         return StreamingResponse(
             content=generate_chunks_default(),
             media_type="text/plain"
@@ -319,9 +323,7 @@ async def post_chat(data: dict):
                 yield chunk["choices"][0]["delta"].content
             except :
                 yield f"ˇ{result[0]['link']}˘{result[1]['link']}˘{result[2]['link']}"
-    def generate_chunks_default():
-        for chunk in response:
-            yield chunk
+    
     
     return StreamingResponse(
         content=generate_chunks(),
