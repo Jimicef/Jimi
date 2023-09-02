@@ -239,10 +239,18 @@ async def get_chat(serviceId):
 @app.post("/chat")
 async def post_chat(data: dict):
     result = [{'link':None},{'link':None},{'link':None}]
+
+    template = f"""You are a chatbot having a conversation with a human.
+    {chat_history}
+    Human: {human_input}
+    Chatbot:
+    """
+
     messages = [
         {"role": "system", "content": f"You can use this service information {data['summary']}"},
         {"role": "user","content": f"user query : {data['question']}"}
     ]
+    
     messages.extend(data['history'])
     first_response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
@@ -257,16 +265,17 @@ async def post_chat(data: dict):
             messages=[
                     {"role": "system", "content": MAIN_PROMPT},
                     {"role": "system", "content": CHAT_PROMPT},
-                    {
-                        "role": "user",
-                        "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
-                        "Please generate a response that includes line breaks for better readability."
-                        User query: {data['question']}
-                        service information:\n{data['summary']}\nAnswer:\n""",
-                    }
             ]
             messages.extend(data['history'])
-
+            messages.append(
+                {
+                    "role": "user",
+                    "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
+                    You will follow the conversation and respond to the queries asked by the 'user's content. You will act as the assistant.
+                    User query: {data['question']}
+                    service information:\n{data['summary']}\nAnswer:\n""",
+                }
+            )
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
@@ -306,16 +315,20 @@ async def post_chat(data: dict):
             messages=[
                         {"role": "system", "content": MAIN_PROMPT},
                         {"role": "system", "content": CHAT_PROMPT},
-                        {
-                            "role": "user",
-                            "content": f"""Please generate your response by referring specifically to google search result's key-value pairs that directly relate to the user's query.
-                            Feel free to generate your response in a casual tone, keeping it succinct and avoiding unnecessary symbols.
-
-                            User query: {data['question']}
-                            Google search result:\n{result}\nAnswer:\n""",
-                        }
             ]
+
             messages.extend(data['history'])
+
+            messages.append(
+                {
+                        "role": "user",
+                        "content": f"""Please generate your response by referring specifically to google search result's key-value pairs that directly relate to the user's query.
+                        You will follow the conversation and respond to the queries asked by the 'user's content. You will act as the assistant
+                        
+                        User query: {data['question']}
+                        Google search result:\n{result}\nAnswer:\n""",
+                    }
+            )
             response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
                     messages=messages,
