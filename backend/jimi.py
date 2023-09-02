@@ -246,6 +246,7 @@ async def post_chat(data: dict):
     ]
     
     messages.extend(data['history'])
+    print(data['history'])
     first_response = openai.ChatCompletion.create(
         model='gpt-3.5-turbo',
         messages=messages,
