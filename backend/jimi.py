@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import openai
-from prompts import MAIN_PROMPT, CHAT_PROMPT, FUNCTIONS
+from prompts import MAIN_PROMPT, CHAT_PROMPT, FUNCTIONS, MODEL
 import os
 import json
 
@@ -248,7 +248,7 @@ async def post_chat(data: dict):
     messages.extend(data['history'])
     print(data['history'])
     first_response = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
+        model=MODEL,
         messages=messages,
         temperature=0,
         functions=FUNCTIONS
@@ -272,7 +272,7 @@ async def post_chat(data: dict):
                 }
             )
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+                model=MODEL,
                 messages=messages,
                 temperature=0,
                 max_tokens = 1000,
@@ -325,7 +325,7 @@ async def post_chat(data: dict):
                     }
             )
             response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
+                    model=MODEL,
                     messages=messages,
                     temperature=0,
                     max_tokens=1000,
