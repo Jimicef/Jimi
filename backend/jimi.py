@@ -305,6 +305,7 @@ async def post_chat(data: dict):
             #     result[i] = search_info
             messages=[
                         {"role": "system", "content": MAIN_PROMPT},
+                        {"role": "system", "content": CHAT_PROMPT},
                         {
                             "role": "user",
                             "content": f"""Please generate your response by referring specifically to google search result's key-value pairs that directly relate to the user's query.
