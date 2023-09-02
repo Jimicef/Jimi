@@ -46,7 +46,7 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
           }
           <Box> 
             {message.text && 
-              <><Typography variant="body1">{message.text}</Typography></>
+              <><Typography variant="body1" sx={{wordBreak: 'break-word'}}>{message.text}</Typography></>
             }
             <Box>
               {(message.link && message.link.length > 0 && message.link[0] !== 'None') && <br/> }
