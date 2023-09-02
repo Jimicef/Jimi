@@ -319,7 +319,7 @@ async def post_chat(data: dict):
                         "role": "user",
                         "content": f"""Please generate your response by referring specifically to google search result's key-value pairs that directly relate to the user's query.
                         You will follow the conversation and respond to the queries asked by the 'user's content. You will act as the assistant
-                        
+                        Do not generate links in the response. e.g. http://www.site.go.kr, https://www.site.com .. etc
                         User query: {data['question']}
                         Google search result:\n{result}\nAnswer:\n""",
                     }
