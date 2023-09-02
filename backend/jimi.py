@@ -287,13 +287,14 @@ async def post_chat(data: dict):
                 if cnt == 3:
                     break
                 if "snippet" in search_result[i].keys():
-                    cnt += 1
+                    
                     search_info = {}
 
                     search_info['link'] = search_result[i]['link'] 
                     search_info['title'] = search_result[i]['title'] 
                     search_info['snippet'] = search_result[i]['snippet']
-                    result[i] = search_info
+                    result[cnt] = search_info
+                    cnt += 1
             # for i in range(3):
             #     search_info = {}
 
