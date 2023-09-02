@@ -347,6 +347,7 @@ async def post_chat(data: dict):
     def generate_chunks():
         for chunk in response:
             try :
+                print(chunk["choices"][0]["delta"].content)
                 yield chunk["choices"][0]["delta"].content
             except :
                 yield f"ˇ{result[0]['link']}˘{result[1]['link']}˘{result[2]['link']}"
