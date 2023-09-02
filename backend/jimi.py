@@ -246,7 +246,7 @@ async def post_chat(data: dict):
     ]
     
     messages.extend(data['history'])
-    print(data['history'])
+    # print(data['history'])
     first_response = openai.ChatCompletion.create(
         model=MODEL,
         messages=messages,
@@ -348,7 +348,7 @@ async def post_chat(data: dict):
     def generate_chunks():
         for chunk in response:
             try :
-                print(chunk["choices"][0]["delta"].content)
+                # print(chunk["choices"][0]["delta"].content)
                 yield chunk["choices"][0]["delta"].content
             except :
                 yield f"ˇ{result[0]['link']}˘{result[1]['link']}˘{result[2]['link']}"
