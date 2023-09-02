@@ -88,14 +88,14 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
                   {message.support.docs &&<br/>}
                   {message.support.url && <Typography variant="body2" sx={{ display: 'flex', whiteSpace: 'nowrap'}} ><Box>📎</Box> <Box sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}}} onClick={()=>handleClickUrl(message.support.url)}>{message.support.url}</Box><br/><br/></Typography>}
 
-                    <Typography variant="body2" onClick={()=>handleQuestion("지원대상이 맞는지 확인하기")} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>
+                    {/* <Typography variant="body2" onClick={()=>handleQuestion("지원대상이 맞는지 확인하기")} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>
                     지원대상이 맞는지 확인하기
                     </Typography>
-                    <br/>
+                    <br/> */}
                   <Typography variant="body2" onClick={()=>handleQuestion("지원대상 쉽게보기")} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>
-                    지원대상 쉽게보기                   </Typography>
+                    지원대상을 알려줘                  </Typography>
                     <br/>
-                  <Typography variant="body2" onClick={()=>handleQuestion("지원내용 쉽게보기")}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>지원내용 쉽게보기</Typography>
+                  <Typography variant="body2" onClick={()=>handleQuestion("지원내용 쉽게보기")}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>지원내용을 알려줘</Typography>
                     
                   
                   {/* {message.support[0].docs && <Typography variant="body2">📎제출서류:</Typography>} 
