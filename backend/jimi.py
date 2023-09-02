@@ -240,12 +240,6 @@ async def get_chat(serviceId):
 async def post_chat(data: dict):
     result = [{'link':None},{'link':None},{'link':None}]
 
-    template = f"""You are a chatbot having a conversation with a human.
-    {chat_history}
-    Human: {human_input}
-    Chatbot:
-    """
-
     messages = [
         {"role": "system", "content": f"You can use this service information {data['summary']}"},
         {"role": "user","content": f"user query : {data['question']}"}
