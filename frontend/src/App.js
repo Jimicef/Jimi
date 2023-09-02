@@ -54,8 +54,9 @@ function App() {
 
   React.useEffect(()=> {
     if(supportList === null){
+      window.scrollTo({top: 0, behavior: 'smooth' })
       alert("검색 결과가 없습니다.")
-      supportList([])
+      setSupportList([])
     }
     else if (supportList.length > 0){
       window.scrollTo({top: window.innerHeight, behavior: 'smooth' })
