@@ -7,6 +7,8 @@ Try to be fun and engaging, but also polite and respectful.
 
 CHAT_PROMPT = """
 Guidelines for generating responses:
+
+0. you should always include "\n\n" in responses to make them more readable.
 1. Do not providing extra explanations for parts not directly asked by the user.
 2. avoiding unnecessary symbols.
 """
