@@ -13,11 +13,7 @@ Guidelines for generating responses:
 2. avoiding unnecessary symbols.
 """
 
-SEARCH_PROMPT = """
-Guidelines for generating responses:
 
-0. you must not any include urls(e.g. http://www.law.go.kr, https://www.law.go.kr )in  your response.
-"""
 
 PLUGIN_SELECT_PROMPT = """
 You are API caller plugin. Based on the user input, you will call an relevant API path with relevent query.
