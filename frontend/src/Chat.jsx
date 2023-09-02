@@ -109,7 +109,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                 }
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
-                //console.log(decodedChunk)
+                console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 // console.log(partData)
                 setJimi((existingJimi) => {
@@ -122,7 +122,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                         const previousData = lastItem.text
                         const updatedJimi = existingJimi.slice(0, -1);
                         if (decodedChunk.includes('ˇ')) {
-                            console.log("it is end of answer")
+                            //console.log("it is end of answer")
                             setIsAnswerEnd(true)
                             const idx = decodedChunk.indexOf('ˇ')
                             const decodedChunkArray = decodedChunk.slice(idx+1).split("˘")
