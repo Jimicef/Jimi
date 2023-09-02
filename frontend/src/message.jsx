@@ -62,7 +62,7 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
                   {message.support.institution && <Typography variant="body2" sx={{ display: "inline-block", borderRadius: 3, bgcolor: "#DAD2E9", px: 1, mb: 1}}>{message.support.institution}</Typography>}
                   {message.support.title && <Typography variant="body1" sx={{fontWeight: 'bold'}}>{message.support.title}</Typography>}
                   
-                  {message.support.description ? <Typography variant="body1">{message.support.description}<br/><br/></Typography>:<><br/><br/></>}
+                  {message.support.description ? <Typography variant="body1">{message.support.description}<br/><br/></Typography>:<br/>}
                   {viewMore === false && <><Typography variant="body2" onClick={()=> {setViewMore(true)}} sx={{display: 'inline-block', color: 'grey.600', borderBottom: '1px solid grey.500', "&:hover": {color:"grey.500", cursor: 'pointer'}}}>▼ 더보기</Typography><br/><br/></>}
                   
                   {viewMore &&message.support.dueDate && <><Typography variant="body2" sx={{display: 'inline-block'}}><Box sx={{fontWeight: 'bold', mr: 0.5}}>🗓️신청기간 </Box>{message.support.dueDate}</Typography><br/><br/></>}
