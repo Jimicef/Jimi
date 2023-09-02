@@ -159,7 +159,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                 return { content, role}; // 여기서 link도 함께 복사하거나 유지합니다.
             });
 
-            console.log(modifiedJimi)
+            //console.log(modifiedJimi)
             
             const response = await fetch(`${apiEndPoint}/chat`,
             {
@@ -184,7 +184,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                 }
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
-                console.log(decodedChunk)
+                //console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 // console.log(partData)
                 setJimi((existingJimi) => {
