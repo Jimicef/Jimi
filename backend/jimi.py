@@ -282,15 +282,26 @@ async def post_chat(data: dict):
 
             search_result = res.get("items")
 
-            
-            for i in range(3):
-                search_info = {}
+            cnt = 0
+            for i in range(len(search_result)):
+                if cnt == 3:
+                    break
+                if "snippet" in search_result[i].keys():
+                    cnt += 1
+                    search_info = {}
 
-                search_info['link'] = search_result[i]['link'] 
-                search_info['title'] = search_result[i]['title'] 
-                search_info['snippet'] = search_result[i]['snippet']
-                # result.append(search_info)
-                result[i] = search_info
+                    search_info['link'] = search_result[i]['link'] 
+                    search_info['title'] = search_result[i]['title'] 
+                    search_info['snippet'] = search_result[i]['snippet']
+                    result[i] = search_info
+            # for i in range(3):
+            #     search_info = {}
+
+            #     search_info['link'] = search_result[i]['link'] 
+            #     search_info['title'] = search_result[i]['title'] 
+            #     search_info['snippet'] = search_result[i]['snippet']
+            #     # result.append(search_info)
+            #     result[i] = search_info
             messages=[
                         {"role": "system", "content": MAIN_PROMPT},
                         {
