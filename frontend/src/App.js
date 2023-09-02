@@ -95,7 +95,7 @@ function App() {
         <Box sx={{height: "100vh"}}>
           <Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer} setIsLastPage={setIsLastPage}/>
         </Box>
-        {supportList && <Box sx={{height: "100vh"}}>
+        {(supportList && supportList.length>0) && <Box sx={{height: "100vh"}}>
           <SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer} setIsLastPage={setIsLastPage} isLastPage={isLastPage} setGoToChat={setGoToChat}/>
         </Box>}
         {summary !=="" && <Box sx={{height: "100vh"}}>
