@@ -38,6 +38,7 @@ function Chat({summary, goToChat, setGoToChat}) {
   useEffect(()=>{
     if(goToChat){
         setJimi([])
+        
         setGoToChat(false)
     }
   }, [goToChat])
