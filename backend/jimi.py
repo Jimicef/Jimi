@@ -239,12 +239,14 @@ async def get_chat(serviceId):
 @app.post("/chat")
 async def post_chat(data: dict):
     result = [{'link':None},{'link':None},{'link':None}]
-    first_response = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
-        messages=[
+    messages = [
         {"role": "system", "content": f"You can use this service information {data['summary']}"},
         {"role": "user","content": f"user query : {data['question']}"}
-        ],
+    ]
+    messages.extend(data['history'])
+    first_response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        messages=messages,
         temperature=0,
         functions=FUNCTIONS
     )
@@ -252,9 +254,7 @@ async def post_chat(data: dict):
         
         full_message = first_response["choices"][0]
         if full_message["message"]["function_call"]["name"] == "answer_with_service_info":
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[
+            messages=[
                     {"role": "system", "content": MAIN_PROMPT},
                     {"role": "system", "content": CHAT_PROMPT},
                     {
@@ -264,7 +264,12 @@ async def post_chat(data: dict):
                         User query: {data['question']}
                         service information:\n{data['summary']}\nAnswer:\n""",
                     }
-                ],
+            ]
+            messages.extend(data['history'])
+
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages,
                 temperature=0,
                 max_tokens = 1000,
                 stream=True
@@ -277,19 +282,27 @@ async def post_chat(data: dict):
 
             search_result = res.get("items")
 
-            
-            for i in range(3):
-                search_info = {}
+            cnt = 0
+            for i in range(len(search_result)):
+                if cnt == 3:
+                    break
+                if "snippet" in search_result[i].keys():
+                    cnt += 1
+                    search_info = {}
 
-                search_info['link'] = search_result[i]['link'] 
-                search_info['title'] = search_result[i]['title'] 
-                search_info['snippet'] = search_result[i]['snippet']
-                # result.append(search_info)
-                result[i] = search_info
+                    search_info['link'] = search_result[i]['link'] 
+                    search_info['title'] = search_result[i]['title'] 
+                    search_info['snippet'] = search_result[i]['snippet']
+                    result[i] = search_info
+            # for i in range(3):
+            #     search_info = {}
 
-            response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
+            #     search_info['link'] = search_result[i]['link'] 
+            #     search_info['title'] = search_result[i]['title'] 
+            #     search_info['snippet'] = search_result[i]['snippet']
+            #     # result.append(search_info)
+            #     result[i] = search_info
+            messages=[
                         {"role": "system", "content": MAIN_PROMPT},
                         {
                             "role": "user",
@@ -299,7 +312,11 @@ async def post_chat(data: dict):
                             User query: {data['question']}
                             Google search result:\n{result}\nAnswer:\n""",
                         }
-                    ],
+            ]
+            messages.extend(data['history'])
+            response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=messages,
                     temperature=0,
                     max_tokens=1000,
                     stream=True
