@@ -8,9 +8,11 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { SET_SUPPORT_LIST, SET_ANSWER, SET_IS_LAST_PAGE, SET_INPUT, SET_COUNT, SET_SERVICES, SET_REGION, SET_SUBREGION, SET_USER } from './action/action';
 
 
-export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setServices, input, region, subRegion, user, setUser, setAnswer, setIsLastPage, setCount}) => {
+export const Intro = () => {
     var apiEndPoint;
     if (process.env.NODE_ENV == 'development') {
         apiEndPoint = process.env.REACT_APP_SWAGGER_API
@@ -27,6 +29,12 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
     const [isLoading, setIsLoading] = useState(false)
     //const [input, setInput] = React.useState("");
     const navigate = useNavigate();
+    const dispatch = useDispatch()
+
+    const input = useSelector((state) => state.input)
+    const region = useSelector((state) => state.region)
+    const subRegion = useSelector((state) => state.subRegion)
+    const user = useSelector((state) => state.user)
     //const [isNav, setIsNav] = useState(false)
     //const [isSelectOpen, setIsSelectOpen] = useState(false);
 
@@ -43,20 +51,32 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
     },[])
 
     const handleChangeRegion = (event) => {
-        setRegion(event.target.value)
+        dispatch({
+            type: SET_REGION,
+            data: event.target.value
+        })
+        // setRegion(event.target.value)
     }
 
     const handleChangeSubRegion = (event) => {
-        setSubRegion(event.target.value)
+        dispatch({
+            type: SET_SUBREGION,
+            data: event.target.value
+        })
+        // setSubRegion(event.target.value)
     }
 
     const handleChangeUser = (event) => {
-        setUser(event.target.value)
+        dispatch({
+            type: SET_USER,
+            data: event.target.value
+        })
+        // setUser(event.target.value)
     }
 
-    const handleChangeSupport = (event) => {
-        setSupport(event.target.value)
-    }
+    // const handleChangeSupport = (event) => {
+    //     setSupport(event.target.value)
+    // }
     const handleCheckBox = (event) => {
         setSupport({...support, [event.target.name]: event.target.checked})
     }
@@ -87,37 +107,41 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
 
     const handleSubmit = () => {
         const selectedSupports = Object.keys(support).filter(key => key!=="전체" && support[key]).map(key => chktype1Code[key]).join("|");
-
-        // fetch(`${apiEndPoint}/api/userinfo`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify({
-        //         region: region,
-        //         subRegion: subRegion,
-        //         services: selectedSupports,
-        //         user: user,
-        //         circumstance: input
-        //     })
-        // })
-        //console.log(subRegion, selectedSupports)
         setIsLoading(true)
         fetch(`${apiEndPoint}/service_list?keyword=${input}&count=0&chktype1=${selectedSupports}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]?sidoCode[region]:""}&svccd=${user}`)
         .then(response => response.json())
         .then(data => {
             //console.log(data)
-            setCount(0)
-            setSupportList(data.support)
-            setAnswer(data.answer)
-            setIsLastPage(data.lastpage)
+            dispatch({
+                type: SET_COUNT,
+                data: 0
+            })
+            // setCount(0)
+            dispatch({
+                type: SET_SUPPORT_LIST,
+                data: data.support
+            })
+            // setSupportList(data.support)
+            dispatch({
+                type: SET_ANSWER,
+                data: data.answer
+            })
+            // setAnswer(data.answer)
+            dispatch({
+                type: SET_IS_LAST_PAGE,
+                data: data.lastpage
+            })
+            // setIsLastPage(data.lastpage)
 
             return Promise.resolve();
             //setIsNav(!isNav)
         })
         .then(() => {
-            
-            setServices(selectedSupports)
+            dispatch({
+                type: SET_SERVICES,
+                data: selectedSupports
+            })
+            // setServices(selectedSupports)
         })
         .catch(error => {
             console.error("에러:", error)
@@ -320,7 +344,12 @@ export const Intro = ({setSupportList, setInput, setRegion, setSubRegion, setSer
                     placeholder="원하는 검색어를 입력해주세요"
                     variant="outlined"
                     value={input}
-                    onChange={(event)=>setInput(event.target.value)}
+                    onChange={(event)=>dispatch({
+                        type: SET_INPUT,
+                        data: event.target.value
+                    })
+                        // setInput(event.target.value)
+                    }
                     onKeyDown={handleEnter}
                     />
                 </Box>

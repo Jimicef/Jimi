@@ -7,20 +7,26 @@ import { Box } from "@mui/material";
 import './App.css'
 import { BrowserRouter, Route, Switc, Routes } from "react-router-dom";
 import { FullPage, Slide } from "react-full-page";
+import { useDispatch, useSelector } from "react-redux";
+import { SET_SUPPORT_LIST, SET_ANSWER } from "./action/action";
 
 
 function App() {
-  const [answer, setAnswer] = React.useState("")
-  const [supportList, setSupportList] = React.useState([])
-  const [isLastPage, setIsLastPage] = React.useState(false)
-  const [input, setInput] = React.useState("")
-  const [count, setCount] = React.useState(0)
-  const [services, setServices] = React.useState([])
-  const [region, setRegion] = React.useState("")
-  const [subRegion, setSubRegion] = React.useState("")
-  const [user, setUser] = React.useState("")
-  const [summary, setSummary] = React.useState("")
-  const [goToChat, setGoToChat] = React.useState(false)
+  // const [answer, setAnswer] = React.useState("")
+  // const [supportList, setSupportList] = React.useState([])
+  // const [isLastPage, setIsLastPage] = React.useState(false)
+  // const [input, setInput] = React.useState("")
+  // const [count, setCount] = React.useState(0)
+  // const [services, setServices] = React.useState([])
+  // const [region, setRegion] = React.useState("")
+  // const [subRegion, setSubRegion] = React.useState("")
+  // const [user, setUser] = React.useState("")
+  // const [summary, setSummary] = React.useState("")
+  // const [goToChat, setGoToChat] = React.useState(false)
+
+  const supportList= useSelector((state) => state.supportList)
+  const summary = useSelector((state) => state.summary)
+  const dispatch = useDispatch()
 
   // npm react-full-page로 바꾸기
   // 스크롤의 위치에 따라 액션 다르게
@@ -56,7 +62,10 @@ function App() {
     if(supportList === null){
       window.scrollTo({top: 0, behavior: 'smooth' })
       alert("검색 결과가 없습니다.")
-      setSupportList([])
+      dispatch({
+        type: SET_SUPPORT_LIST,
+        data: ""
+    })
     }
     else if (supportList.length > 0){
       window.scrollTo({top: window.innerHeight, behavior: 'smooth' })
@@ -78,47 +87,19 @@ function App() {
   return (
     <div>
       <BrowserRouter>
-      {/* <Routes>
-        <Route path="/" element={<Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer} setIsLastPage={setIsLastPage}/>} />
-        <Route path="/chat" element={<Chat summary={summary}/>} />
-        <Route path="/supportlist" element={<SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer} setIsLastPage={setIsLastPage} isLastPage={isLastPage}/>} />
-      </Routes> */}
-      {/* <FullPage controls>
-        <Slide>
-          <h1>Inner slide content</h1>
-        </Slide>
-        <Slide>
-          <h1>Another slide content</h1>
-        </Slide>
-      </FullPage> */}
       <Box sx={{overflow: 'auto'}}>
         <Box sx={{height: "100vh"}}>
-          <Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer} setIsLastPage={setIsLastPage}/>
+          <Intro/>
         </Box>
         {(supportList && supportList.length>0) && <Box sx={{height: "100vh"}}>
-          <SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer} setIsLastPage={setIsLastPage} isLastPage={isLastPage} setGoToChat={setGoToChat}/>
+          <SupportList />
         </Box>}
         {summary !=="" && <Box sx={{height: "100vh"}}>
-          <Chat summary={summary} goToChat={goToChat} setGoToChat={setGoToChat}/>
+          <Chat/>
         </Box>}
       </Box>
 
-      {/* <SectionsContainer {...options} >
-      {
-      // selectedOptions !==options&&
-      <Section ><Intro setSupportList={setSupportList} setInput={setInput} setCount={setCount} setServices={setServices} setRegion={setRegion} setSubRegion={setSubRegion} supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} user={user} setUser={setUser} setAnswer={setAnswer} setIsLastPage={setIsLastPage}/></Section>}
-      {supportList.length > 0 
-      // && selectedOptions !==options
-      ? (
-          <Section><SupportList supportList={supportList} input={input} count={count} services={services} region={region} subRegion={subRegion} setSupportList={setSupportList} setCount={setCount} user={user} setSummary={setSummary} answer={answer} setIsLastPage={setIsLastPage} isLastPage={isLastPage}/></Section>
-          
-       ): null} 
-      {summary !=="" ? (
-          <Section><Chat summary={summary}/></Section>
-          
-       ): null}
       
-      </SectionsContainer> */}
       </BrowserRouter>
    </div> 
   )
