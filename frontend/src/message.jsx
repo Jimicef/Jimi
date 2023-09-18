@@ -4,10 +4,15 @@ import SendIcon from "@mui/icons-material/Send";
 import ChatIcon from '@mui/icons-material/Chat';
 import FaceIcon from '@mui/icons-material/Face';
 import { theme } from "./theme";
+import { useDispatch, useSelector } from "react-redux";
+import { SET_VIEW_MORE } from "./action/action";
 
 export const Message = ({ message, handleQuestion, handleTarget, handleContent, handleDocs, handleSelection, handleWay }) => {
-    const [viewMore, setViewMore] = React.useState(false)
+    // const [viewMore, setViewMore] = React.useState(false)
+    
+    const dispatch = useDispatch()
   
+    const viewMore = useSelector((state) => state.viewMore)
     const isBot = message.sender === "bot";
 
     const handleClickUrl = (url) => {
@@ -63,7 +68,10 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
                   {message.support.title && <Typography variant="body1" sx={{fontWeight: 'bold'}}>{message.support.title}</Typography>}
                   
                   {message.support.description ? <Typography variant="body1">{message.support.description}<br/><br/></Typography>:<br/>}
-                  {viewMore === false && <><Typography variant="body2" onClick={()=> {setViewMore(true)}} sx={{display: 'inline-block', color: 'grey.600', borderBottom: '1px solid grey.500', "&:hover": {color:"grey.500", cursor: 'pointer'}}}>▼ 더보기</Typography><br/><br/></>}
+                  {viewMore === false && <><Typography variant="body2" onClick={()=> {dispatch({
+                    type: SET_VIEW_MORE,
+                    data: true
+                  })}} sx={{display: 'inline-block', color: 'grey.600', borderBottom: '1px solid grey.500', "&:hover": {color:"grey.500", cursor: 'pointer'}}}>▼ 더보기</Typography><br/><br/></>}
                   
                   {viewMore &&message.support.dueDate && <><Typography variant="body2" sx={{display: 'inline-block'}}><Box sx={{fontWeight: 'bold', mr: 0.5}}>🗓️신청기간 </Box>{message.support.dueDate}</Typography><br/><br/></>}
                   {/* {message.support.institution && <Typography variant="body2">🏢소관기관: {message.support.institution}<br/><br/></Typography>} */}
@@ -93,7 +101,10 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
                   {viewMore &&message.support.docs &&<br/>}
                   {viewMore &&message.support.url && <Typography variant="body2" sx={{ display: 'flex', whiteSpace: 'nowrap'}} ><Box>📎</Box> <Box sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}}} onClick={()=>handleClickUrl(message.support.url)}>{message.support.url}</Box><br/><br/></Typography>}
 
-                  {viewMore && <><Typography variant="body2" onClick={()=> {setViewMore(false)}} sx={{display: 'inline-block', color: 'grey.600', borderBottom: '1px solid grey.500', "&:hover": {color:"grey.500", cursor: 'pointer'}}}>▲ 숨기기</Typography><br/><br/></>}
+                  {viewMore && <><Typography variant="body2" onClick={()=> {dispatch({
+                    type: SET_VIEW_MORE,
+                    data: false
+                  })}} sx={{display: 'inline-block', color: 'grey.600', borderBottom: '1px solid grey.500', "&:hover": {color:"grey.500", cursor: 'pointer'}}}>▲ 숨기기</Typography><br/><br/></>}
                     {/* <Typography variant="body2" onClick={()=>handleQuestion("지원대상이 맞는지 확인하기")} sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#1A66CC"}}><SendIcon sx={{fontSize: "14px", color: "#1A66CC"}}/>
                     지원대상이 맞는지 확인하기
                     </Typography>
