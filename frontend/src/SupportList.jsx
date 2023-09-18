@@ -2,6 +2,8 @@ import { Box, Card, Avatar, Typography, Button } from '@mui/material'
 import ChatIcon from '@mui/icons-material/Chat';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { SET_COUNT, SET_GO_TO_CHAT, SET_IS_LAST_PAGE, SET_SUMMARY, SET_SUPPORT_LIST } from './action/action';
 
 const sidoCode = {
     "서울특별시": "tab1100000000",
@@ -23,9 +25,19 @@ const sidoCode = {
     "강원특별자치도": "tab5100000000"
 };
 
-export const SupportList = ({supportList, setSupportList, input, count, setCount, services, region, subRegion, user, setSummary, answer, isLastPage, setIsLastPage, setGoToChat}) => {
+export const SupportList = () => {
     const [isLoadingPage, setIsLoadingPage] = React.useState(false)
     const [isLoadingChat, setIsLoadingChat] = React.useState(false)
+    const answer = useSelector((state) => state.answer)
+    const supportList = useSelector((state) => state.supportList)
+    const isLastPage = useSelector((state) => state.isLastPage)
+    const input = useSelector((state) => state.input)
+    const count = useSelector((state) => state.count)
+    const services = useSelector((state) => state.services)
+    const region = useSelector((state) => state.region)
+    const subRegion = useSelector((state) => state.subRegion)
+    const user = useSelector((state) => state.user)
+    const dispatch = useDispatch()
     var apiEndPoint;
     if (process.env.NODE_ENV == 'development') {
         apiEndPoint = process.env.REACT_APP_SWAGGER_API
@@ -38,9 +50,21 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
         fetch(`${apiEndPoint}/service_list?keyword=${input}&count=${count+1}&chktype1=${services}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]}&svccd=${user}`)
         .then(response => response.json())
         .then(data => {
-            setSupportList(data.support)
-            setCount(count+1)
-            setIsLastPage(data.lastpage)
+            // setSupportList(data.support)
+            dispatch({
+                type:SET_SUPPORT_LIST,
+                data: data.support
+            })
+            dispatch({
+                type: SET_COUNT,
+                data: count + 1
+            })
+            // setCount(count+1)
+            // setIsLastPage(data.lastpage)
+            dispatch({
+                type: SET_IS_LAST_PAGE,
+                data: data.lastpage
+            })
             //window.location.href = '/#sectionTwo'
             //setIsNav(!isNav)
         })
@@ -56,9 +80,20 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
         fetch(`${apiEndPoint}/service_list?keyword=${input}&count=${count-1}&chktype1=${services}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]}&svccd=${user}`)
         .then(response => response.json())
         .then(data => {
-            setSupportList(data.support)
-            setCount(count-1)
-            setIsLastPage(data.lastpage)
+            // setSupportList(data.support)
+            dispatch({
+                type:SET_SUPPORT_LIST,
+                data: data.support
+            })
+            // setCount(count-1)
+            dispatch({
+                type: SET_COUNT,
+                data: count - 1
+            })
+            dispatch({
+                type: SET_IS_LAST_PAGE,
+                data: data.lastpage
+            })
             //window.location.href = '/#sectionTwo'
             //setIsNav(!isNav)
         })
@@ -75,8 +110,16 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
         fetch(`${apiEndPoint}/chat?serviceId=${serviceId}`)
         .then(response => response.json())
         .then(data => {
-            setSummary(data)
-            setGoToChat(true)
+            dispatch({
+                type: SET_SUMMARY,
+                data: data
+            })
+            dispatch({
+                type: SET_GO_TO_CHAT,
+                data: true
+            })
+            // setSummary(data)
+            // setGoToChat(true)
             //sessionStorage.setItem("summary", JSON.stringify(data))
             //window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
             //window.location.href = '/'
@@ -106,7 +149,7 @@ export const SupportList = ({supportList, setSupportList, input, count, setCount
             </Box>
             <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'}}>
             <Box sx={{display: 'flex', flexWrap: "wrap", justifyContent: 'center', alignItems: 'center'}}>
-                {supportList.map((sup, idx) => (
+                {supportList && supportList.map((sup, idx) => (
                     <Card sx={{width: "225px", mx: 1, p: 1, mb: 3, height: "255px"}} key={sup.serviceId}>
                         <Typography variant="body2" sx={{ display: "inline-block", borderRadius: 3, bgcolor: "#DAD2E9", px: 1, mb: 1}}>{sup.institution}</Typography>
                         <Box sx={{display: 'flex', flexDirection: 'column', height: "225px"}}>

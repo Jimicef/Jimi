@@ -6,9 +6,11 @@ import { useEffect, useRef } from "react";
 import { theme } from "./theme";
 import logo from './logo.png';
 import './App.css';
+import { useDispatch, useSelector } from "react-redux";
+import { SET_GO_TO_CHAT } from "./action/action";
 
 
-function Chat({summary, goToChat, setGoToChat}) {
+function Chat() {
   const [input, setInput] = React.useState("");
   const [jimi, setJimi] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false)
@@ -16,6 +18,11 @@ function Chat({summary, goToChat, setGoToChat}) {
   const [links, setLinks] = React.useState([])
   const [partLink, setPartLink] = React.useState("")
   const messageContainerRef = useRef();
+
+  const dispatch = useDispatch()
+
+  const summary = useSelector((state) => state.summary)
+  const goToChat = useSelector((state) => state.goToChat)
 
   var apiEndPoint;
   if (process.env.NODE_ENV == 'development') {
@@ -38,8 +45,11 @@ function Chat({summary, goToChat, setGoToChat}) {
   useEffect(()=>{
     if(goToChat){
         setJimi([])
-        
-        setGoToChat(false)
+        dispatch({
+          type: SET_GO_TO_CHAT,
+          data: false
+        })
+        // setGoToChat(false)
     }
   }, [goToChat])
 
@@ -110,7 +120,7 @@ function Chat({summary, goToChat, setGoToChat}) {
                 }
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
-                console.log(decodedChunk)
+                // console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 // console.log(partData)
                 setJimi((existingJimi) => {
