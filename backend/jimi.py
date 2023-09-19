@@ -360,7 +360,7 @@ async def post_chat(data: dict):
         media_type="text/plain"
     )
 
-@app.post("/voice_chat")
+@app.post("/api/voice_chat")
 async def post_voice_chat(file: UploadFile):
     # 업로드된 MP3 파일을 저장
     with open(file.filename, "wb") as f:
