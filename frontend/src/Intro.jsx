@@ -28,7 +28,7 @@ export const Intro = () => {
     })
     const [isLoading, setIsLoading] = useState(false)
     //const [input, setInput] = React.useState("");
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const dispatch = useDispatch()
 
     const input = useSelector((state) => state.input)
