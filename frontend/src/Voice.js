@@ -5,6 +5,14 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 
 const Voice = () => {
 
+    var apiEndPoint;
+    if (process.env.NODE_ENV == 'development') {
+        apiEndPoint = process.env.REACT_APP_SWAGGER_API
+    }
+    else {
+        apiEndPoint = `${process.env.REACT_APP_AWS_SERVER}`
+    }
+
     const [stream, setStream] = useState();
     const [media, setMedia] = useState();
     const [onRec, setOnRec] = useState(true);
@@ -103,7 +111,7 @@ const Voice = () => {
         const sound = new File([audioUrl], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
         console.log(sound); // File 정보 출력
         try {
-            const response = await fetch('/voice-chat',{
+            const response = await fetch(`${apiEndPoint}/voice-chat`,{
                 method: "POST",
                 headers:{
                     "Content-Type": "audio/mpeg"
@@ -116,9 +124,37 @@ const Voice = () => {
             console.log(error)
         }
         }, [audioUrl]);
+
+    const fetchCheck = async() => {
+        const audioFilePath = '/public/0001.wav';
+
+        // fetch를 사용하여 오디오 파일을 가져옵니다.
+        const audioResponse = await fetch(audioFilePath);
+
+        // 오디오 파일을 Blob 형식으로 변환합니다.
+        const audioBlob = await audioResponse.blob();
+
+        // FormData 객체를 생성하고 오디오 파일을 추가합니다.
+        const formData = new FormData();
+        formData.append('audioFile', audioBlob, '0001.wav');
+        try {
+            const response = await fetch(`${apiEndPoint}/voice-chat`,{
+                method: "POST",
+                headers:{
+                    "Content-Type": "audio/mpeg"
+                },
+                body: formData
+            })
+            const data = response.json()
+            console.log("가져온 값:", data.transcript)
+        } catch (error) {
+            console.log(error)
+        }
+    }
   return (
     <div>Voice
         <br/>
+        <Button variant='contained' onClick={fetchCheck}>fetch 확인</Button>
         <Button variant="contained" onClick={onRec ? onRecAudio : offRecAudio}>녹음</Button>
         <Button variant='outlined' onClick={onSubmitAudioFile}>결과 확인 </Button>
         <p>{transcript}</p>
