@@ -136,7 +136,7 @@ const Voice = () => {
 
         // FormData 객체를 생성하고 오디오 파일을 추가합니다.
         const formData = new FormData();
-        formData.append('fileㅎ', audioBlob, '0001.wav');
+        formData.append('file', audioBlob, '0001.wav');
         try {
             const response = await fetch(`${apiEndPoint}/voice_chat`,{
                 method: "POST",
