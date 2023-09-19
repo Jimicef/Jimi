@@ -126,7 +126,7 @@ const Voice = () => {
         }, [audioUrl]);
 
     const fetchCheck = async() => {
-        const audioFilePath = '/public/0001.wav';
+        const audioFilePath = '0001.wav';
 
         // fetch를 사용하여 오디오 파일을 가져옵니다.
         const audioResponse = await fetch(audioFilePath);
