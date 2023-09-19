@@ -16,6 +16,7 @@ Google_API_KEY = os.environ["Google_API_KEY"]
 Google_SEARCH_ENGINE_ID = os.environ["Google_SEARCH_ENGINE_ID"]
 
 origins = [
+    "https://d2cbtv7b4u1taw.cloudfront.net"
     "http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com",
     "http://jimi-bucket.s3-website.ap-northeast-2.amazonaws.com"
 ]
@@ -33,7 +34,7 @@ app.add_middleware(
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/service_list")
+@app.get("/api/service_list")
 async def get_service_list(keyword : str = Query(None,description = "검색 키워드"),
                            count : int = Query(0,description = "페이지 번호"),
                            chktype1 : str = Query(None,description = "서비스 분야"),
@@ -196,7 +197,7 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
 #     )
 
 
-@app.get("/chat")
+@app.get("/api/chat")
 async def get_chat(serviceId):
     cond = serviceId
     url = f"http://api.odcloud.kr/api/gov24/v3/serviceDetail?page=1&perPage=10&cond%5B%EC%84%9C%EB%B9%84%EC%8A%A4ID%3A%3AEQ%5D={cond}&serviceKey=aVyQkv5W8mV6fweNFyOmB3fvxjmcuMvbOl4fkTCOVH1kCgOCcSkFa8UKeUBljB3Czd5VwvoIYKkH%2FpWWwVvpKQ%3D%3D"
@@ -236,7 +237,7 @@ async def get_chat(serviceId):
             ret[askey] = value
     return ret
 
-@app.post("/chat")
+@app.post("/api/chat")
 async def post_chat(data: dict):
     result = [{'link':None},{'link':None},{'link':None}]
 
