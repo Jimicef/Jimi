@@ -141,7 +141,7 @@ const Voice = () => {
             const response = await fetch(`${apiEndPoint}/voice_chat`,{
                 method: "POST",
                 headers:{
-                    "Content-Type": "audio/mpeg"
+                    "Content-Type": "multipart/form-data"
                 },
                 body: formData
             })
