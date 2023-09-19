@@ -136,6 +136,7 @@ const Voice = () => {
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
+        console.log(selectedFile)
         if (selectedFile) {
           sendFile(selectedFile); // 파일을 전송하는 함수 호출
         }
@@ -159,9 +160,9 @@ const Voice = () => {
         try {
             const response = await fetch(`${apiEndPoint}/voice_chat`,{
                 method: "POST",
-                headers:{
-                    "Content-Type": "multipart/form-data"
-                },
+                // headers:{
+                //     "Content-Type": "multipart/form-data"
+                // },
                 body: formData
             })
             if (response.ok) {
