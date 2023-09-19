@@ -134,29 +134,29 @@ const Voice = () => {
         console.log(e.target.files[0]);
     };
 
-    const handleFileChange = (event) => {
-        const selectedFile = event.target.files[0];
-        console.log(selectedFile)
-        if (selectedFile) {
-          sendFile(selectedFile); // 파일을 전송하는 함수 호출
-        }
-      };
+    // const handleFileChange = (event) => {
+    //     const selectedFile = event.target.files[0];
+    //     console.log(selectedFile)
+    //     if (selectedFile) {
+    //       sendFile(selectedFile); // 파일을 전송하는 함수 호출
+    //     }
+    //   };
 
-    const sendFile = async(file) => {
-        // const audioFilePath = '/0001.wav';
+    const fetchCheck = async() => {
+        const audioFilePath = '/0001.wav';
 
-        // // fetch를 사용하여 오디오 파일을 가져옵니다.
-        // const audioResponse = await fetch(audioFilePath);
+        // fetch를 사용하여 오디오 파일을 가져옵니다.
+        const audioResponse = await fetch(audioFilePath);
 
-        // // 오디오 파일을 Blob 형식으로 변환합니다.
-        // const audioBlob = await audioResponse.blob();
-        // console.log(audioBlob)
+        // 오디오 파일을 Blob 형식으로 변환합니다.
+        const audioBlob = await audioResponse.blob();
+        console.log(audioBlob)
 
-        // const sound = new File([audioFilePath], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
-        // console.log(sound)
+        const sound = new File([audioFilePath], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
+        console.log(sound)
         // FormData 객체를 생성하고 오디오 파일을 추가합니다.
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', audioBlob);
         try {
             const response = await fetch(`${apiEndPoint}/voice_chat`,{
                 method: "POST",
@@ -178,12 +178,12 @@ const Voice = () => {
   return (
     <div>Voice
         <br/>
-        <Button onClick={handleButtonClick}>파일 업로드</Button>
+        {/* <Button onClick={handleButtonClick}>파일 업로드</Button>
       <input type="file"
              ref={fileInput}
              onChange={handleFileChange}
-             style={{ display: "none" }} />
-        {/* <Button variant='contained' onClick={fetchCheck}>fetch 확인</Button> */}
+             style={{ display: "none" }} /> */}
+        <Button variant='contained' onClick={fetchCheck}>fetch 확인</Button>
         <Button variant="contained" onClick={onRec ? onRecAudio : offRecAudio}>녹음</Button>
         <Button variant='outlined' onClick={onSubmitAudioFile}>결과 확인 </Button>
         <p>{transcript}</p>
