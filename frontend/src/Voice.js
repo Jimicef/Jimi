@@ -110,16 +110,19 @@ const Voice = () => {
         // File 생성자를 사용해 파일로 변환
         const sound = new File([audioUrl], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
         console.log(sound); // File 정보 출력
+        const formData = new FormData();
+        formData.append("file", sound)
         try {
             const response = await fetch(`${apiEndPoint}/voice-chat`,{
                 method: "POST",
-                headers:{
-                    "Content-Type": "audio/mpeg"
-                },
-                body: sound
+                body: formData
             })
-            const data = response.json()
-            console.log("가져온 값:", data.transcript)
+            if (response.ok) {
+                const data = await response.json();
+                console.log('가져온 값:', data.transcript);
+              } else {
+                console.error('파일 업로드 실패:', response.statusText);
+              }
         } catch (error) {
             console.log(error)
         }
@@ -156,7 +159,7 @@ const Voice = () => {
         console.log(sound)
         // FormData 객체를 생성하고 오디오 파일을 추가합니다.
         const formData = new FormData();
-        formData.append('file', audioBlob);
+        formData.append('file', sound);
         try {
             const response = await fetch(`${apiEndPoint}/voice_chat`,{
                 method: "POST",
