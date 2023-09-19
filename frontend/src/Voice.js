@@ -113,7 +113,7 @@ const Voice = () => {
         const formData = new FormData();
         formData.append("file", sound)
         try {
-            const response = await fetch(`${apiEndPoint}/voice-chat`,{
+            const response = await fetch(`${apiEndPoint}/voice_chat`,{
                 method: "POST",
                 body: formData
             })
