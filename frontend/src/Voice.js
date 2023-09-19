@@ -113,7 +113,7 @@ const Voice = () => {
         const formData = new FormData();
         formData.append("file", sound)
         try {
-            const response = await fetch(`${apiEndPoint}/voice_chat`,{
+            const response = await fetch(`${apiEndPoint}/api/voice_chat`,{
                 method: "POST",
                 body: formData
             })
@@ -161,7 +161,7 @@ const Voice = () => {
         const formData = new FormData();
         formData.append('file', sound);
         try {
-            const response = await fetch(`${apiEndPoint}/voice_chat`,{
+            const response = await fetch(`${apiEndPoint}/api/voice_chat`,{
                 method: "POST",
                 // headers:{
                 //     "Content-Type": "multipart/form-data"

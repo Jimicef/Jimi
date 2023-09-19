@@ -97,7 +97,7 @@ function Chat() {
 
             //console.log(modifiedJimi)
             
-            const response = await fetch(`${apiEndPoint}/chat`,
+            const response = await fetch(`${apiEndPoint}/api/chat`,
             {
                 method: "POST",
                     headers: {
