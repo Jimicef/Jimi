@@ -124,6 +124,15 @@ const Voice = () => {
             console.log(error)
         }
         }, [audioUrl]);
+    const fileInput = React.useRef(null);
+
+    const handleButtonClick = e => {
+        fileInput.current.click();
+    };
+    
+    const handleChange = e => {
+        console.log(e.target.files[0]);
+    };
 
     const fetchCheck = async() => {
         const audioFilePath = '0001.wav';
@@ -136,7 +145,7 @@ const Voice = () => {
 
         // FormData 객체를 생성하고 오디오 파일을 추가합니다.
         const formData = new FormData();
-        formData.append('file', audioBlob);
+        formData.append('file', audioBlob, '0001.wav');
         try {
             const response = await fetch(`${apiEndPoint}/voice_chat`,{
                 method: "POST",
