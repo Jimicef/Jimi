@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query, HTTPException, Cookie, Depends
+from fastapi import FastAPI, Query, HTTPException, Cookie, Depends, File, UploadFile
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Dict
@@ -359,3 +359,14 @@ async def post_chat(data: dict):
         content=generate_chunks(),
         media_type="text/plain"
     )
+
+@app.post("/voice_chat")
+async def post_voice_chat(file: UploadFile):
+    transcript = openai.Audio.transcribe(
+        file=open(file, "rb"),
+        model="whisper-1",
+        prompt="",
+    )
+    return {
+        "transcript": transcript["text"]
+    }

@@ -13,8 +13,6 @@ Guidelines for generating responses:
 2. avoiding unnecessary symbols.
 """
 
-
-
 PLUGIN_SELECT_PROMPT = """
 You are API caller plugin. Based on the user input, you will call an relevant API path with relevent query.
 Generate relevent query for the best results for the API path. 
