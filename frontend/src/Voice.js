@@ -138,7 +138,7 @@ const Voice = () => {
         const formData = new FormData();
         formData.append('audioFile', audioBlob, '0001.wav');
         try {
-            const response = await fetch(`${apiEndPoint}/voice-chat`,{
+            const response = await fetch(`${apiEndPoint}/voice_chat`,{
                 method: "POST",
                 headers:{
                     "Content-Type": "audio/mpeg"
