@@ -134,21 +134,28 @@ const Voice = () => {
         console.log(e.target.files[0]);
     };
 
-    const fetchCheck = async() => {
-        const audioFilePath = '0001.wav';
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+          sendFile(selectedFile); // 파일을 전송하는 함수 호출
+        }
+      };
 
-        // fetch를 사용하여 오디오 파일을 가져옵니다.
-        const audioResponse = await fetch(audioFilePath);
+    const sendFile = async(file) => {
+        // const audioFilePath = '/0001.wav';
 
-        // 오디오 파일을 Blob 형식으로 변환합니다.
-        const audioBlob = await audioResponse.blob();
-        console.log(audioBlob)
+        // // fetch를 사용하여 오디오 파일을 가져옵니다.
+        // const audioResponse = await fetch(audioFilePath);
 
-        const sound = new File([audioFilePath], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
-        console.log(sound)
+        // // 오디오 파일을 Blob 형식으로 변환합니다.
+        // const audioBlob = await audioResponse.blob();
+        // console.log(audioBlob)
+
+        // const sound = new File([audioFilePath], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
+        // console.log(sound)
         // FormData 객체를 생성하고 오디오 파일을 추가합니다.
         const formData = new FormData();
-        formData.append('file', sound);
+        formData.append('file', file);
         try {
             const response = await fetch(`${apiEndPoint}/voice_chat`,{
                 method: "POST",
@@ -157,8 +164,12 @@ const Voice = () => {
                 },
                 body: formData
             })
-            const data = response.json()
-            console.log("가져온 값:", data.transcript)
+            if (response.ok) {
+                const data = await response.json();
+                console.log('가져온 값:', data.transcript);
+              } else {
+                console.error('파일 업로드 실패:', response.statusText);
+              }
         } catch (error) {
             console.log(error)
         }
@@ -166,7 +177,12 @@ const Voice = () => {
   return (
     <div>Voice
         <br/>
-        <Button variant='contained' onClick={fetchCheck}>fetch 확인</Button>
+        <Button onClick={handleButtonClick}>파일 업로드</Button>
+      <input type="file"
+             ref={fileInput}
+             onChange={handleFileChange}
+             style={{ display: "none" }} />
+        {/* <Button variant='contained' onClick={fetchCheck}>fetch 확인</Button> */}
         <Button variant="contained" onClick={onRec ? onRecAudio : offRecAudio}>녹음</Button>
         <Button variant='outlined' onClick={onSubmitAudioFile}>결과 확인 </Button>
         <p>{transcript}</p>
