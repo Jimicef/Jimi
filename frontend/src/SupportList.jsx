@@ -3,7 +3,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { SET_COUNT, SET_GO_TO_CHAT, SET_IS_LAST_PAGE, SET_SUMMARY, SET_SUPPORT_LIST } from './action/action';
+import { SET_COUNT, SET_GO_TO_CHAT, SET_IS_LAST_PAGE, SET_SUMMARY, SET_SUPPORT_LIST, SET_VIEW_MORE } from './action/action';
 
 const sidoCode = {
     "서울특별시": "tab1100000000",
@@ -161,7 +161,13 @@ export const SupportList = () => {
                         {sup.rcvInstitution && <Typography variant="body2">🏠접수기관: {sup.rcvInstitution.length>12?sup.rcvInstitution.slice(0,12)+"⋯":sup.rcvInstitution}</Typography>}
                         <Typography variant="body2">📞전화문의: {sup.phone.length>12?sup.phone.slice(0,12)+"⋯":sup.phone}</Typography>
                         <Box sx={{display: 'flex', justifyContent: 'flex-end', marginTop: 'auto'}}>
-                            <Button disabled={isLoadingChat} variant='outlined' color='secondary' size='small' sx={{mt: 1}} onClick={()=>goToChat(sup.serviceId)}>자세히 보기</Button>
+                            <Button disabled={isLoadingChat} variant='outlined' color='secondary' size='small' sx={{mt: 1}} onClick={()=>{
+                                goToChat(sup.serviceId)
+                                dispatch({
+                                    type: SET_VIEW_MORE,
+                                    data: false
+                                })
+                                }}>자세히 보기</Button>
                         </Box>
                         </Box>
                         {/* <Box><Typography variant="body2" sx={{borderBottom: "1px solid", diplay: "inline-block", width: 'fit-content', color: 'violet'}}>👤지원대상</Typography></Box>
