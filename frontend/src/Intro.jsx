@@ -46,10 +46,6 @@ export const Intro = () => {
     // setIsSelectOpen(false);
     // };
 
-    useEffect(()=>{
-        //window.location.href="/#section"
-    },[])
-
     const handleChangeRegion = (event) => {
         dispatch({
             type: SET_REGION,
