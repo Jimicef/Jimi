@@ -21,3 +21,5 @@ export const SET_SUMMARY = "SET_SUMMARY"
 export const SET_GO_TO_CHAT = "SET_GO_TO_CHAT"
 
 export const SET_VIEW_MORE = "SET_VIEW_MORE"
+
+export const SET_MIN_TWENTY = "SET_MIN_TWENTY"
