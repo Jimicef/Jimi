@@ -189,11 +189,11 @@ const Voice = () => {
         const audioBlob = await audioResponse.blob();
         console.log(audioBlob)
 
-        const sound = new File([audioFilePath], "soundBlob.wav", { lastModified: new Date().getTime(), type: "audio" });
+        const sound = new File([audioFilePath], "soundBlob.wav", { lastModified: new Date().getTime(), type: "audio/mpeg" });
         console.log(sound)
         // FormData 객체를 생성하고 오디오 파일을 추가합니다.
         const formData = new FormData();
-        formData.append('file', audioBlob);
+        formData.append('file', audioBlob, 'sample.wav');
         try {
             const response = await fetch(`${apiEndPoint}/api/voice_chat`,{
                 method: "POST",
