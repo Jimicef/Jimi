@@ -8,6 +8,7 @@ import logo from './logo.png';
 import './App.css';
 import { useDispatch, useSelector } from "react-redux";
 import { SET_GO_TO_CHAT } from "./action/action";
+import { getSpeech } from "./tts";
 
 
 function Chat() {
@@ -120,6 +121,7 @@ function Chat() {
                 }
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
+                getSpeech(decodedChunk)
                 // console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 // console.log(partData)
