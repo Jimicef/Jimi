@@ -1,10 +1,9 @@
-from fastapi import FastAPI, Query, HTTPException, Cookie, Depends, File, UploadFile
+from fastapi import FastAPI, Query, UploadFile, Depends
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Dict
+from typing import Dict, Annotated
 import requests
 from bs4 import BeautifulSoup
-import re
 import openai
 from prompts import MAIN_PROMPT, CHAT_PROMPT, FUNCTIONS, MODEL
 import os
@@ -32,11 +31,6 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-@app.get("/api/service_list")
 async def get_service_list(keyword : str = Query(None,description = "검색 키워드"),
                            count : int = Query(0,description = "페이지 번호"),
                            chktype1 : str = Query(None,description = "서비스 분야"),
@@ -155,6 +149,14 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
         "support" : card_data_list,
         "lastpage" : last_page
     }
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+@app.get("/api/service_list")
+async def api_get_service_list(result: Annotated[dict,Depends(get_service_list)]):
+    return result
 
 
 @app.get("/api/chat")
@@ -313,6 +315,11 @@ async def post_chat(data: dict):
         media_type="text/plain"
     )
 
+
+
+
+
+# 디버그용 추후 삭제 필요 /api/voice/chat으로 대체할 예정임
 @app.post("/api/voice_chat")
 async def post_voice_chat(file: UploadFile):
     # 업로드된 MP3 파일을 저장
