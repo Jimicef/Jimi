@@ -134,7 +134,7 @@ function Chat() {
                 const decodedChunk = decoder.decode(value, { stream: true });
                 // decodedChunk를 계속 받아서 20글자가 넘어가면, getSpeech로 읽게 한후 해당값은 초기화
                 
-                setminTwenty((existingText) => existingText+decodedChunk)
+                //setminTwenty((existingText) => existingText+decodedChunk)
                 console.log('chunk', decodedChunk)
                 
                 //checkMinTwenty()
@@ -155,10 +155,11 @@ function Chat() {
                         const previousData = lastItem.text
                         const updatedJimi = existingJimi.slice(0, -1);
                         if (decodedChunk.includes('ˇ')) {
-                            //console.log("it is end of answer")
+                            console.log("it is end of answer")
                             //setIsAnswerEnd(true)
                             const idx = decodedChunk.indexOf('ˇ')
                             const decodedChunkArray = decodedChunk.slice(idx+1).split("˘")
+                            setminTwenty(() => previousData + decodedChunk.slice(0, idx))
                             return [...updatedJimi, { text: previousData+decodedChunk.slice(0, idx), link: decodedChunkArray, sender: 'bot' }]
                         }
                         else {
@@ -209,6 +210,9 @@ function Chat() {
   useEffect(()=>{
     console.log(minTwenty)
     getSpeech('')
+    if (minTwenty) {
+      getSpeech(minTwenty)
+    }
     // if (isAnswerEnd) {
     //   console.log(minTwenty)
     //   getSpeech(minTwenty)
@@ -216,19 +220,19 @@ function Chat() {
     // }
     // getSpeech(minTwenty)
     // setminTwenty('')
-    if (minTwenty.includes('.')) {
-      const parts = minTwenty.split(".");
-      if (parts.length === 1) {
-        getSpeech(parts[0])
-        setminTwenty('')
-      } else if (parts.length > 1) {
-        const lastPart = parts.pop(); // 마지막 부분 추출
-        const restOfString = parts.join('.'); // 나머지 부분 합치기
-        console.log('나머지##', restOfString)
-        getSpeech(restOfString)
-        setminTwenty(lastPart)
-      }
-    }
+    // if (minTwenty.includes('.')) {
+    //   const parts = minTwenty.split(".");
+    //   if (parts.length === 1) {
+    //     getSpeech(parts[0])
+    //     setminTwenty('')
+    //   } else if (parts.length > 1) {
+    //     const lastPart = parts.pop(); // 마지막 부분 추출
+    //     const restOfString = parts.join('.'); // 나머지 부분 합치기
+    //     console.log('나머지##', restOfString)
+    //     getSpeech(restOfString)
+    //     setminTwenty(lastPart)
+    //   }
+    // }
   }, [minTwenty])
 
   const checkMinTwenty = () => {
