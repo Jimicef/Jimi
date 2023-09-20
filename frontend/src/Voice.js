@@ -58,16 +58,33 @@ const Voice = () => {
 
         setUserText(transcript)
         console.log("hihi:", transcript)
-        if (transcript){
+        if (transcript && listening){ //transcript 없어진후 -> listening: false
 
-            setJimi((existingJimi) => [...existingJimi, {text: transcript, sender: 'user'}])
+            setJimi((existingJimi) => {
+                const lastItem = existingJimi[existingJimi.length - 1]
+                if (lastItem.sender === 'user') {
+
+                    const updatedJimi = existingJimi.slice(0, -1)
+                    return [...updatedJimi, {text: transcript, sender: 'user'}]
+                } else {
+                    return existingJimi
+                }
+            })
         }
     }, [transcript])
+
+    useEffect(()=>{
+        if (userText && !listening) {
+            setJimi((existingJimi) => [...existingJimi.slice(0, -1), {text: userText, sender: 'user'}])
+            setUserText('')
+        }
+    }, [listening])
 
     const onRecAudio = () => {
         // setIsAudioEnd(true)
         // 음원정보를 담은 노드를 생성하거나 음원을 실행또는 디코딩 시키는 일을 한다
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        setJimi((existingJimi) => [...existingJimi, {text: '', sender: 'user'}])
         
         // 자바스크립트를 통해 음원의 진행상태에 직접접근에 사용된다.
         const analyser = audioCtx.createScriptProcessor(0, 1, 1);
@@ -189,7 +206,7 @@ const Voice = () => {
             })
             if (response.ok) {
                 const data = await response.json();
-                setJimi((existingJimi) => [...existingJimi, {text: data.transcript, sender: 'bot'}])
+                //setJimi((existingJimi) => [...existingJimi, {text: data.transcript, sender: 'bot'}])
                 console.log('가져온 값:', data.transcript);
               } else {
                 console.error('파일 업로드 실패:', response.statusText);
@@ -197,7 +214,7 @@ const Voice = () => {
         } catch (error) {
             console.log(error)
         } finally {
-            // setJimi((existingJimi) => [...existingJimi, {text: 1, sender: 'bot'}])
+            setJimi((existingJimi) => [...existingJimi, {text: 1, sender: 'bot'}])
             setAudioState(1)
         }
         }, [audioUrl]);
