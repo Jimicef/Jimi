@@ -20,6 +20,7 @@ function Chat() {
   const [partLink, setPartLink] = React.useState("")
   const messageContainerRef = useRef();
   const [minTwenty, setminTwenty] = useState('')
+  const [isDot, setIsDot] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -118,6 +119,7 @@ function Chat() {
             while (true) {
                 const { value, done } = await reader.read()
                 if (done) {
+                  console.log(minTwenty)
                     getSpeech(minTwenty)
                     setminTwenty('')
                     break
@@ -125,7 +127,11 @@ function Chat() {
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
                 // decodedChunk를 계속 받아서 20글자가 넘어가면, getSpeech로 읽게 한후 해당값은 초기화
+                
                 setminTwenty((existingText) => existingText+decodedChunk)
+                // if (decodedChunk.includes('.')){
+                //   setIsDot(!isDot)
+                // }
                 // getSpeech(decodedChunk)
                 // console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
@@ -174,9 +180,17 @@ function Chat() {
     };
 
   useEffect(()=>{
-    if (minTwenty.length>20){
-      getSpeech(minTwenty)
-      setminTwenty('')
+    // console.log(minTwenty)
+    // getSpeech(minTwenty)
+    // setminTwenty('')
+    if (minTwenty.includes('.')) {
+
+      const parts = minTwenty.split(".");
+      const lastPart = parts.pop(); // 마지막 부분 추출
+      const restOfString = parts.join('.'); // 나머지 부분 합치기
+      console.log(parts)
+      getSpeech(restOfString)
+      setminTwenty(lastPart)
     }
   }, [minTwenty])
   
