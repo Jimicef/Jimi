@@ -324,4 +324,4 @@ async def post_voice_chat(file: UploadFile):
             "format": "서비스(의료)"
         }
     }
-    return post_chat(data)
+    return await post_chat(data)
