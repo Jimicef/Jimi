@@ -14,7 +14,7 @@ function App() {
           <Route path="/voice" element={<Voice/>}></Route>
         </Routes>
       </BrowserRouter>
-    </div>
+    </div> 
   )
 };
 
