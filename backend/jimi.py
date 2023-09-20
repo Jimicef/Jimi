@@ -16,7 +16,8 @@ Google_API_KEY = os.environ["Google_API_KEY"]
 Google_SEARCH_ENGINE_ID = os.environ["Google_SEARCH_ENGINE_ID"]
 
 origins = [
-    "https://d2cbtv7b4u1taw.cloudfront.net"
+    "https://d2cbtv7b4u1taw.cloudfront.net",
+    "https://jimi-bot.net",
     "http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com",
     "http://jimi-bucket.s3-website.ap-northeast-2.amazonaws.com"
 ]
