@@ -1,7 +1,11 @@
-import { Button } from '@mui/material';
+import { Button, Box, TextField, ThemeProvider } from '@mui/material';
 import React from 'react'
 import { useState, useCallback } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
+import BasicCard from './layout/BasicCard';
+import { theme } from "./theme";
+import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
+import MicOffIcon from '@mui/icons-material/MicOff';
 
 const Voice = () => {
 
@@ -19,6 +23,8 @@ const Voice = () => {
     const [source, setSource] = useState();
     const [analyser, setAnalyser] = useState();
     const [audioUrl, setAudioUrl] = useState();
+
+    const [audioState, setAudioState] = useState(1) // 1: 녹음 시작 2: 녹음 중지 3: 로딩중
 
     // react-speech-recognition
     const {
@@ -179,8 +185,7 @@ const Voice = () => {
         }
     }
   return (
-    <div>Voice
-        <br/>
+    <div>
         {/* <Button onClick={handleButtonClick}>파일 업로드</Button>
       <input type="file"
              ref={fileInput}
@@ -190,6 +195,65 @@ const Voice = () => {
         <Button variant="contained" onClick={onRec ? onRecAudio : offRecAudio}>녹음</Button>
         <Button variant='outlined' onClick={onSubmitAudioFile}>결과 확인 </Button>
         <p>{transcript}</p>
+        <BasicCard>
+        <Box sx={{ flexGrow: 1, overflow: "auto", p: 2, minWidth: 120 }} 
+        // ref={messageContainerRef}
+        >
+        {/* {jimi.map((message, index) => (
+          <Message key={index} message={message} handleQuestion={handleQuestion} handleTarget={handleTarget} handleContent={handleContent}
+          handleDocs={handleDocs} handleSelection={handleSelection} handleWay={handleWay}/>
+        ))} */}
+      </Box>
+      <Box sx={{display:'flex', p: 2, backgroundColor: "background.default", minWidth: 120 }}>
+        {/* <Grid container spacing={2}> */}
+          {/* <Box sx={{width: "85%", mr: 2}}>
+            <TextField
+            //   size="Normal"
+              fullWidth
+              placeholder="해당 지원금 제도에 대해 무엇이든 질문해주세요"
+              variant="outlined"
+              value={transcript}
+            //   onChange={handleInputChange}
+            //   onKeyDown={handleKeyDown}
+            />
+          </Box> */}
+          <Box sx={{width: '100%', height: '13vh'}}>
+            {/* <ThemeProvider theme={theme}> */}
+
+              {
+                audioState === 1 &&
+                <Button
+                fullWidth
+                variant="contained"
+                sx={{height: '100%', fontSize: '3vh'}}
+                onClick={onRecAudio}
+                color='secondary'
+              ><KeyboardVoiceIcon fontSize='large'/>시작</Button>}
+
+                {audioState === 2 && <Button
+                fullWidth
+                variant="contained"
+                sx={{height: '100%', fontSize: '3vh'}}
+                onClick={offRecAudio}
+                color='error'
+              ><MicOffIcon fontSize='large'/>멈춤</Button>}
+
+              {audioState === 3 && 
+              <Button
+              fullWidth
+              variant="contained"
+              sx={{height: '100%', fontSize: '3vh'}}
+              color='secondary'
+              disabled
+            ><KeyboardVoiceIcon fontSize='large'/>시작</Button>}
+            
+              
+      
+              
+            {/* </ThemeProvider> */}
+          </Box>
+          </Box>
+        </BasicCard>
     </div>
   )
 }
