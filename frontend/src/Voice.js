@@ -187,6 +187,7 @@ const Voice = () => {
 
         // 오디오 파일을 Blob 형식으로 변환합니다.
         const audioBlob = await audioResponse.blob();
+        audioBlob.name = 'sample.wav'
         console.log(audioBlob)
 
         const sound = new File([audioFilePath], "soundBlob.wav", { lastModified: new Date().getTime(), type: "audio/mpeg" });
