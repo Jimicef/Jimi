@@ -200,7 +200,7 @@ const Voice = () => {
                 // headers:{
                 //     "Content-Type": "multipart/form-data"
                 // },
-                body: audioBlob
+                body: formData
             })
             if (response.ok) {
                 const data = await response.json();
