@@ -25,6 +25,7 @@ const Voice = () => {
     const [analyser, setAnalyser] = useState();
     const [audioUrl, setAudioUrl] = useState();
     const [jimi, setJimi] = React.useState([]);
+    const [isAudioEnd, setIsAudioEnd] = React.useState(false)
 
     const [audioState, setAudioState] = useState(1) // 1: 녹음 시작 2: 녹음 중지 3: 로딩중
     const messageContainerRef = useRef();
@@ -38,9 +39,7 @@ const Voice = () => {
       useEffect(() => {
         scrollToBottom();
       }, [jimi]);
-    //   useEffect(()=> {
-        
-    //   }, [transcript])
+      
     // react-speech-recognition
     const {
         transcript,
@@ -53,7 +52,12 @@ const Voice = () => {
     // return <span>Browser doesn't support speech recognition.</span>;
     // }
 
+    useEffect(()=> {
+        // const lastItem = existingJimi
+    }, [transcript])
+
     const onRecAudio = () => {
+        setIsAudioEnd(true)
         // 음원정보를 담은 노드를 생성하거나 음원을 실행또는 디코딩 시키는 일을 한다
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
@@ -125,6 +129,7 @@ const Voice = () => {
         analyser.disconnect();
         source.disconnect();
         setAudioState(3)
+        setIsAudioEnd(true)
         setJimi((existingJimi) => [...existingJimi, {text: transcript, sender: 'user'}])
         onSubmitAudioFile()
       };
@@ -137,6 +142,7 @@ const Voice = () => {
         console.log(sound); // File 정보 출력
         const formData = new FormData();
         formData.append("file", sound)
+        console.log(formData)
         try {
             const response = await fetch(`${apiEndPoint}/api/voice_chat`,{
                 method: "POST",
@@ -187,7 +193,7 @@ const Voice = () => {
         console.log(sound)
         // FormData 객체를 생성하고 오디오 파일을 추가합니다.
         const formData = new FormData();
-        formData.append('file', sound);
+        formData.append('file', audioBlob);
         try {
             const response = await fetch(`${apiEndPoint}/api/voice_chat`,{
                 method: "POST",
