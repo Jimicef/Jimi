@@ -1,11 +1,9 @@
 from fastapi import FastAPI, UploadFile, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
-import openai
-import os
 
 
-from handlers import get_service_list, get_chat, post_chat
+from handlers import get_service_list, get_chat, post_chat, post_voice_chat
 
 app = FastAPI()
 
@@ -46,24 +44,7 @@ async def api_post_chat(chat_response: Annotated[dict,Depends(post_chat)]):
     return chat_response
 
 
-
-
-
 # 디버그용 추후 삭제 필요 /api/voice/chat으로 대체할 예정임
 @app.post("/api/voice_chat")
-async def post_voice_chat(file: UploadFile):
-    # 업로드된 MP3 파일을 저장
-    with open(file.filename, "wb") as f:
-        f.write(file.file.read())
-
-    # 저장한 파일 경로를 사용하여 업로드된 MP3 파일을 transcribe 함수에 전달
-    with open(file.filename, "rb") as f:
-        transcript = openai.Audio.transcribe(
-            file=f,
-            model="whisper-1",
-            prompt="",
-        )
-    os.remove(file.filename)
-    return {
-        "transcript": transcript["text"]
-    }
+async def api_post_voice_chat(voice_chat_response: Annotated[dict,Depends(post_voice_chat)]):
+    return voice_chat_response

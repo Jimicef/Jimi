@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query, UploadFile, Depends
+from fastapi import Query, UploadFile
 from bs4 import BeautifulSoup
 import requests
 from prompts import MAIN_PROMPT, CHAT_PROMPT, FUNCTIONS, MODEL
@@ -287,3 +287,27 @@ async def post_chat(data: dict):
         content=generate_chunks(),
         media_type="text/plain"
     )
+
+
+async def post_voice_chat(file: UploadFile):
+    # 업로드된 MP3 파일을 저장
+    with open(file.filename, "wb") as f:
+        f.write(file.file.read())
+
+    # 저장한 파일 경로를 사용하여 업로드된 MP3 파일을 transcribe 함수에 전달
+    with open(file.filename, "rb") as f:
+        transcript = openai.Audio.transcribe(
+            file=f,
+            model="whisper-1",
+            prompt="",
+        )
+    os.remove(file.filename)
+    # return {
+    #     "transcript": transcript["text"]
+    # }
+    data = {
+        "question": transcript["text"],
+        "history" : [],
+        "summary" : get_chat("SD0000007044")
+    }
+    return post_chat(data)
