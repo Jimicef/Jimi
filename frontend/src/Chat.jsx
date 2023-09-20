@@ -86,6 +86,7 @@ function Chat() {
         //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
         setIsLoading(true)
         setInput("")
+        setminTwenty('')
         try {
             const modifiedJimi = jimi.filter(item => !item.support).map(item => {
                 // 'text'를 'content'로 변경
@@ -115,13 +116,18 @@ function Chat() {
             })
             const reader = response.body.getReader()
             const decoder = new TextDecoder()
+            var flag = false
             
             while (true) {
                 const { value, done } = await reader.read()
                 if (done) {
-                  console.log(minTwenty)
-                    getSpeech(minTwenty)
-                    setminTwenty('')
+                    console.log('done')
+                    console.log(minTwenty)
+                    // if (minTwenty) {
+                    //   getSpeech(minTwenty)
+                    //   setminTwenty('')
+                    // }
+                    
                     break
                 }
                 //console.log(value)
@@ -129,6 +135,9 @@ function Chat() {
                 // decodedChunk를 계속 받아서 20글자가 넘어가면, getSpeech로 읽게 한후 해당값은 초기화
                 
                 setminTwenty((existingText) => existingText+decodedChunk)
+                console.log('chunk', decodedChunk)
+                
+                //checkMinTwenty()
                 // if (decodedChunk.includes('.')){
                 //   setIsDot(!isDot)
                 // }
@@ -147,7 +156,7 @@ function Chat() {
                         const updatedJimi = existingJimi.slice(0, -1);
                         if (decodedChunk.includes('ˇ')) {
                             //console.log("it is end of answer")
-                            setIsAnswerEnd(true)
+                            //setIsAnswerEnd(true)
                             const idx = decodedChunk.indexOf('ˇ')
                             const decodedChunkArray = decodedChunk.slice(idx+1).split("˘")
                             return [...updatedJimi, { text: previousData+decodedChunk.slice(0, idx), link: decodedChunkArray, sender: 'bot' }]
@@ -170,21 +179,44 @@ function Chat() {
             //     const updatedJimi = existingJimi.slice(0, -1);
             //     return [...updatedJimi, { text: previousData, link: arrayData, sender: 'bot' }];
             // })
+            
         } catch(error) {
             console.log(error)
         } finally {
             setIsLoading(false)
-            setIsAnswerEnd(false)
+            // setIsAnswerEnd(true)
+            // getSpeech(minTwenty)
+            // setminTwenty('')
         }
+        // initMinTwenty()
         window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
     };
 
+    // const initMinTwenty = () => {
+    //   console.log('hereee')
+    //   getSpeech(minTwenty)
+    //   setminTwenty('')
+    // }
+  // useEffect(()=>{
+  //   if (isAnswerEnd) {
+  //     console.log ("isanswerend")
+  //     getSpeech(minTwenty)
+  //     setminTwenty('')
+  //     setIsAnswerEnd(false)
+  //   }
+  // }, [isAnswerEnd])
+
   useEffect(()=>{
-    // console.log(minTwenty)
+    console.log(minTwenty)
+    getSpeech('')
+    // if (isAnswerEnd) {
+    //   console.log(minTwenty)
+    //   getSpeech(minTwenty)
+    //   setIsAnswerEnd(false)
+    // }
     // getSpeech(minTwenty)
     // setminTwenty('')
     if (minTwenty.includes('.')) {
-
       const parts = minTwenty.split(".");
       if (parts.length === 1) {
         getSpeech(parts[0])
@@ -192,12 +224,30 @@ function Chat() {
       } else if (parts.length > 1) {
         const lastPart = parts.pop(); // 마지막 부분 추출
         const restOfString = parts.join('.'); // 나머지 부분 합치기
-        console.log(parts)
+        console.log('나머지##', restOfString)
         getSpeech(restOfString)
         setminTwenty(lastPart)
       }
     }
   }, [minTwenty])
+
+  const checkMinTwenty = () => {
+    console.log("check!", minTwenty)
+    if (minTwenty.includes('.')) {
+      console.log("아예 여기로도 못들어오네")
+      const parts = minTwenty.split(".");
+      if (parts.length === 1) {
+        getSpeech(parts[0])
+        setminTwenty('')
+      } else if (parts.length > 1) {
+        const lastPart = parts.pop(); // 마지막 부분 추출
+        const restOfString = parts.join('.'); // 나머지 부분 합치기
+        console.log(restOfString)
+        getSpeech(restOfString)
+        setminTwenty(lastPart)
+      }
+    }
+  }
   
 
   const handleTarget = () => {
