@@ -1,11 +1,12 @@
 import { Button, Box, TextField, ThemeProvider } from '@mui/material';
 import React from 'react'
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 import BasicCard from './layout/BasicCard';
 import { theme } from "./theme";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import MicOffIcon from '@mui/icons-material/MicOff';
+import { Message } from "./message";
 
 const Voice = () => {
 
@@ -23,9 +24,23 @@ const Voice = () => {
     const [source, setSource] = useState();
     const [analyser, setAnalyser] = useState();
     const [audioUrl, setAudioUrl] = useState();
+    const [jimi, setJimi] = React.useState([]);
 
     const [audioState, setAudioState] = useState(1) // 1: 녹음 시작 2: 녹음 중지 3: 로딩중
+    const messageContainerRef = useRef();
 
+    const scrollToBottom = () => {
+        if (messageContainerRef.current) {
+          messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+        }
+      };
+
+      useEffect(() => {
+        scrollToBottom();
+      }, [jimi]);
+      useEffect(()=> {
+        
+      }, [transcript])
     // react-speech-recognition
     const {
         transcript,
@@ -87,6 +102,7 @@ const Voice = () => {
                 setOnRec(false);
                 }
             };
+            setAudioState(2)
         });
     };
     const offRecAudio = () => {
@@ -108,13 +124,16 @@ const Voice = () => {
         // 메서드가 호출 된 노드 연결 해제
         analyser.disconnect();
         source.disconnect();
+        setAudioState(3)
+        setJimi((existingJimi) => [...existingJimi, {text: transcript, sender: 'user'}])
+        onSubmitAudioFile()
       };
     const onSubmitAudioFile = useCallback(async() => {
         if (audioUrl) {
             console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
         }
         // File 생성자를 사용해 파일로 변환
-        const sound = new File([audioUrl], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
+        const sound = new File([audioUrl], "soundBlob.wav", { lastModified: new Date().getTime(), type: "audio" });
         console.log(sound); // File 정보 출력
         const formData = new FormData();
         formData.append("file", sound)
@@ -131,6 +150,9 @@ const Voice = () => {
               }
         } catch (error) {
             console.log(error)
+        } finally {
+            setJimi((existingJimi) => [...existingJimi, {text: 1, sender: 'bot'}])
+            setAudioState(1)
         }
         }, [audioUrl]);
     const fileInput = React.useRef(null);
@@ -161,7 +183,7 @@ const Voice = () => {
         const audioBlob = await audioResponse.blob();
         console.log(audioBlob)
 
-        const sound = new File([audioFilePath], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
+        const sound = new File([audioFilePath], "soundBlob.wav", { lastModified: new Date().getTime(), type: "audio" });
         console.log(sound)
         // FormData 객체를 생성하고 오디오 파일을 추가합니다.
         const formData = new FormData();
@@ -197,12 +219,11 @@ const Voice = () => {
         <p>{transcript}</p>
         <BasicCard>
         <Box sx={{ flexGrow: 1, overflow: "auto", p: 2, minWidth: 120 }} 
-        // ref={messageContainerRef}
+        ref={messageContainerRef}
         >
-        {/* {jimi.map((message, index) => (
-          <Message key={index} message={message} handleQuestion={handleQuestion} handleTarget={handleTarget} handleContent={handleContent}
-          handleDocs={handleDocs} handleSelection={handleSelection} handleWay={handleWay}/>
-        ))} */}
+        {jimi.map((message, index) => (
+          <Message key={index} message={message} />
+        ))}
       </Box>
       <Box sx={{display:'flex', p: 2, backgroundColor: "background.default", minWidth: 120 }}>
         {/* <Grid container spacing={2}> */}
