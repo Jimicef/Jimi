@@ -38,9 +38,9 @@ const Voice = () => {
       useEffect(() => {
         scrollToBottom();
       }, [jimi]);
-      useEffect(()=> {
+    //   useEffect(()=> {
         
-      }, [transcript])
+    //   }, [transcript])
     // react-speech-recognition
     const {
         transcript,
