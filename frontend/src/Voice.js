@@ -206,7 +206,7 @@ const Voice = () => {
             })
             if (response.ok) {
                 const data = await response.json();
-                //setJimi((existingJimi) => [...existingJimi, {text: data.transcript, sender: 'bot'}])
+                setJimi((existingJimi) => [...existingJimi, {text: data.transcript, sender: 'bot'}])
                 console.log('가져온 값:', data.transcript);
               } else {
                 console.error('파일 업로드 실패:', response.statusText);
@@ -214,7 +214,7 @@ const Voice = () => {
         } catch (error) {
             console.log(error)
         } finally {
-            setJimi((existingJimi) => [...existingJimi, {text: 1, sender: 'bot'}])
+            //setJimi((existingJimi) => [...existingJimi, {text: 1, sender: 'bot'}])
             setAudioState(1)
         }
         }, [audioUrl]);
@@ -280,8 +280,8 @@ const Voice = () => {
         {/* <Button variant='contained' onClick={fetchCheck}>fetch 확인</Button>
         <Button variant="contained" onClick={onRec ? onRecAudio : offRecAudio}>녹음</Button>
         <Button variant='outlined' onClick={onSubmitAudioFile}>결과 확인 </Button> */}
-        <p>{transcript}</p>
-        <p>{listening?"듣는중":"멈췄음"}</p>
+        {/* <p>{transcript}</p>
+        <p>{listening?"듣는중":"멈췄음"}</p> */}
         <BasicCard>
         <Box sx={{ flexGrow: 1, overflow: "auto", p: 2, minWidth: 120 }} 
         ref={messageContainerRef}
