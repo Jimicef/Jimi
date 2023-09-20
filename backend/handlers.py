@@ -5,6 +5,13 @@ from prompts import MAIN_PROMPT, CHAT_PROMPT, FUNCTIONS, MODEL
 from fastapi.responses import StreamingResponse
 from prompts import MAIN_PROMPT, CHAT_PROMPT, FUNCTIONS, MODEL
 import openai
+import json
+import os
+
+
+openai.api_key = os.environ["OPENAI_API_KEY"]
+Google_API_KEY = os.environ["Google_API_KEY"]
+Google_SEARCH_ENGINE_ID = os.environ["Google_SEARCH_ENGINE_ID"]
 
 async def get_service_list(keyword : str = Query(None,description = "검색 키워드"),
                            count : int = Query(0,description = "페이지 번호"),

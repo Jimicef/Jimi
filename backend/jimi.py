@@ -1,17 +1,14 @@
 from fastapi import FastAPI, UploadFile, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
-
 import openai
-
 import os
+
 
 from handlers import get_service_list, get_chat, post_chat
 
 app = FastAPI()
-openai.api_key = os.environ["OPENAI_API_KEY"]
-Google_API_KEY = os.environ["Google_API_KEY"]
-Google_SEARCH_ENGINE_ID = os.environ["Google_SEARCH_ENGINE_ID"]
+
 
 origins = [
     "https://d2cbtv7b4u1taw.cloudfront.net",
