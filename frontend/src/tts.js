@@ -31,16 +31,16 @@ export const getSpeech = (text) => {
   
       //힌국어 voice가 있다면 ? utterance에 목소리를 설정한다 : 리턴하여 목소리가 나오지 않도록 한다.
       if (kor_voice) {
-        console.log('yes!')
+        
         utterThis.voice = kor_voice;
       } else {
-        console.log('no!')
+        
 
         return;
       }
   
       //utterance를 재생(speak)한다.
-      window.speechSynthesis.speak(utterThis, );
+      window.speechSynthesis.speak(utterThis);
     };
   
     speech(text);
