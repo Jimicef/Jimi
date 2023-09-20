@@ -118,6 +118,8 @@ function Chat() {
             while (true) {
                 const { value, done } = await reader.read()
                 if (done) {
+                    getSpeech(minTwenty)
+                    setminTwenty('')
                     break
                 }
                 //console.log(value)
