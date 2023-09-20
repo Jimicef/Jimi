@@ -186,11 +186,16 @@ function Chat() {
     if (minTwenty.includes('.')) {
 
       const parts = minTwenty.split(".");
-      const lastPart = parts.pop(); // 마지막 부분 추출
-      const restOfString = parts.join('.'); // 나머지 부분 합치기
-      console.log(parts)
-      getSpeech(restOfString)
-      setminTwenty(lastPart)
+      if (parts.length === 1) {
+        getSpeech(parts[0])
+        setminTwenty('')
+      } else if (parts.length > 1) {
+        const lastPart = parts.pop(); // 마지막 부분 추출
+        const restOfString = parts.join('.'); // 나머지 부분 합치기
+        console.log(parts)
+        getSpeech(restOfString)
+        setminTwenty(lastPart)
+      }
     }
   }, [minTwenty])
   
