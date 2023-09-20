@@ -2,7 +2,7 @@ import * as React from "react";
 import {Box, TextField, Button, Typography, Avatar, Grid, Paper, ThemeProvider, Card} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { Message } from "./message";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { theme } from "./theme";
 import logo from './logo.png';
 import './App.css';
@@ -19,6 +19,7 @@ function Chat() {
   const [links, setLinks] = React.useState([])
   const [partLink, setPartLink] = React.useState("")
   const messageContainerRef = useRef();
+  const [minTwenty, setminTwenty] = useState('')
 
   const dispatch = useDispatch()
 
@@ -117,11 +118,15 @@ function Chat() {
             while (true) {
                 const { value, done } = await reader.read()
                 if (done) {
+                    getSpeech(minTwenty)
+                    setminTwenty('')
                     break
                 }
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
-                getSpeech(decodedChunk)
+                // decodedChunk를 계속 받아서 20글자가 넘어가면, getSpeech로 읽게 한후 해당값은 초기화
+                setminTwenty((existingText) => existingText+decodedChunk)
+                // getSpeech(decodedChunk)
                 // console.log(decodedChunk)
                 // setPartData(prevValue => `${prevValue}${decodedChunk}`)
                 // console.log(partData)
@@ -167,6 +172,13 @@ function Chat() {
         }
         window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
     };
+
+  useEffect(()=>{
+    if (minTwenty.length>20){
+      getSpeech(minTwenty)
+      setminTwenty('')
+    }
+  }, [minTwenty])
   
 
   const handleTarget = () => {

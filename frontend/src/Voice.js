@@ -57,7 +57,7 @@ const Voice = () => {
         // const lastItem = existingJimi
 
         setUserText(transcript)
-        console.log("hihi:", transcript)
+        // console.log("hihi:", transcript)
         if (transcript && listening){ //transcript 없어진후 -> listening: false
 
             setJimi((existingJimi) => {
