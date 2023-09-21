@@ -104,7 +104,7 @@ export const Intro = () => {
     const handleSubmit = () => {
         const selectedSupports = Object.keys(support).filter(key => key!=="전체" && support[key]).map(key => chktype1Code[key]).join("|");
         setIsLoading(true)
-        fetch(`${apiEndPoint}/api/service_list?keyword=${input}&count=0&chktype1=${selectedSupports}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]?sidoCode[region]:""}&svccd=${user}`)
+        fetch(`${apiEndPoint}/api/service_list?keyword=${input}&count=0&chktype1=${selectedSupports}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]?sidoCode[region]:""}&svccd=${user}&voice=0`)
         .then(response => response.json())
         .then(data => {
             //console.log(data)

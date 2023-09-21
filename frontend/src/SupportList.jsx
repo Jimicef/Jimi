@@ -47,7 +47,7 @@ export const SupportList = () => {
     }
     const handleNextPage = () => {
         setIsLoadingPage(true)
-        fetch(`${apiEndPoint}/api/service_list?keyword=${input}&count=${count+1}&chktype1=${services}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]}&svccd=${user}`)
+        fetch(`${apiEndPoint}/api/service_list?keyword=${input}&count=${count+1}&chktype1=${services}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]}&svccd=${user}&voice=0`)
         .then(response => response.json())
         .then(data => {
             // setSupportList(data.support)
@@ -107,7 +107,7 @@ export const SupportList = () => {
 
     const goToChat = (serviceId) => {
         setIsLoadingChat(true)
-        fetch(`${apiEndPoint}/api/chat?serviceId=${serviceId}`)
+        fetch(`${apiEndPoint}/api/chat?serviceId=${serviceId}&voice=0`)
         .then(response => response.json())
         .then(data => {
             dispatch({
