@@ -140,8 +140,10 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     }
 
 
-async def get_chat(serviceId):
+async def get_chat(serviceId : str = Query(None,description = "서비스 ID"),
+                   voice : bool = Query(None,description = "시각 장애인 자막 생성 여부")):
     cond = serviceId
+    voice_answer = ""
     url = f"http://api.odcloud.kr/api/gov24/v3/serviceDetail?page=1&perPage=10&cond%5B%EC%84%9C%EB%B9%84%EC%8A%A4ID%3A%3AEQ%5D={cond}&serviceKey=aVyQkv5W8mV6fweNFyOmB3fvxjmcuMvbOl4fkTCOVH1kCgOCcSkFa8UKeUBljB3Czd5VwvoIYKkH%2FpWWwVvpKQ%3D%3D"
     response = requests.get(url)
     res = response.json()
@@ -177,7 +179,27 @@ async def get_chat(serviceId):
             askey = key
         if key != askey :
             ret[askey] = value
-    return ret
+
+    if voice:
+        messages = [
+            {"role": "user","content": 
+             f"""
+             Summarize the key content of the provided service information below, 
+             and please provide the response in a conversational manner as if a person were speaking.
+             
+             SERVICE INFORMATION : {ret}
+            """}
+        ]
+        
+        voice_answer = openai.ChatCompletion.create(
+            model=MODEL,
+            messages=messages,
+            temperature=0,
+        )
+    return {
+        "voiceAnswer" : voice_answer,
+        "summary" : ret
+        }
 
 
 async def post_chat(data: dict):
