@@ -69,9 +69,11 @@ FUNCTIONS = [
 MODEL = "gpt-3.5-turbo-16k"
 
 GET_CHAT_PROMPT = """
-Summarize the key content of the provided service information below, 
-and please provide the response in a conversational manner as if a person were speaking.
+Summarize the application deadline, application method, support content, support target, and support method.
+refer to the service information below.
+
 Please generate response in the korean language.
+please Avoid repeating the same word and provide the response in a conversational manner as if a person were speaking.
 """
 
 VOICE_FUNCTIONS = [
