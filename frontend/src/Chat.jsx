@@ -135,7 +135,7 @@ function Chat() {
                 // decodedChunk를 계속 받아서 20글자가 넘어가면, getSpeech로 읽게 한후 해당값은 초기화
                 
                 //setminTwenty((existingText) => existingText+decodedChunk)
-                getSpeech(decodedChunk)
+                // getSpeech(decodedChunk)
                 console.log('chunk', decodedChunk)
                 
                 //checkMinTwenty()
