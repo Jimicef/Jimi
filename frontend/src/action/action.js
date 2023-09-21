@@ -27,3 +27,5 @@ export const SET_MIN_TWENTY = "SET_MIN_TWENTY"
 export const SET_VOICE_COUNT = "SET_VOICE_COUNT"
 
 export const SET_FIRST_JIMI = "SET_FIRST_JIMI"
+
+export const SET_JIMI = "SET_JIMI"

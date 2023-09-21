@@ -8,7 +8,7 @@ import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import { Message } from "./message";
 import { useDispatch, useSelector } from 'react-redux';
-import { SET_ANSWER, SET_COUNT, SET_SUPPORT_LIST, SET_VOICE_COUNT, SET_SUMMARY } from './action/action';
+import { SET_ANSWER, SET_COUNT, SET_SUPPORT_LIST, SET_VOICE_COUNT, SET_SUMMARY, SET_JIMI } from './action/action';
 import { getSpeech } from './tts';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
@@ -29,7 +29,7 @@ const Voice = () => {
     const [source, setSource] = useState();
     const [analyser, setAnalyser] = useState();
     const [audioUrl, setAudioUrl] = useState();
-    const [jimi, setJimi] = React.useState([]);
+    // const [jimi, setJimi] = React.useState([]);
     
     const [userText, setUserText] = React.useState('')
 
@@ -40,6 +40,7 @@ const Voice = () => {
     const supports = useSelector((state) => state.supportList)
     const summary = useSelector((state) => state.summary)
     const firstJimi = useSelector((state) => state.firstJimi)
+    const jimi = useSelector((state)=>state.jimi)
 
     const messageContainerRef = useRef();
 
@@ -71,45 +72,48 @@ const Voice = () => {
         setUserText(transcript)
         // console.log("hihi:", transcript)
         if (transcript && listening){ //transcript 없어진후 -> listening: false
+            const lastItem = jimi[jimi.length - 1]
+            var result
+            if (lastItem.sender === 'user') {
 
-            setJimi((existingJimi) => {
-                const lastItem = existingJimi[existingJimi.length - 1]
-                if (lastItem.sender === 'user') {
-
-                    const updatedJimi = existingJimi.slice(0, -1)
-                    return [...updatedJimi, {text: transcript, sender: 'user'}]
-                } else {
-                    return existingJimi
-                }
+                const updatedJimi = jimi.slice(0, -1)
+                result =  [...updatedJimi, {text: transcript, sender: 'user'}]
+            } else {
+                result =  jimi
+            }
+            dispatch({
+                type: SET_JIMI,
+                data: result
             })
         }
     }, [transcript])
 
     useEffect(()=>{
         if (userText && !listening) {
-            setJimi((existingJimi) => [...existingJimi.slice(0, -1), {text: userText, sender: 'user'}])
+            // setJimi((existingJimi) => [...existingJimi.slice(0, -1), {text: userText, sender: 'user'}])
+            dispatch({
+                type: SET_JIMI,
+                data: [...jimi.slice(0, -1), {text: userText, sender: 'user'}]
+            })
             setUserText('')
         }
     }, [listening])
 
     useEffect(()=> {
         // console.log(firstJimi)
-        setTimeout(() => {
-            getSpeech('')
-            const textToSpeak = '안녕하세요! 페이지가 로드되었습니다.';
-            console.log(textToSpeak)
-            getSpeech(textToSpeak);
-          }, 1000);
         //getSpeech(firstJimi)
-       //setJimi((existingJimi) => [...existingJimi, {text: "안녕하세요. 현재 거주하고 계신 지역과 지원받고 싶은 상황에 대해 말해줘", sender: 'bot'}])
+        
     }, [])
 
     const onRecAudio = () => {
         // setIsAudioEnd(true)
         // 음원정보를 담은 노드를 생성하거나 음원을 실행또는 디코딩 시키는 일을 한다
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        setJimi((existingJimi) => [...existingJimi, {text: '', sender: 'user'}])
-        
+        // setJimi((existingJimi) => [...existingJimi, {text: '', sender: 'user'}])
+        dispatch({
+            type: SET_JIMI,
+            data: [...jimi, {text: '', sender: 'user'}]
+        })
         // 자바스크립트를 통해 음원의 진행상태에 직접접근에 사용된다.
         const analyser = audioCtx.createScriptProcessor(0, 1, 1);
         setAnalyser(analyser);
@@ -185,11 +189,11 @@ const Voice = () => {
         }
       }, [audioUrl]); // audioUrl 상태가 변경될 때만 실행
     const onSubmitAudioFile = useCallback(async() => {
-        if (audioUrl) {
-            console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
-            //audioUrl.name = "request.wav"
-        }
-        console.log(audioUrl)
+        // if (audioUrl) {
+        //     console.log(URL.createObjectURL(audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
+        //     //audioUrl.name = "request.wav"
+        // }
+        //console.log(audioUrl)
         // File 생성자를 사용해 파일로 변환
         const sound = new File([audioUrl], "request.wav", { lastModified: new Date().getTime(), type: "audio" });
         // console.log(sound); // File 정보 출력
@@ -201,7 +205,7 @@ const Voice = () => {
 
         const formData = new FormData();
         formData.append("file", sound)
-        console.log(formData)
+        //console.log(formData)
         try {
             const response = await fetch(`${apiEndPoint}/api/voice/chat`,{
                 method: "POST",
@@ -223,7 +227,11 @@ const Voice = () => {
                                 type: SET_SUPPORT_LIST,
                                 data: data.support
                             })
-                            setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                            // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                            dispatch({
+                                type: SET_JIMI,
+                                data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
+                            })
                             getSpeech(data.voiceAnswer)
                         })    
                     } else if (data.serviceParams.prevPage){
@@ -238,7 +246,11 @@ const Voice = () => {
                                 type: SET_SUPPORT_LIST,
                                 data: data.support
                             })
-                            setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                            // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                            dispatch({
+                                type: SET_JIMI,
+                                data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
+                            })
                             getSpeech(data.voiceAnswer)
                         })    
                     } else {
@@ -253,11 +265,16 @@ const Voice = () => {
                                 type: SET_SUPPORT_LIST,
                                 data: data.support
                             })
-                            setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                            // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                            dispatch({
+                                type: SET_JIMI,
+                                data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
+                            })
                             getSpeech(data.voiceAnswer)
                         })                 
                     }
                 } else if (data.function === 'get:/api/chat') {
+                    console.log(supports)
                     fetch(`${apiEndPoint}/api/chat?serviceId=${supports[data.getChatParams.serviceNumber].serviceId}&voice=1`)
                     .then(response => response.json())
                     .then(data => {
@@ -265,7 +282,11 @@ const Voice = () => {
                             type: SET_SUMMARY,
                             data: data.summary
                         })
-                        setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                        // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                        dispatch({
+                            type: SET_JIMI,
+                            data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
+                        })
                         getSpeech(data.voiceAnswer)
                     })
                 } else if (data.function === 'post:/api/chat') {
@@ -274,7 +295,7 @@ const Voice = () => {
                         const role = item.sender === 'bot' ? 'assistant' : item.sender;
                         return { content, role}; // 여기서 link도 함께 복사하거나 유지합니다.
                     });
-                    fetch(`${apiEndPoint}/api/chat?voice=1`, {
+                    fetch(`${apiEndPoint}/api/chat`, {
                         method: 'POST',
                         headers: {
                             "Content-Type": "application/json"
@@ -283,11 +304,16 @@ const Voice = () => {
                             username: sessionStorage.getItem("username"),
                             question: data.postChatParams.question,
                             history: modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi,
-                            summary: summary
+                            summary: summary,
+                            voice: 1
                         })
                     }).then(response => response.json())
                     .then(data => {
-                        setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}])
+                        // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}])
+                        dispatch({
+                            type: SET_JIMI,
+                            data: [...jimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}]
+                        })
                         getSpeech(data.voiceAnswer)
                     })
                 }
@@ -320,6 +346,7 @@ const Voice = () => {
         <Box sx={{ flexGrow: 1, overflow: "auto", p: 2, minWidth: 120 }} 
         ref={messageContainerRef}
         >
+            {/* {console.log(jimi)} */}
         {jimi.map((message, index) => (
           <Message key={index} message={message} />
         ))}
