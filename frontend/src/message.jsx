@@ -62,7 +62,7 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
             {/* {console.log(Boolean(message.support)== false)} */}
             {(message.support) ? (
               
-                <Box>
+                <Box sx={{width: '80%'}}>
                   {/* {console.log("here: ",message.support)} */}
                   {message.support.institution && <Typography variant="body2" sx={{ display: "inline-block", borderRadius: 3, bgcolor: "#DAD2E9", px: 1, mb: 1}}>{message.support.institution}</Typography>}
                   {message.support.title && <Typography variant="body1" sx={{fontWeight: 'bold'}}>{message.support.title}</Typography>}
@@ -99,7 +99,7 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
                   {viewMore &&message.support.docs && <><Typography variant="body2"sx={{display: 'inline-block'}}><Box sx={{fontWeight: 'bold', mr: 0.5}}>📑제출서류 </Box>{message.support.docs.length>150?message.support.docs.slice(0, 150)+"⋯":message.support.docs}</Typography><br/></>} 
                   {viewMore &&(message.support.docs && message.support.docs.length>150) &&<><Typography variant="body2" onClick={handleDocs}sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}, display: "inline-block", alignItems:'center', color:"#682699"}}><SendIcon sx={{fontSize: "14px", color: "#682699"}}/>제출서류 전체보기</Typography><br/></>}
                   {viewMore &&message.support.docs &&<br/>}
-                  {viewMore &&message.support.url && <Typography variant="body2" sx={{ display: 'flex', whiteSpace: 'nowrap'}} ><Box>📎</Box> <Box sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}}} onClick={()=>handleClickUrl(message.support.url)}>{message.support.url}</Box><br/><br/></Typography>}
+                  {viewMore &&message.support.url && <Typography variant="body2" sx={{ display: 'flex', wordBreak: 'break-all'}} ><Box>📎</Box> <Box sx={{"&:hover": {color:"grey.500", cursor: 'pointer'}}} onClick={()=>handleClickUrl(message.support.url)}>{message.support.url}</Box><br/><br/></Typography>}
 
                   {viewMore && <><Typography variant="body2" onClick={()=> {dispatch({
                     type: SET_VIEW_MORE,

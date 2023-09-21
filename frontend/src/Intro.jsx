@@ -10,6 +10,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { SET_SUPPORT_LIST, SET_ANSWER, SET_IS_LAST_PAGE, SET_INPUT, SET_COUNT, SET_SERVICES, SET_REGION, SET_SUBREGION, SET_USER } from './action/action';
+import BasicCard from './layout/BasicCard';
 
 
 export const Intro = () => {
@@ -208,8 +209,7 @@ export const Intro = () => {
     }
 
   return (
-    <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}} >
-        <Card sx={{width: '820px', height: '760px', bgcolor: "grey.200", overflow: 'auto'}}>
+    <BasicCard>
             <Box sx={{display: 'flex', alignItems: 'center', m:3}}>    
                 <Avatar sx={{ bgcolor: "#8977AD" ,mr: 1}}>
                     <ChatIcon sx={{fontSize: "23px"}}/>
@@ -218,17 +218,19 @@ export const Intro = () => {
                 안녕하세요! 👋 저는 지원금 찾기 도우미, 지미입니다.
                 </Typography>
             </Box>
+            <Box sx={{}}>
             <Typography variant='body1' sx={{m: 4}}>
                 사용자님이 신청할 수 있는 지원금 제도를 쉽게 찾아드려요! <br/><br/>
                 먼저, 지원금을 빠르고 간편하게 찾아보세요!<br/>
                 지역, 서비스 분야, 사용자 구분, 검색어를 선택적으로 입력하시면 관련된 지원금 제도를 찾아드릴게요.
             </Typography>
-            <Box sx={{height: "60%", display: 'flex', alignItems:'center', m: 2}}>
+            <Box>
+            <Box sx={{height: ["40%", "50%", "60%"], display: 'flex', alignItems:'center', m: 2}}>
             <Box sx={{m: 2, p:3, bgcolor: "white", borderRadius: '30px', boxShadow: '5px 5px 10px grey'}}>
                 <Typography sx={{fontWeight: 'bold'}}>지역</Typography>
                 <Box sx={{display: 'flex', m: 1, mb: 2}}>
                     
-                    <Box sx={{ minWidth: 120, mr: 3}}>
+                    <Box sx={{ width:'120px', mr: 3}}>
                         <FormControl fullWidth size="small">
                             <InputLabel id="demo-simple-select-label">시/도</InputLabel>
                             <Select
@@ -245,35 +247,7 @@ export const Intro = () => {
                             </Select>
                         </FormControl>
                     </Box>
-                    {/* <FormControl>
-                        <FormLabel id="demo-row-radio-buttons-group-label">시/도</FormLabel>
-                        <RadioGroup
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
-                            value={region}
-                            onChange={handleChangeRegion}
-                        >
-                            {regionList.map((re, idx) => (
-                                <FormControlLabel value={re} control={<Radio size='small'/>} label={re}/>
-                            ))}
-                        </RadioGroup>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel id="demo-row-radio-buttons-group-label">시/군/구</FormLabel>
-                        <RadioGroup
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
-                            value={subRegion}
-                            onChange={handleChangeSubRegion}
-                        >
-                            {subRegionList[region] && subRegionList[region].map((re, idx) => (
-                                <FormControlLabel value={re} control={<Radio size='small'/>} label={re}/>
-                            ))}
-                        </RadioGroup>
-                    </FormControl> */}
-                    <Box sx={{ minWidth: 120 }}>
+                    <Box sx={{ width: '120px'}}>
                         <FormControl fullWidth size="small">
                             <InputLabel >시/군/구</InputLabel>
                             <Select
@@ -350,14 +324,13 @@ export const Intro = () => {
                     />
                 </Box>
             </Box>
-            
+            </Box>
             </Box>
             <Box sx={{display: 'flex', justifyContent: 'flex-end', m:2}}>
                 {isLoading?<Button disabled variant='contained' color="secondary">지원금 추천받기</Button>:<Button variant='contained' color="secondary" onClick={handleSubmit}>지원금 추천받기</Button>}
             </Box>
-        </Card>
-        
-    </Box>
+            </Box>
+    </BasicCard>
   )
 }
 

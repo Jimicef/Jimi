@@ -9,6 +9,7 @@ import './App.css';
 import { useDispatch, useSelector } from "react-redux";
 import { SET_GO_TO_CHAT } from "./action/action";
 import { getSpeech } from "./tts";
+import BasicCard from "./layout/BasicCard";
 
 
 function Chat() {
@@ -147,7 +148,7 @@ function Chat() {
                         const previousData = lastItem.text
                         const updatedJimi = existingJimi.slice(0, -1);
                         if (decodedChunk.includes('ˇ')) {
-                            console.log("it is end of answer")
+                            // console.log("it is end of answer")
                             //setIsAnswerEnd(true)
                             const idx = decodedChunk.indexOf('ˇ')
                             const decodedChunkArray = decodedChunk.slice(idx+1).split("˘")
@@ -216,27 +217,7 @@ function Chat() {
 
   return (
     
-    <Box
-      sx = {{
-        height: "100vh",
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-     >
-    
-    <Card
-      sx={{
-
-        width: ['100%', '100%', '820px'],
-        height: "760px",
-        display: "flex",
-        flexDirection: "column",
-        bgcolor: "grey.200",
-        overflow: "auto"
-      }}
-    > 
+    <BasicCard>
     {/* <Box sx={{backgroundColor: '#DAD2E9', display: 'flex', justifyContent: 'center'}}>
 
       <img src={logo} alt="logo" width="30%" height="40px" />
@@ -282,9 +263,7 @@ function Chat() {
           </Box>
         {/* </Grid> */}
       </Box>
-    </Card>
-    
-    </Box>
+      </BasicCard>
     
   );
 };
