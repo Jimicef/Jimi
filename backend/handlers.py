@@ -310,28 +310,29 @@ async def post_chat(data: Annotated[dict,{
                 media_type="text/plain"
             )
         else:
-            return StreamingResponse(
-                content=generate_chunks(),
-                media_type="text/plain"
-            )
+            return {
+                "voiceAnswer" : response,
+                "links" : []
+            }
     
-    def generate_chunks():
-        for chunk in response:
-            try :
-                yield chunk["choices"][0]["delta"].content
-            except :
-                yield f"ˇ{result[0]['link']}˘{result[1]['link']}˘{result[2]['link']}"
     
     if is_stream:
+        def generate_chunks():
+            for chunk in response:
+                try :
+                    yield chunk["choices"][0]["delta"].content
+                except :
+                    yield f"ˇ{result[0]['link']}˘{result[1]['link']}˘{result[2]['link']}"
+
         return StreamingResponse(
             content=generate_chunks(),
             media_type="text/plain"
         )
     else:
-        return StreamingResponse(
-            content=generate_chunks(),
-            media_type="text/plain"
-        )
+        return {
+                "voiceAnswer" : response['choices'][0]['message']['content'],
+                "links" : []
+        }
 
 
 async def post_voice_chat(file: UploadFile):
