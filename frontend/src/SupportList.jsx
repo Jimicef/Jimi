@@ -112,7 +112,7 @@ export const SupportList = () => {
         .then(data => {
             dispatch({
                 type: SET_SUMMARY,
-                data: data
+                data: data.summary
             })
             dispatch({
                 type: SET_GO_TO_CHAT,
