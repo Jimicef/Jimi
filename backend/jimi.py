@@ -44,7 +44,7 @@ async def api_post_chat(chat_response: Annotated[dict,Depends(post_chat)]):
     return chat_response
 
 
-# 디버그용 추후 삭제 필요 /api/voice/chat으로 대체할 예정임
-@app.post("/api/voice_chat")
+# 디버그용 추후 아룸변경!!!! 필요 /api/voice/chat으로 대체할 예정임
+@app.post("/api/voice/chat")
 async def api_post_voice_chat(voice_chat_response: Annotated[dict,Depends(post_voice_chat)]):
     return voice_chat_response

@@ -67,3 +67,55 @@ FUNCTIONS = [
 ]
 
 MODEL = "gpt-3.5-turbo-16k"
+
+SERVICE_LIST_PROMPT = ""
+
+VOICE_FUNCTIONS = [
+    {
+        "name": "get_service_list",
+        "description": f"""
+        This function is available when the user asks what is in the service information, otherwise it is not available.
+        """,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "keyword": {
+                    "type": "string",
+                    "description": f"""The keyword to use for summarizing service information
+                    for example,
+                    신청기한,접수센터,서비스이름,선정기준,담당기관,지원대상,지원내용,접수센터,지원형태,제출서류,서비스,보조금,지원금
+                    """
+                },
+            },
+            "required": ["keyword"],
+        },
+    },
+    {
+        "name": "get_chat",
+        "description": "If it is difficult to answer, select a keyword from the question and make it search.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "keyword": {
+                    "type": "string",
+                    "description": "The keyword to use for the information search",
+                },
+            },
+            "required": ["keyword"],            
+        },
+    },
+    {
+        "name": "post_chat",
+        "description": "If it is difficult to answer, select a keyword from the question and make it search.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "keyword": {
+                    "type": "string",
+                    "description": "The keyword to use for the information search",
+                },
+            },
+            "required": ["keyword"],            
+        },
+    }
+]

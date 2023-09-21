@@ -19,12 +19,14 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
                            siGunGuArea : str = Query(None,description = "시/군/구 코드"),
                            sidocode : str = Query(None,description = "시/도 코드"),
                            svccd : str = Query(None,description = "사용자 구분"),
+                           voice : bool = Query(None,description = "시각 장애인 자막 생성 여부")
                            ):
     url = "https://www.gov.kr/portal/rcvfvrSvc/svcFind/svcSearchAll"
     
     div_count = count // 2
     
     last_page = False
+    voice_answer = ""
 
     params = {
         "siGunGuArea" : siGunGuArea,
@@ -52,6 +54,7 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     result_count = int(''.join(filter(str.isdigit, text)))
     if result_count == 0:
         return {
+        "vocieAnswer": "검색 결과가 없습니다.",
         "answer" : None,
         "support" : None,
         "lastpage" : True
@@ -126,10 +129,14 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     else:
         message = f"선택한 조건에 대한 {result_count}개의 통합검색 결과입니다."
     
+    if voice:
+        for i in range(6):
+            voice_answer += f"{i+1}번: {card_data_list[i]['title']}\n"
     return {
         "answer" : message,
         "support" : card_data_list,
-        "lastpage" : last_page
+        "lastpage" : last_page,
+        "voiceAnswer" : voice_answer
     }
 
 
