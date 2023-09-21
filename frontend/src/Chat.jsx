@@ -101,7 +101,7 @@ function Chat() {
 
             //console.log(modifiedJimi)
             
-            const response = await fetch(`${apiEndPoint}/api/chat?voice=0`,
+            const response = await fetch(`${apiEndPoint}/api/chat`,
             {
                 method: "POST",
                 headers: {
@@ -111,7 +111,8 @@ function Chat() {
                     username: sessionStorage.getItem("username"),
                     question: quest,
                     history: modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi,
-                    summary: summary
+                    summary: summary,
+                    voice: 0
                 })
             })
             const reader = response.body.getReader()
@@ -120,23 +121,13 @@ function Chat() {
             
             while (true) {
                 const { value, done } = await reader.read()
-                if (done) {
-                    console.log('done')
-                    console.log(minTwenty)
-                    // if (minTwenty) {
-                    //   getSpeech(minTwenty)
-                    //   setminTwenty('')
-                    // }
-                    
+                if (done) {              
                     break
                 }
                 //console.log(value)
                 const decodedChunk = decoder.decode(value, { stream: true });
                 // decodedChunk를 계속 받아서 20글자가 넘어가면, getSpeech로 읽게 한후 해당값은 초기화
                 
-                //setminTwenty((existingText) => existingText+decodedChunk)
-                // getSpeech(decodedChunk)
-                console.log('chunk', decodedChunk)
                 
                 //checkMinTwenty()
                 // if (decodedChunk.includes('.')){
@@ -194,65 +185,6 @@ function Chat() {
         window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
     };
 
-    // const initMinTwenty = () => {
-    //   console.log('hereee')
-    //   getSpeech(minTwenty)
-    //   setminTwenty('')
-    // }
-  // useEffect(()=>{
-  //   if (isAnswerEnd) {
-  //     console.log ("isanswerend")
-  //     getSpeech(minTwenty)
-  //     setminTwenty('')
-  //     setIsAnswerEnd(false)
-  //   }
-  // }, [isAnswerEnd])
-
-  useEffect(()=>{
-    console.log(minTwenty)
-    getSpeech('')
-    if (minTwenty) {
-      getSpeech(minTwenty)
-    }
-    // if (isAnswerEnd) {
-    //   console.log(minTwenty)
-    //   getSpeech(minTwenty)
-    //   setIsAnswerEnd(false)
-    // }
-    // getSpeech(minTwenty)
-    // setminTwenty('')
-    // if (minTwenty.includes('.')) {
-    //   const parts = minTwenty.split(".");
-    //   if (parts.length === 1) {
-    //     getSpeech(parts[0])
-    //     setminTwenty('')
-    //   } else if (parts.length > 1) {
-    //     const lastPart = parts.pop(); // 마지막 부분 추출
-    //     const restOfString = parts.join('.'); // 나머지 부분 합치기
-    //     console.log('나머지##', restOfString)
-    //     getSpeech(restOfString)
-    //     setminTwenty(lastPart)
-    //   }
-    // }
-  }, [minTwenty])
-
-  const checkMinTwenty = () => {
-    console.log("check!", minTwenty)
-    if (minTwenty.includes('.')) {
-      console.log("아예 여기로도 못들어오네")
-      const parts = minTwenty.split(".");
-      if (parts.length === 1) {
-        getSpeech(parts[0])
-        setminTwenty('')
-      } else if (parts.length > 1) {
-        const lastPart = parts.pop(); // 마지막 부분 추출
-        const restOfString = parts.join('.'); // 나머지 부분 합치기
-        console.log(restOfString)
-        getSpeech(restOfString)
-        setminTwenty(lastPart)
-      }
-    }
-  }
   
 
   const handleTarget = () => {

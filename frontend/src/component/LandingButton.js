@@ -39,7 +39,8 @@ const LandingButton = (props) => {
                     data: data.voiceAnswer
                 })
                 //getSpeech(data.voiceAnswer)
-                navigate(props.url)
+                //navigate(props.url)
+                window.scrollTo({top: window.innerHeight, behavior: 'smooth' })
                 
         })
         } else {
