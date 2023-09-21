@@ -312,7 +312,7 @@ async def post_chat(data: Annotated[dict,{
         else:
             return {
                 "voiceAnswer" : response,
-                "links" : []
+                "links" : [None,None,None]
             }
     
     
@@ -331,7 +331,7 @@ async def post_chat(data: Annotated[dict,{
     else:
         return {
                 "voiceAnswer" : response['choices'][0]['message']['content'],
-                "links" : []
+                "links" : [result[0]['link'],result[1]['link'],result[2]['link']]
         }
 
 
