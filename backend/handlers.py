@@ -1,4 +1,5 @@
 from fastapi import Query, UploadFile
+from typing import Annotated
 from bs4 import BeautifulSoup
 import requests
 from prompts import MAIN_PROMPT, CHAT_PROMPT, GET_CHAT_PROMPT, FUNCTIONS, MODEL
@@ -199,7 +200,15 @@ async def get_chat(serviceId : str = Query(None,description = "서비스 ID"),
         }
 
 
-async def post_chat(data: dict):
+async def post_chat(data: Annotated[dict,{
+    "username" : str,
+    "question" : str,
+    "history" : list,
+    "summary" : dict,
+    "voice" : int
+}]):
+    is_stream = not data["voice"]
+
     result = [{'link':None},{'link':None},{'link':None}]
 
     messages = [
@@ -238,7 +247,7 @@ async def post_chat(data: dict):
                 messages=messages,
                 temperature=0,
                 max_tokens = 1000,
-                stream=True
+                stream=is_stream
             )
         elif full_message["message"]["function_call"]["name"] == "get_search_info":
             parsed_output = json.loads(full_message["message"]["function_call"]["arguments"])
@@ -285,7 +294,7 @@ async def post_chat(data: dict):
                     messages=messages,
                     temperature=0,
                     max_tokens=1000,
-                    stream=True
+                    stream=is_stream
                 )
         else:
             raise Exception("Function does not exist and cannot be called")
@@ -295,11 +304,16 @@ async def post_chat(data: dict):
         def generate_chunks_default():
             for chunk in response:
                 yield chunk
-                
-        return StreamingResponse(
-            content=generate_chunks_default(),
-            media_type="text/plain"
-        )
+        if is_stream:
+            return StreamingResponse(
+                content=generate_chunks_default(),
+                media_type="text/plain"
+            )
+        else:
+            return StreamingResponse(
+                content=generate_chunks(),
+                media_type="text/plain"
+            )
     
     def generate_chunks():
         for chunk in response:
@@ -308,11 +322,16 @@ async def post_chat(data: dict):
             except :
                 yield f"ˇ{result[0]['link']}˘{result[1]['link']}˘{result[2]['link']}"
     
-    
-    return StreamingResponse(
-        content=generate_chunks(),
-        media_type="text/plain"
-    )
+    if is_stream:
+        return StreamingResponse(
+            content=generate_chunks(),
+            media_type="text/plain"
+        )
+    else:
+        return StreamingResponse(
+            content=generate_chunks(),
+            media_type="text/plain"
+        )
 
 
 async def post_voice_chat(file: UploadFile):

@@ -38,7 +38,7 @@ async def api_get_service_list(result: Annotated[dict,Depends(get_service_list)]
 async def api_get_chat(service_info: Annotated[dict,Depends(get_chat)]):
     return service_info
 
-
+#todo post chat -> voice
 @app.post("/api/chat")
 async def api_post_chat(chat_response: Annotated[dict,Depends(post_chat)]):
     return chat_response
