@@ -1,9 +1,9 @@
 from fastapi import Query, UploadFile
 from bs4 import BeautifulSoup
 import requests
-from prompts import MAIN_PROMPT, CHAT_PROMPT, FUNCTIONS, MODEL
+from prompts import MAIN_PROMPT, CHAT_PROMPT, GET_CHAT_PROMPT, FUNCTIONS, MODEL
 from fastapi.responses import StreamingResponse
-from prompts import MAIN_PROMPT, CHAT_PROMPT, FUNCTIONS, MODEL
+
 import openai
 import json
 import os
@@ -182,20 +182,17 @@ async def get_chat(serviceId : str = Query(None,description = "서비스 ID"),
 
     if voice:
         messages = [
-            {"role": "user","content": 
-             f"""
-             Summarize the key content of the provided service information below, 
-             and please provide the response in a conversational manner as if a person were speaking.
-             
-             SERVICE INFORMATION : {ret}
-            """}
+            {"role": "user","content": f"{GET_CHAT_PROMPT}"},
+            {"role": "user","content": f"SERVICE INFORMATION: {ret}"}
         ]
         
-        voice_answer = openai.ChatCompletion.create(
+        gpt_response = openai.ChatCompletion.create(
             model=MODEL,
             messages=messages,
             temperature=0,
         )
+
+        voice_answer = gpt_response["choices"][0]["message"]["content"]
     return {
         "voiceAnswer" : voice_answer,
         "summary" : ret

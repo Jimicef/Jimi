@@ -68,7 +68,11 @@ FUNCTIONS = [
 
 MODEL = "gpt-3.5-turbo-16k"
 
-SERVICE_LIST_PROMPT = ""
+GET_CHAT_PROMPT = """
+Summarize the key content of the provided service information below, 
+and please provide the response in a conversational manner as if a person were speaking.
+Please generate response in the korean language.
+"""
 
 VOICE_FUNCTIONS = [
     {
