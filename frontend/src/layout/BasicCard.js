@@ -17,7 +17,7 @@ const BasicCard = (props) => {
         <Card
         sx={{
             width: ['100%', '100%', '820px'],
-            height: "760px",
+            height: ['100%', '100%', '760px'],
             display: "flex",
             flexDirection: "column",
             bgcolor: "grey.200",

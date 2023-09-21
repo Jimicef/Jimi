@@ -4,6 +4,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { SET_COUNT, SET_GO_TO_CHAT, SET_IS_LAST_PAGE, SET_SUMMARY, SET_SUPPORT_LIST, SET_VIEW_MORE } from './action/action';
+import BasicCard from './layout/BasicCard';
 
 const sidoCode = {
     "서울특별시": "tab1100000000",
@@ -137,8 +138,7 @@ export const SupportList = () => {
     //     console.log(supportList)
     // },[])
   return (
-    <Box sx={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <Card sx={{width: '820px', height: '760px', bgcolor: "grey.200", overflow: 'auto'}}>
+    <BasicCard>
             <Box sx={{display: 'flex', alignItems: 'center', m: 3}}>    
                 <Avatar sx={{ bgcolor: "#8977AD",mr: 1}}>
                 <ChatIcon sx={{fontSize: "23px"}}/>
@@ -210,7 +210,6 @@ export const SupportList = () => {
             } */}
             </>
             </Box>
-        </Card>
-    </Box>
+        </BasicCard>
   )
 }
