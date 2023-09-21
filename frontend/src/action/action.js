@@ -23,3 +23,7 @@ export const SET_GO_TO_CHAT = "SET_GO_TO_CHAT"
 export const SET_VIEW_MORE = "SET_VIEW_MORE"
 
 export const SET_MIN_TWENTY = "SET_MIN_TWENTY"
+
+export const SET_VOICE_COUNT = "SET_VOICE_COUNT"
+
+export const SET_FIRST_JIMI = "SET_FIRST_JIMI"

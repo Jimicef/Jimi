@@ -39,18 +39,18 @@ const NonVoice = () => {
     //const selectedOptions = supportList.length > 0 ? optionsSupport: optionsIntro
     //console.log(selectedOptions)
 
-    const ipDataFetch = async() =>{
-        const ipData = await fetch('https://geolocation-db.com/json/');
-        const locationIp = await ipData.json();
-        sessionStorage.setItem("username", locationIp.IPv4)
-    }
+    // const ipDataFetch = async() =>{
+    //     const ipData = await fetch('https://geolocation-db.com/json/');
+    //     const locationIp = await ipData.json();
+    //     sessionStorage.setItem("username", locationIp.IPv4)
+    // }
   
-    React.useEffect(()=>{
-    //   const ipData = await fetch('https://geolocation-db.com/json/');
-    //   const locationIp = await ipData.json();
-    //   sessionStorage.setItem("username", locationIp.IPv4)
-        ipDataFetch()
-    }, [])
+    // React.useEffect(()=>{
+    // //   const ipData = await fetch('https://geolocation-db.com/json/');
+    // //   const locationIp = await ipData.json();
+    // //   sessionStorage.setItem("username", locationIp.IPv4)
+    //     ipDataFetch()
+    // }, [])
   
     React.useEffect(()=> {
       if(supportList === null){

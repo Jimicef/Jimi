@@ -7,6 +7,11 @@ import { theme } from "./theme";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import { Message } from "./message";
+import { useDispatch, useSelector } from 'react-redux';
+import { SET_ANSWER, SET_COUNT, SET_SUPPORT_LIST, SET_VOICE_COUNT, SET_SUMMARY } from './action/action';
+import { getSpeech } from './tts';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
+import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 
 const Voice = () => {
 
@@ -28,7 +33,14 @@ const Voice = () => {
     
     const [userText, setUserText] = React.useState('')
 
-    const [audioState, setAudioState] = useState(1) // 1: 녹음 시작 2: 녹음 중지 3: 로딩중
+    const [audioState, setAudioState] = useState(1) // 1: 녹음 시작 2: 답변 받는중 3: 로딩중
+
+    const dispatch = useDispatch()
+    const voiceCount = useSelector((state) => state.voiceCount)
+    const supports = useSelector((state) => state.supportList)
+    const summary = useSelector((state) => state.summary)
+    const firstJimi = useSelector((state) => state.firstJimi)
+
     const messageContainerRef = useRef();
 
     const scrollToBottom = () => {
@@ -79,6 +91,18 @@ const Voice = () => {
             setUserText('')
         }
     }, [listening])
+
+    useEffect(()=> {
+        // console.log(firstJimi)
+        setTimeout(() => {
+            getSpeech('')
+            const textToSpeak = '안녕하세요! 페이지가 로드되었습니다.';
+            console.log(textToSpeak)
+            getSpeech(textToSpeak);
+          }, 1000);
+        //getSpeech(firstJimi)
+       //setJimi((existingJimi) => [...existingJimi, {text: "안녕하세요. 현재 거주하고 계신 지역과 지원받고 싶은 상황에 대해 말해줘", sender: 'bot'}])
+    }, [])
 
     const onRecAudio = () => {
         // setIsAudioEnd(true)
@@ -152,30 +176,9 @@ const Voice = () => {
             }
         );
     };
-    const offRecAudio = async() => {
-        // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
-        media.ondataavailable = function (e) {
-            setAudioUrl(e.data);
-            setOnRec(true);
-        };
+
     
-        // 모든 트랙에서 stop()을 호출해 오디오 스트림을 정지
-        stream.getAudioTracks().forEach(function (track) {
-            track.stop();
-        });
-        SpeechRecognition.stopListening()
     
-        // 미디어 캡처 중지
-        media.stop();
-        
-        // 메서드가 호출 된 노드 연결 해제
-        analyser.disconnect();
-        source.disconnect();
-        setAudioState(3)
-        // setIsAudioEnd(true)
-        setJimi((existingJimi) => [...existingJimi, {text: transcript, sender: 'user'}])
-        
-    };
     useEffect(() => {
         if (audioUrl){
             onSubmitAudioFile();
@@ -206,8 +209,90 @@ const Voice = () => {
             })
             if (response.ok) {
                 const data = await response.json();
-                setJimi((existingJimi) => [...existingJimi, {text: data.transcript, sender: 'bot'}])
-                console.log('가져온 값:', data.transcript);
+                getSpeech('')
+                if (data.function === 'get:/api/service_list') {
+                    if (data.serviceParams.nextPage) {
+                        fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount+1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
+                        .then(response => response.json())
+                        .then(data => {
+                            dispatch({
+                                type: SET_VOICE_COUNT,
+                                data: voiceCount+1
+                            })
+                            dispatch({
+                                type: SET_SUPPORT_LIST,
+                                data: data.support
+                            })
+                            setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                            getSpeech(data.voiceAnswer)
+                        })    
+                    } else if (data.serviceParams.prevPage){
+                        fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount-1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
+                        .then(response => response.json())
+                        .then(data => {
+                            dispatch({
+                                type: SET_VOICE_COUNT,
+                                data: voiceCount-1
+                            })
+                            dispatch({
+                                type: SET_SUPPORT_LIST,
+                                data: data.support
+                            })
+                            setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                            getSpeech(data.voiceAnswer)
+                        })    
+                    } else {
+                        fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=0&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
+                        .then(response => response.json())
+                        .then(data => {
+                            dispatch({
+                                type: SET_COUNT,
+                                data: 0
+                            })
+                            dispatch({
+                                type: SET_SUPPORT_LIST,
+                                data: data.support
+                            })
+                            setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                            getSpeech(data.voiceAnswer)
+                        })                 
+                    }
+                } else if (data.function === 'get:/api/chat') {
+                    fetch(`${apiEndPoint}/api/chat?serviceId=${supports[data.getChatParams.serviceNumber].serviceId}&voice=1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        dispatch({
+                            type: SET_SUMMARY,
+                            data: data.summary
+                        })
+                        setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
+                        getSpeech(data.voiceAnswer)
+                    })
+                } else if (data.function === 'post:/api/chat') {
+                    const modifiedJimi = jimi.filter(item => !item.support).map(item => {
+                        const content = item.text;
+                        const role = item.sender === 'bot' ? 'assistant' : item.sender;
+                        return { content, role}; // 여기서 link도 함께 복사하거나 유지합니다.
+                    });
+                    fetch(`${apiEndPoint}/api/chat?voice=1`, {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            username: sessionStorage.getItem("username"),
+                            question: data.postChatParams.question,
+                            history: modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi,
+                            summary: summary
+                        })
+                    }).then(response => response.json())
+                    .then(data => {
+                        setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}])
+                        getSpeech(data.voiceAnswer)
+                    })
+                }
+                // setJimi((existingJimi) => [...existingJimi, {text: data.transcript, sender: 'bot'}])
+                // console.log('가져온 값:', data.transcript);
               } else {
                 console.error('파일 업로드 실패:', response.statusText);
               }
@@ -218,58 +303,7 @@ const Voice = () => {
             setAudioState(1)
         }
         }, [audioUrl]);
-    const fileInput = React.useRef(null);
-
-    const handleButtonClick = e => {
-        fileInput.current.click();
-    };
     
-    const handleChange = e => {
-        console.log(e.target.files[0]);
-    };
-
-    // const handleFileChange = (event) => {
-    //     const selectedFile = event.target.files[0];
-    //     console.log(selectedFile)
-    //     if (selectedFile) {
-    //       sendFile(selectedFile); // 파일을 전송하는 함수 호출
-    //     }
-    //   };
-
-    const fetchCheck = async() => {
-        const audioFilePath = '/0001.wav';
-
-        // fetch를 사용하여 오디오 파일을 가져옵니다.
-        const audioResponse = await fetch(audioFilePath);
-
-        // 오디오 파일을 Blob 형식으로 변환합니다.
-        const audioBlob = await audioResponse.blob();
-        audioBlob.name = 'sample.wav'
-        console.log(audioBlob)
-
-        // const sound = new File([audioFilePath], "soundBlob.wav", { lastModified: new Date().getTime(), type: "audio/mpeg" });
-        // console.log(sound)
-        // FormData 객체를 생성하고 오디오 파일을 추가합니다.
-        const formData = new FormData();
-        formData.append('file', audioBlob);
-        try {
-            const response = await fetch(`${apiEndPoint}/api/voice/chat`,{
-                method: "POST",
-                // headers:{
-                //     "Content-Type": "multipart/form-data"
-                // },
-                body: formData
-            })
-            if (response.ok) {
-                const data = await response.json();
-                console.log('가져온 값:', data.transcript);
-              } else {
-                console.error('파일 업로드 실패:', response.statusText);
-              }
-        } catch (error) {
-            console.log(error)
-        }
-    }
   return (
     <div>
         {/* <Button onClick={handleButtonClick}>파일 업로드</Button>
@@ -321,17 +355,17 @@ const Voice = () => {
                 variant="contained"
                 sx={{height: '100%', fontSize: '3vh'}}
                 // onClick={offRecAudio}
-                color='error'
-              ><MicOffIcon fontSize='large'/>답변 받는 중</Button>}
+                color='success'
+              ><RecordVoiceOverIcon fontSize='large' sx={{mr: 1}}/>답변 받는 중</Button>}
 
               {audioState === 3 && 
               <Button
               fullWidth
               variant="contained"
-              sx={{height: '100%', fontSize: '3vh'}}
+              sx={{height: '100%', fontSize: '3vh' }}
             //   color='secondary'
             //   disabled
-            ><KeyboardVoiceIcon fontSize='large'/>답변 생성 중</Button>}
+            ><GraphicEqIcon fontSize='large'sx={{mr: 1}}/>답변 생성 중</Button>}
             
               
       

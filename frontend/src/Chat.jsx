@@ -101,18 +101,18 @@ function Chat() {
 
             //console.log(modifiedJimi)
             
-            const response = await fetch(`${apiEndPoint}/api/chat`,
+            const response = await fetch(`${apiEndPoint}/api/chat?voice=0`,
             {
                 method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        username: sessionStorage.getItem("username"),
-                        question: quest,
-                        history: modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi,
-                        summary: summary
-                    })
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: sessionStorage.getItem("username"),
+                    question: quest,
+                    history: modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi,
+                    summary: summary
+                })
             })
             const reader = response.body.getReader()
             const decoder = new TextDecoder()

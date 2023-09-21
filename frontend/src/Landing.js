@@ -8,6 +8,15 @@ import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import FaceIcon from '@mui/icons-material/Face';
 
 const Landing = () => {
+    const ipDataFetch = async() =>{
+        const ipData = await fetch('https://geolocation-db.com/json/');
+        const locationIp = await ipData.json();
+        sessionStorage.setItem("username", locationIp.IPv4)
+    }
+  
+    React.useEffect(()=>{
+        ipDataFetch()
+    }, [])
     return (
         <div>
             <BasicCard>
