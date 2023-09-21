@@ -136,7 +136,7 @@ const Voice = () => {
                         setAudioUrl(e.data);
                         setOnRec(true);
                     };
-                    // setAudioState(3)
+                    setAudioState(3)
                     // setIsAudioEnd(true)
                     // if (transcript) {
 
@@ -200,7 +200,7 @@ const Voice = () => {
         formData.append("file", sound)
         console.log(formData)
         try {
-            const response = await fetch(`${apiEndPoint}/api/voice_chat`,{
+            const response = await fetch(`${apiEndPoint}/api/voice/chat`,{
                 method: "POST",
                 body: formData
             })
@@ -253,7 +253,7 @@ const Voice = () => {
         const formData = new FormData();
         formData.append('file', audioBlob);
         try {
-            const response = await fetch(`${apiEndPoint}/api/voice_chat`,{
+            const response = await fetch(`${apiEndPoint}/api/voice/chat`,{
                 method: "POST",
                 // headers:{
                 //     "Content-Type": "multipart/form-data"
@@ -329,9 +329,9 @@ const Voice = () => {
               fullWidth
               variant="contained"
               sx={{height: '100%', fontSize: '3vh'}}
-              color='secondary'
-              disabled
-            ><KeyboardVoiceIcon fontSize='large'/>시작</Button>}
+            //   color='secondary'
+            //   disabled
+            ><KeyboardVoiceIcon fontSize='large'/>답변 생성 중</Button>}
             
               
       
