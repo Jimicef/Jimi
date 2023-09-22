@@ -99,11 +99,6 @@ const Voice = () => {
         }
     }, [listening])
 
-    useEffect(()=> {
-        // console.log(firstJimi)
-        //getSpeech(firstJimi)
-        
-    }, [])
 
     const onRecAudio = () => {
         // setIsAudioEnd(true)
@@ -234,6 +229,7 @@ const Voice = () => {
                                 data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
                             })
                             getSpeech(data.voiceAnswer)
+                            setAudioState(1)
                         })    
                     } else if (data.serviceParams.prevPage){
                         fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount-1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
@@ -253,6 +249,7 @@ const Voice = () => {
                                 data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
                             })
                             getSpeech(data.voiceAnswer)
+                            setAudioState(1)
                         })    
                     } else {
                         fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=0&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
@@ -272,6 +269,7 @@ const Voice = () => {
                                 data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
                             })
                             getSpeech(data.voiceAnswer)
+                            setAudioState(1)
                         })                 
                     }
                 } else if (data.function === 'get_api_chat') {
@@ -289,6 +287,7 @@ const Voice = () => {
                             data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
                         })
                         getSpeech(data.voiceAnswer)
+                        setAudioState(1)
                     })
                 } else if (data.function === 'post_api_chat') {
                     const modifiedJimi = jimi.filter(item => !item.support).map(item => {
@@ -316,6 +315,7 @@ const Voice = () => {
                             data: [...jimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}]
                         })
                         getSpeech(data.voiceAnswer)
+                        setAudioState(1)
                     })
                 }
                 // setJimi((existingJimi) => [...existingJimi, {text: data.transcript, sender: 'bot'}])
@@ -327,7 +327,7 @@ const Voice = () => {
             console.log(error)
         } finally {
             //setJimi((existingJimi) => [...existingJimi, {text: 1, sender: 'bot'}])
-            setAudioState(1)
+            //setAudioState(1)
         }
         }, [audioUrl]);
     
