@@ -134,7 +134,10 @@ async def get_service_list(keyword : str = Query(None,description = "검색 키�
     
     if voice:
         for i in range(6):
-            voice_answer += f"{i+1}번: {card_data_list[i]['title']}\n"
+            try:
+                voice_answer += f"{i+1}번: {card_data_list[i]['title']}\n"
+            except:
+                print(i,len(card_data_list))
     return {
         "answer" : message,
         "support" : card_data_list,
