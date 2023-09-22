@@ -186,8 +186,6 @@ VOICE_FUNCTIONS = [
     {
         "name": "post_api_chat",
         "description": """This function allows users to engage in a question-and-answer session related to the selected subsidy service.
-            
-            
             """,
             #It can only be called after the 'get_api_service_list' function has been executed.
             #This function can be used to generate answers to questions related to the following keywords.

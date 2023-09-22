@@ -341,8 +341,12 @@ async def post_chat(data: Annotated[dict,{
         }
 
 
-async def post_voice_chat(file: UploadFile):
+async def post_voice_chat(file: UploadFile, history: UploadFile):
     # 업로드된 MP3 파일을 저장
+    print(history.filename)
+    content = history.read()
+    json_data = json.loads(content)
+    print(json_data)
     with open(file.filename, "wb") as f:
         f.write(file.file.read())
 
