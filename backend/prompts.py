@@ -176,14 +176,17 @@ VOICE_FUNCTIONS = [
     },
     {
         "name": "get_api_chat",
-        "description": f"""This function returns a number based on user input.
-            When a user mentions a number outside the range of 1 to 6, you must be requested to provide a number between 1 and 6.""",
+        "description": f"""This function returns a number based on user input.""",
         "parameters": {
             "type": "object",
             "properties": {
                 "serviceNumber": {
                     "type": "integer",
-                    "description": "The number chosen by the user, a natural number between 1 and 6.This variable cannot hold a value beyond the range of natural numbers from 1 to 6.",
+                    "description": f"""The number chosen by the user, a natural number between 1 and 6.
+                        This variable cannot hold a value beyond the range of natural numbers from 1 to 6.
+                        
+                        """,
+                        #When a user mentions a number outside the range of 1 to 6, you must be requested to provide a number between 1 and 6.
                 },
             },
             "required": ["serviceNumber"],            
