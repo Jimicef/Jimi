@@ -20,7 +20,7 @@ export const getSpeech = (text) => {
       const utterThis = new SpeechSynthesisUtterance(txt);
   
       utterThis.lang = lang;
-      // utterThis.rate = 2;
+      utterThis.rate = 0.8;
   
       /* 한국어 vocie 찾기
          디바이스 별로 한국어는 ko-KR 또는 ko_KR로 voice가 정의되어 있다.
