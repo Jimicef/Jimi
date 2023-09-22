@@ -95,6 +95,9 @@ VOICE_FUNCTIONS = [
                 "keyword": {
                     "type": "string",
                     "description": f"""This variable is used as a keyword for conducting subsidy searches.
+                    Extract the key words from the user's question.
+                    For example, if the question is 'Tell me about '장애인 지원금',' the key word is '장애인'.
+
                     """
                 },
                 "chktype1": {

@@ -383,6 +383,7 @@ async def post_voice_chat(file: UploadFile):
             except:
                 get_service_params['siGunGuArea'] = sub_region_code[get_service_params['sidocode']]["전체"]
             get_service_params['sidocode'] = region_code[get_service_params['sidocode']]
+            get_service_params['chktype1'] = 'NB0301|NB0302|NB0303|NB0304|NB0305|NB0306|NB0307|NB0308|NB0309|NB0310|'
         elif function_name == 'get_api_chat':
             get_chat_params = params
 
