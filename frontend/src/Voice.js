@@ -68,6 +68,8 @@ const Voice = () => {
         resetTranscript,
         browserSupportsSpeechRecognition
       } = useSpeechRecognition();
+
+      
     
     // if (!browserSupportsSpeechRecognition) {
     // return <span>Browser doesn't support speech recognition.</span>;
@@ -116,7 +118,7 @@ const Voice = () => {
             };
             setAudioState(3)
             endAudio.play()
-            
+
             dispatch({
                 type: SET_JIMI,
                 data: [...jimi.slice(0, -1), {text: userText, sender: 'user'}]
@@ -200,10 +202,17 @@ const Voice = () => {
         // const audioResponse = await fetch(audioUrl);
         // const audioBlob = await audioResponse.blob();
         // audioBlob.name = 'request.wav'
-        
+        const modifiedJimi = jimi.filter(item => !item.support).map(item => {
+            const content = item.text;
+            const role = item.sender === 'bot' ? 'assistant' : item.sender;
+            return { content, role}; // 여기서 link도 함께 복사하거나 유지합니다.
+        });
+
+        const jsonData = modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi
 
         const formData = new FormData();
         formData.append("file", sound)
+        formData.append("history", new File([JSON.stringify(jsonData)], username+".json"));
         //console.log(formData)
         try {
             const response = await fetch(`${apiEndPoint}/api/voice/chat`,{
@@ -320,6 +329,13 @@ const Voice = () => {
                         getSpeech(data.voiceAnswer)
                         setAudioState(1)
                     })
+                } else if (data.voiceAnswer) {
+                    dispatch({
+                        type: SET_JIMI,
+                        data: [...jimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}]
+                    })
+                    getSpeech(data.voiceAnswer)
+                    setAudioState(1)
                 }
                 // setJimi((existingJimi) => [...existingJimi, {text: data.transcript, sender: 'bot'}])
                 // console.log('가져온 값:', data.transcript);
@@ -344,8 +360,8 @@ const Voice = () => {
         {/* <Button variant='contained' onClick={fetchCheck}>fetch 확인</Button>
         <Button variant="contained" onClick={onRec ? onRecAudio : offRecAudio}>녹음</Button>
         <Button variant='outlined' onClick={onSubmitAudioFile}>결과 확인 </Button> */}
-        <p>{transcript}</p>
-        <p>{listening?"듣는중":"멈췄음"}</p>
+        {/* <p>{transcript}</p>
+        <p>{listening?"듣는중":"멈췄음"}</p> */}
         <p>{console.log("여기서는?", listening)}</p>
         <BasicCard>
         <Box sx={{ flexGrow: 1, overflow: "auto", p: 2, minWidth: 120 }} 
