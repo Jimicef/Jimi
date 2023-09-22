@@ -363,8 +363,10 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
             prompt="",
         )
     os.remove(file.filename)
-
-    messages = [{"role": "system", "content" : "you must function call post_api_chat If you determine that it is not the appropriate time to call the 'get_api_service_list' or 'get_api_chat' functions"},]
+    
+    messages = [{"role": "system", "content" : "If it's unclear which function to use, you should ask the user for the required function arguments again."},]
+    
+    #messages = [{"role": "system", "content" : "you must function call post_api_chat If you determine that it is not the appropriate time to call the 'get_api_service_list' or 'get_api_chat' functions"},]
     messages.extend(chat_history)
     messages.append({"role": "user","content": transcript["text"]})
 
@@ -374,7 +376,7 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
             temperature=0,
             functions=VOICE_FUNCTIONS,
     )
-    
+
     if response["choices"][0]['finish_reason'] != 'function_call':
         # raise Exception("finish_reason is not function_call")
         voice_answer = response["choices"][0]['message']['content']
