@@ -60,6 +60,7 @@ const Landing = () => {
   
     React.useEffect(()=>{
         ipDataFetch()
+        navigator.mediaDevices.getUserMedia({ audio: true })
     }, [])
     return (
         <div>
