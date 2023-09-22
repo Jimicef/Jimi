@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
 
 
-from handlers import get_service_list, get_chat, post_chat, post_voice_chat
+from handlers import get_service_list, get_chat, post_chat, post_voice_chat, get_voice_chat
 
 app = FastAPI()
 
@@ -47,4 +47,8 @@ async def api_post_chat(chat_response: Annotated[dict,Depends(post_chat)]):
 # 디버그용 추후 아룸변경!!!! 필요 /api/voice/chat으로 대체할 예정임
 @app.post("/api/voice/chat")
 async def api_post_voice_chat(voice_chat_response: Annotated[dict,Depends(post_voice_chat)]):
+    return voice_chat_response
+
+@app.get("/api/voice/chat")
+async def api_get_voice_chat(voice_chat_response: Annotated[str,Depends(get_voice_chat)]):
     return voice_chat_response
