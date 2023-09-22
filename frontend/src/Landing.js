@@ -28,7 +28,7 @@ const Landing = () => {
     const ipDataFetch = async() =>{
         const ipData = await fetch('https://geolocation-db.com/json/');
         const locationIp = await ipData.json();
-        sessionStorage.setItem("username", locationIp.IPv4)
+        localStorage.setItem("username", locationIp.IPv4)
     }
 
     const handleButtonClick = () => {

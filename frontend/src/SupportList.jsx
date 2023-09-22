@@ -121,7 +121,7 @@ export const SupportList = () => {
             })
             // setSummary(data)
             // setGoToChat(true)
-            //sessionStorage.setItem("summary", JSON.stringify(data))
+            //localStorage.setItem("summary", JSON.stringify(data))
             //window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
             //window.location.href = '/'
             //window.location.href = '/chat'
