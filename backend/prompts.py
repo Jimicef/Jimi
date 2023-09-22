@@ -100,19 +100,23 @@ VOICE_FUNCTIONS = [
                     Extract the key words from the user's question.
                     For example, if the question is 'Tell me about '장애인 지원금',' the key word is '장애인'.
 
+                    In order to conduct a subsidy search, there must be relevant search keywords related to the following topics.
+                    
+                    TOPICS:
+                        생활안정, 주거·자립, 보육·교육, 고용·창업, 보건·의료, 행정·안전, 임신·출산, 보호·돌봄, 문화·환경 , 농림축산어업
                     """
                 },
-                "chktype1": {
-                    "type": "string",
-                    "description": f"""chktype1 is a variable representing the service category. 
-                    match user's desired service category to a key in chktype1_code and set the code value as the variable's value.
+                # "chktype1": {
+                #     "type": "string",
+                #     "description": f"""chktype1 is a variable representing the service category. 
+                #     match user's desired service category to a key in chktype1_code and set the code value as the variable's value.
                     
-                    For example, if a user wants the service category to be "Housing Support," then "NB0302" with the key "주거·자립" in chktype1_code is set as the value of chktype1.
+                #     For example, if a user wants the service category to be "Housing Support," then "NB0302" with the key "주거·자립" in chktype1_code is set as the value of chktype1.
                     
-                    CHKTYPE1_CODE:
-                        {chktype1_code}
-                    """
-                },
+                #     CHKTYPE1_CODE:
+                #         {chktype1_code}
+                #     """
+                # },
                 "siGunGuArea": {
                     "type": "string",
                     "description": f"""This variable signifies the sub-region of your residence. 
@@ -166,18 +170,20 @@ VOICE_FUNCTIONS = [
                     """
                 },
             },
-            "required": ["keyword","chktype1","siGunGuArea","sidocode","svccd","nextPage","prevPage"],
+            # "required": ["keyword","chktype1","siGunGuArea","sidocode","svccd","nextPage","prevPage"],
+            "required": ["keyword","siGunGuArea","sidocode","svccd","nextPage","prevPage"],
         },
     },
     {
         "name": "get_api_chat",
-        "description": "This function returns a number based on user input.",
+        "description": f"""This function returns a number based on user input.
+            When a user mentions a number outside the range of 1 to 6, you must be requested to provide a number between 1 and 6.""",
         "parameters": {
             "type": "object",
             "properties": {
                 "serviceNumber": {
                     "type": "integer",
-                    "description": "The number chosen by the user, a natural number between 1 and 6.",
+                    "description": "The number chosen by the user, a natural number between 1 and 6.This variable cannot hold a value beyond the range of natural numbers from 1 to 6.",
                 },
             },
             "required": ["serviceNumber"],            
