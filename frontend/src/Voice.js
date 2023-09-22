@@ -181,6 +181,13 @@ const Voice = () => {
         );
     };
 
+    const userTextChange = (userTextData) => {
+        dispatch({
+            type: SET_JIMI,
+            data: [...jimi.slice(0,-1), {text: userTextData, sender: 'user'}]
+        })
+    }
+
     
     
     useEffect(() => {
@@ -227,6 +234,7 @@ const Voice = () => {
                         fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount+1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
                         .then(response => response.json())
                         .then(data => {
+                            userTextChange(data.userText)
                             dispatch({
                                 type: SET_VOICE_COUNT,
                                 data: voiceCount+1
@@ -247,6 +255,7 @@ const Voice = () => {
                         fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount-1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
                         .then(response => response.json())
                         .then(data => {
+                            userTextChange(data.userText)
                             dispatch({
                                 type: SET_VOICE_COUNT,
                                 data: voiceCount-1
@@ -267,6 +276,7 @@ const Voice = () => {
                         fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=0&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
                         .then(response => response.json())
                         .then(data => {
+                            userTextChange(data.userText)
                             dispatch({
                                 type: SET_COUNT,
                                 data: 0
@@ -289,6 +299,7 @@ const Voice = () => {
                     fetch(`${apiEndPoint}/api/chat?serviceId=${supports[data.getChatParams.serviceNumber-1].serviceId}&voice=1`)
                     .then(response => response.json())
                     .then(data => {
+                        userTextChange(data.userText)
                         dispatch({
                             type: SET_SUMMARY,
                             data: data.summary
@@ -322,6 +333,7 @@ const Voice = () => {
                     }).then(response => response.json())
                     .then(data => {
                         // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}])
+                        userTextChange(data.userText)
                         dispatch({
                             type: SET_JIMI,
                             data: [...jimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}]
@@ -330,6 +342,7 @@ const Voice = () => {
                         setAudioState(1)
                     })
                 } else if (data.voiceAnswer) {
+                    userTextChange(data.userText)
                     dispatch({
                         type: SET_JIMI,
                         data: [...jimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}]
