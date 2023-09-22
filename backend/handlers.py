@@ -2,7 +2,7 @@ from fastapi import Query, UploadFile
 from typing import Annotated
 from bs4 import BeautifulSoup
 import requests
-from prompts import MAIN_PROMPT, CHAT_PROMPT, GET_CHAT_PROMPT, FUNCTIONS, MODEL, VOICE_FUNCTIONS
+from prompts import MAIN_PROMPT, CHAT_PROMPT, GET_CHAT_PROMPT, FUNCTIONS, MODEL, VOICE_FUNCTIONS, AUDIO_MODEL
 from utils import *
 
 from fastapi.responses import StreamingResponse
@@ -350,7 +350,7 @@ async def post_voice_chat(file: UploadFile):
     with open(file.filename, "rb") as f:
         transcript = openai.Audio.transcribe(
             file=f,
-            model="whisper-1",
+            model=AUDIO_MODEL,
             prompt="",
         )
     os.remove(file.filename)
@@ -367,7 +367,7 @@ async def post_voice_chat(file: UploadFile):
     ]
 
     response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-16k",
+            model=MODEL,
             messages=messages,
             temperature=0,
             functions=VOICE_FUNCTIONS,
@@ -404,27 +404,5 @@ async def post_voice_chat(file: UploadFile):
 
 async def get_voice_chat():
     return {
-        "voiceAnswer": "지원금을 빠르고 간편하게 찾아보세요!현재 거주하고 계신 지역과, 지원받고 싶은 상황에 대해 말씀해주세요"
+        "voiceAnswer": "지원금을 빠르고 간편하게 찾아보세요! 현재 거주하고 계신 지역과 지원받고 싶은 상황에 대해 아래 버튼을 누르고 말씀해주세요"
     }
-# async def post_voice_chat(file: UploadFile):
-#     # 업로드된 MP3 파일을 저장
-#     with open(file.filename, "wb") as f:
-#         f.write(file.file.read())
-
-#     # 저장한 파일 경로를 사용하여 업로드된 MP3 파일을 transcribe 함수에 전달
-#     with open(file.filename, "rb") as f:
-#         transcript = openai.Audio.transcribe(
-#             file=f,
-#             model="whisper-1",
-#             prompt="",
-#         )
-#     os.remove(file.filename)
-#     # return {
-#     #     "transcript": transcript["text"]
-#     # }
-#     data = {
-#         "question": transcript["text"],
-#         "history" : [],
-#         "summary" : await get_chat("SD0000007044")
-#     }
-#     return await post_chat(data)

@@ -66,7 +66,9 @@ FUNCTIONS = [
     }
 ]
 
-MODEL = "gpt-3.5-turbo-16k"
+# MODEL = "gpt-3.5-turbo-16k"
+MODEL = "gpt-3.5-turbo"
+AUDIO_MODEL = "whisper-1"
 
 GET_CHAT_PROMPT = """
 Summarize the application deadline, application method, support content, support target, and support method.
