@@ -29,11 +29,15 @@ const Voice = () => {
     const [source, setSource] = useState();
     const [analyser, setAnalyser] = useState();
     const [audioUrl, setAudioUrl] = useState();
+    const [isListening, setIsListening] = useState(false);
     // const [jimi, setJimi] = React.useState([]);
     
     const [userText, setUserText] = React.useState('')
 
     const [audioState, setAudioState] = useState(1) // 1: 녹음 시작 2: 답변 받는중 3: 로딩중
+
+    // const [mediaRecorder, setMediaRecorder] = useState()
+    const [audioCtx, setAudioCtx] = useState()
 
     const dispatch = useDispatch()
     const voiceCount = useSelector((state) => state.voiceCount)
@@ -44,6 +48,9 @@ const Voice = () => {
 
     const messageContainerRef = useRef();
 
+    const startAudio = new Audio('/start.mp3');
+    const endAudio = new Audio('/end.mp3')
+
     const scrollToBottom = () => {
         if (messageContainerRef.current) {
           messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
@@ -52,7 +59,7 @@ const Voice = () => {
 
       useEffect(() => {
         scrollToBottom();
-      }, [jimi]);
+      }, [jimi]);    
       
     // react-speech-recognition
     const {
@@ -65,6 +72,10 @@ const Voice = () => {
     // if (!browserSupportsSpeechRecognition) {
     // return <span>Browser doesn't support speech recognition.</span>;
     // }
+
+    useEffect(()=> {
+        setIsListening(listening)
+      }, [listening])
 
     useEffect(()=> {
         // const lastItem = existingJimi
@@ -91,6 +102,21 @@ const Voice = () => {
     useEffect(()=>{
         if (userText && !listening) {
             // setJimi((existingJimi) => [...existingJimi.slice(0, -1), {text: userText, sender: 'user'}])
+            stream.getAudioTracks().forEach(function (track) {
+                track.stop();
+            });
+            media.stop();
+            // 메서드가 호출 된 노드 연결 해제
+            analyser.disconnect();
+            audioCtx.createMediaStreamSource(stream).disconnect();
+    
+            media.ondataavailable = function (e) {
+                setAudioUrl(e.data);
+                setOnRec(true);
+            };
+            setAudioState(3)
+            endAudio.play()
+            
             dispatch({
                 type: SET_JIMI,
                 data: [...jimi.slice(0, -1), {text: userText, sender: 'user'}]
@@ -103,6 +129,7 @@ const Voice = () => {
     const onRecAudio = () => {
         // setIsAudioEnd(true)
         // 음원정보를 담은 노드를 생성하거나 음원을 실행또는 디코딩 시키는 일을 한다
+        startAudio.play()
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         // setJimi((existingJimi) => [...existingJimi, {text: '', sender: 'user'}])
         dispatch({
@@ -134,7 +161,8 @@ const Voice = () => {
         
         // 마이크 사용 권한 획득 후 녹음 시작
         navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-            const mediaRecorder = new MediaRecorder(stream);   
+            const mediaRecorder = new MediaRecorder(stream);
+            // setMediaRecorder(new MediaRecorder(stream)) 
             // react-speech-recognition
             SpeechRecognition.startListening()
             mediaRecorder.start();
@@ -143,34 +171,9 @@ const Voice = () => {
         
 
             makeSound(stream);
-            // 음성 녹음이 시작됐을 때 onRec state값을 false로 변경
-            analyser.onaudioprocess = function (e) {
-                // 3분(180초) 지나면 자동으로 음성 저장 및 녹음 중지
-                if (e.playbackTime > 180 || (!listening && e.playbackTime > 5)) {
-                    stream.getAudioTracks().forEach(function (track) {
-                        track.stop();
-                    });
-                    mediaRecorder.stop();
-                    // 메서드가 호출 된 노드 연결 해제
-                    analyser.disconnect();
-                    audioCtx.createMediaStreamSource(stream).disconnect();
-            
-                    mediaRecorder.ondataavailable = function (e) {
-                        setAudioUrl(e.data);
-                        setOnRec(true);
-                    };
-                    setAudioState(3)
-                    // setIsAudioEnd(true)
-                    // if (transcript) {
 
-                    // setJimi((existingJimi) => [...existingJimi, {text: userText, sender: 'user'}])
-                    // }
-                } 
-                
-                else {
-                setOnRec(false);
-                }
-            };
+            setAudioCtx(audioCtx)
+            
             setAudioState(2)
             }
         );
@@ -341,8 +344,9 @@ const Voice = () => {
         {/* <Button variant='contained' onClick={fetchCheck}>fetch 확인</Button>
         <Button variant="contained" onClick={onRec ? onRecAudio : offRecAudio}>녹음</Button>
         <Button variant='outlined' onClick={onSubmitAudioFile}>결과 확인 </Button> */}
-        {/* <p>{transcript}</p>
-        <p>{listening?"듣는중":"멈췄음"}</p> */}
+        <p>{transcript}</p>
+        <p>{listening?"듣는중":"멈췄음"}</p>
+        <p>{console.log("여기서는?", listening)}</p>
         <BasicCard>
         <Box sx={{ flexGrow: 1, overflow: "auto", p: 2, minWidth: 120 }} 
         ref={messageContainerRef}
