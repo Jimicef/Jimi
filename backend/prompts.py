@@ -66,8 +66,8 @@ FUNCTIONS = [
     }
 ]
 
-# MODEL = "gpt-3.5-turbo-16k"
-MODEL = "gpt-3.5-turbo"
+MODEL = "gpt-3.5-turbo-16k"
+# MODEL = "gpt-3.5-turbo"
 AUDIO_MODEL = "whisper-1"
 
 GET_CHAT_PROMPT = """
