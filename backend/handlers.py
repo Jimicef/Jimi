@@ -375,7 +375,10 @@ async def post_voice_chat(file: UploadFile):
         params = json.loads(response['choices'][0]['message']['function_call']['arguments'])
         if function_name == 'get_api_service_list':
             get_service_params = params
-            get_service_params['siGunGuArea'] = sub_region_code[get_service_params['sidocode']][get_service_params['siGunGuArea']]
+            try:
+                get_service_params['siGunGuArea'] = sub_region_code[get_service_params['sidocode']][get_service_params['siGunGuArea']]
+            except:
+                get_service_params['siGunGuArea'] = sub_region_code[get_service_params['sidocode']]["전체"]
             get_service_params['sidocode'] = region_code[get_service_params['sidocode']]
         elif function_name == 'get_api_chat':
             get_chat_params = params
