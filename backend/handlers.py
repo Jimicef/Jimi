@@ -404,7 +404,7 @@ async def post_voice_chat(file: UploadFile):
 
 async def get_voice_chat():
     return {
-        "vocieAnswer": "지원금을 빠르고 간편하게 찾아보세요!현재 거주하고 계신 지역과, 지원받고 싶은 상황에 대해 말씀해주세요"
+        "voiceAnswer": "지원금을 빠르고 간편하게 찾아보세요!현재 거주하고 계신 지역과, 지원받고 싶은 상황에 대해 말씀해주세요"
     }
 # async def post_voice_chat(file: UploadFile):
 #     # 업로드된 MP3 파일을 저장
