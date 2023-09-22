@@ -2,7 +2,9 @@ from fastapi import Query, UploadFile
 from typing import Annotated
 from bs4 import BeautifulSoup
 import requests
-from prompts import MAIN_PROMPT, CHAT_PROMPT, GET_CHAT_PROMPT, FUNCTIONS, MODEL
+from prompts import MAIN_PROMPT, CHAT_PROMPT, GET_CHAT_PROMPT, FUNCTIONS, MODEL, VOICE_FUNCTIONS
+from utils import *
+
 from fastapi.responses import StreamingResponse
 
 import openai
@@ -348,12 +350,70 @@ async def post_voice_chat(file: UploadFile):
             prompt="",
         )
     os.remove(file.filename)
-    # return {
-    #     "transcript": transcript["text"]
-    # }
-    data = {
-        "question": transcript["text"],
-        "history" : [],
-        "summary" : await get_chat("SD0000007044")
+
+    function_name = ""
+    get_service_params = {}
+    get_chat_params = {}
+    post_chat_params = {}
+
+
+    messages = [
+            {"role": "system", "content" : "you must function call post_api_chat If you determine that it is not the appropriate time to call the 'get_api_service_list' or 'get_api_chat' functions"},
+            {"role": "user","content": transcript}
+    ]
+
+    response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-16k",
+            messages=messages,
+            temperature=0,
+            functions=VOICE_FUNCTIONS,
+    )
+    if response["choices"][0]['finish_reason'] != 'function_call':
+        raise Exception("finish_reason is not function_call")
+    else:
+        function_name = response['choices'][0]['message']['function_call']['name']
+        params = json.loads(response['choices'][0]['message']['function_call']['arguments'])
+        if function_name == 'get_api_service_list':
+            get_service_params = params
+            get_service_params['siGunGuArea'] = sub_region_code[get_service_params['sidocode']][get_service_params['siGunGuArea']]
+            get_service_params['sidocode'] = region_code[get_service_params['sidocode']]
+        elif function_name == 'get_api_chat':
+            get_chat_params = params
+
+        elif function_name == 'post_api_chat':
+            post_chat_params = params
+
+        else:
+            raise Exception("Function does not exist")
+
+    return {
+        "function": function_name,
+        "serviceParams": get_service_params,
+        "getChatParams": get_chat_params,
+        "postChatParams": post_chat_params,
     }
-    return await post_chat(data)
+
+
+
+# async def post_voice_chat(file: UploadFile):
+#     # 업로드된 MP3 파일을 저장
+#     with open(file.filename, "wb") as f:
+#         f.write(file.file.read())
+
+#     # 저장한 파일 경로를 사용하여 업로드된 MP3 파일을 transcribe 함수에 전달
+#     with open(file.filename, "rb") as f:
+#         transcript = openai.Audio.transcribe(
+#             file=f,
+#             model="whisper-1",
+#             prompt="",
+#         )
+#     os.remove(file.filename)
+#     # return {
+#     #     "transcript": transcript["text"]
+#     # }
+#     data = {
+#         "question": transcript["text"],
+#         "history" : [],
+#         "summary" : await get_chat("SD0000007044")
+#     }
+#     return await post_chat(data)
