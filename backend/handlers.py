@@ -223,7 +223,7 @@ async def post_chat(data: Annotated[dict,{
     
     messages.extend(data['history'])
     # print(data['history'])
-    print(messages)
+
     first_response = openai.ChatCompletion.create(
         model=MODEL,
         messages=messages,
