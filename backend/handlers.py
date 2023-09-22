@@ -359,7 +359,7 @@ async def post_voice_chat(file: UploadFile):
 
     messages = [
             {"role": "system", "content" : "you must function call post_api_chat If you determine that it is not the appropriate time to call the 'get_api_service_list' or 'get_api_chat' functions"},
-            {"role": "user","content": transcript}
+            {"role": "user","content": transcript["text"]}
     ]
 
     response = openai.ChatCompletion.create(
