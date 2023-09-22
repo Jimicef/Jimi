@@ -343,10 +343,15 @@ async def post_chat(data: Annotated[dict,{
 
 async def post_voice_chat(file: UploadFile, history: UploadFile):
     # 업로드된 MP3 파일을 저장
-    print(history.filename)
-    content = await history.read()
-    json_data = json.loads(content)
-    print(json_data)
+    voice_answer=""
+    function_name = ""
+    get_service_params = {}
+    get_chat_params = {}
+    post_chat_params = {}
+
+    history_json = await history.read()
+    chat_history = json.loads(history_json)
+    
     with open(file.filename, "wb") as f:
         f.write(file.file.read())
 
@@ -359,16 +364,9 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
         )
     os.remove(file.filename)
 
-    function_name = ""
-    get_service_params = {}
-    get_chat_params = {}
-    post_chat_params = {}
-
-
-    messages = [
-            {"role": "system", "content" : "you must function call post_api_chat If you determine that it is not the appropriate time to call the 'get_api_service_list' or 'get_api_chat' functions"},
-            {"role": "user","content": transcript["text"]}
-    ]
+    messages = [{"role": "system", "content" : "you must function call post_api_chat If you determine that it is not the appropriate time to call the 'get_api_service_list' or 'get_api_chat' functions"},]
+    messages.extend(chat_history)
+    messages.append({"role": "user","content": transcript["text"]})
 
     response = openai.ChatCompletion.create(
             model=MODEL,
@@ -376,8 +374,10 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
             temperature=0,
             functions=VOICE_FUNCTIONS,
     )
+    
     if response["choices"][0]['finish_reason'] != 'function_call':
-        raise Exception("finish_reason is not function_call")
+        # raise Exception("finish_reason is not function_call")
+        voice_answer = response["choices"][0]['message']['content']
     else:
         function_name = response['choices'][0]['message']['function_call']['name']
         params = json.loads(response['choices'][0]['message']['function_call']['arguments'])
@@ -399,6 +399,8 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
             raise Exception("Function does not exist")
 
     return {
+        "userText": transcript["text"],
+        "voiceAnswer": voice_answer,
         "function": function_name,
         "serviceParams": get_service_params,
         "getChatParams": get_chat_params,
