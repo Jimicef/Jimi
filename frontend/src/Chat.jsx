@@ -109,7 +109,7 @@ function Chat() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    username: sessionStorage.getItem("username"),
+                    username: localStorage.getItem("username"),
                     question: quest,
                     history: modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi,
                     summary: summary,

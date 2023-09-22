@@ -195,7 +195,8 @@ const Voice = () => {
         // }
         //console.log(audioUrl)
         // File 생성자를 사용해 파일로 변환
-        const sound = new File([audioUrl], "request.wav", { lastModified: new Date().getTime(), type: "audio" });
+        const username = localStorage.getItem("username")
+        const sound = new File([audioUrl], username +".wav", { lastModified: new Date().getTime(), type: "audio" });
         // console.log(sound); // File 정보 출력
 
         // const audioResponse = await fetch(audioUrl);
@@ -214,7 +215,7 @@ const Voice = () => {
             if (response.ok) {
                 const data = await response.json();
                 getSpeech('')
-                if (data.function === 'get:/api/service_list') {
+                if (data.function === 'get_api_service_list') {
                     if (data.serviceParams.nextPage) {
                         fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount+1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
                         .then(response => response.json())
@@ -273,7 +274,7 @@ const Voice = () => {
                             getSpeech(data.voiceAnswer)
                         })                 
                     }
-                } else if (data.function === 'get:/api/chat') {
+                } else if (data.function === 'get_api_chat') {
                     console.log(supports)
                     fetch(`${apiEndPoint}/api/chat?serviceId=${supports[data.getChatParams.serviceNumber].serviceId}&voice=1`)
                     .then(response => response.json())
@@ -289,7 +290,7 @@ const Voice = () => {
                         })
                         getSpeech(data.voiceAnswer)
                     })
-                } else if (data.function === 'post:/api/chat') {
+                } else if (data.function === 'post_api_chat') {
                     const modifiedJimi = jimi.filter(item => !item.support).map(item => {
                         const content = item.text;
                         const role = item.sender === 'bot' ? 'assistant' : item.sender;
@@ -301,7 +302,7 @@ const Voice = () => {
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            username: sessionStorage.getItem("username"),
+                            username: localStorage.getItem("username"),
                             question: data.postChatParams.question,
                             history: modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi,
                             summary: summary,
