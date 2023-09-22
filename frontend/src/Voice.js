@@ -276,7 +276,7 @@ const Voice = () => {
                     }
                 } else if (data.function === 'get_api_chat') {
                     console.log(supports)
-                    fetch(`${apiEndPoint}/api/chat?serviceId=${supports[data.getChatParams.serviceNumber].serviceId}&voice=1`)
+                    fetch(`${apiEndPoint}/api/chat?serviceId=${supports[data.getChatParams.serviceNumber-1].serviceId}&voice=1`)
                     .then(response => response.json())
                     .then(data => {
                         dispatch({
