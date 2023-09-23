@@ -205,7 +205,7 @@ VOICE_FUNCTIONS = [
         },
     },
     {
-        "name": "get_api_chat",
+        "name": "get_number",
         "description": f"""
         you must generate serviceNumber parameters.
         If the user mentions numbers "1번", "2번", "3번","4번",""5번","6번" etc., this function must be executed 
