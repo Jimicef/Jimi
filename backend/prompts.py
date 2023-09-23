@@ -245,7 +245,7 @@ VOICE_FUNCTIONS = [
             "properties": {
                 "question": {
                     "type": "string",
-                    "description": "This variable is the user's questions."
+                    "description": "This variable is the user's questions about subsidy service"
                 
                 },
             },
