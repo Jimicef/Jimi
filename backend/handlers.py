@@ -374,7 +374,7 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
         transcript = openai.Audio.transcribe(
             file=f,
             model=AUDIO_MODEL,
-            prompt="",
+            prompt=VOICE_CHAT_PROMPT,
         )
     os.remove(file.filename)
     
