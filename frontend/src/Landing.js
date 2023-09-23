@@ -30,9 +30,10 @@ const Landing = () => {
     }
 
     const ipDataFetch = async() =>{
-        const ipData = await fetch('https://geolocation-db.com/json/');
-        const locationIp = await ipData.json();
-        localStorage.setItem("username", locationIp.IPv4)
+        // const ipData = await fetch('https://geolocation-db.com/json/');
+        // const locationIp = await ipData.json();
+        const randomNumber = Math.floor(Math.random() * 1000000);
+        localStorage.setItem("username", randomNumber)
     }
 
     const handleVoiceButtonClick = () => {
