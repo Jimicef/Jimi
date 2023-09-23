@@ -143,7 +143,7 @@ VOICE_FUNCTIONS = [
                 "chktype1": {
                     "type": "string",
                     "description": f"""chktype1 is a variable representing the service category. 
-                    
+                    you must generate this parameter.
                     Choose the service category in the chktype1 code below.
                     
                     CHKTYPE1_CODE:
