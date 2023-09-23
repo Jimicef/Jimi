@@ -79,7 +79,7 @@ FUNCTIONS = [
     {
         "name": "answer_with_service_info",
         "description": f"""
-        "This function is called only for questions related to the content found in service information; otherwise, it is never called.""",
+        "This function is called only for questions related to the content found in ***subsidy service information***; otherwise, it is never called.""",
         "parameters": {
             "type": "object",
             "properties": {
