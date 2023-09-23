@@ -206,6 +206,7 @@ VOICE_FUNCTIONS = [
     {
         "name": "get_api_chat",
         "description": f"""
+        you must generate serviceNumber parameters.
         If the user mentions numbers "1번", "2번", "3번","4번",""5번","6번" etc., this function must be executed 
         This function returns a number based on user input.
         This function allows you to search for government subsidies and obtain related information.
