@@ -319,6 +319,26 @@ const Voice = () => {
                 userTextChange(data.userText)
                 getSpeech('')
                 if (data.function === 'get_api_service_list') {
+                    // chktype1 어레이 필터링하여 원하는 결과 생성
+                    const filteredChktype1 = [];
+
+                    // chktype1 어레이의 첫 번째 아이템 가져오기
+                    const firstItem = data.serviceParams.chktype1[0];
+
+                    // 첫 번째 아이템을 스페이스로 분할
+                    const [region1, region2] = firstItem.split(' ');
+
+                    if (region1 === region2) {
+                    // 앞과 뒤의 내용이 같으면 해당 지역의 정보를 가져와서 결과에 추가
+                        const regionInfo = subRegionList[region1];
+                        
+                        if (regionInfo) {
+                            const subRegions = regionInfo.map(obj => Object.keys(obj)[0]);
+                            // "서울특별시"를 앞에 붙여서 결과 어레이에 추가
+                            const formattedSubRegions = subRegions.map(subRegion => `${region1} ${subRegion}`);
+                            filteredChktype1.push(...formattedSubRegions);
+                        }
+                    }
                     if (data.serviceParams.nextPage) {
                         fetch(`${apiEndPoint}/api/service_list`,{
                             method: "POST",
@@ -328,7 +348,7 @@ const Voice = () => {
                             body: JSON.stringify({
                                 keyword: data.serviceParams.keyword,
                                 count: voiceCount+1,
-                                chktype1: data.serviceParams.chktype1,
+                                chktype1: region1===region2?filteredChktype1:data.serviceParams.chktype1,
                                 sidocode: data.serviceParams.sidocode,
                                 svccd: data.serviceParams.svccd,
                                 voice: 1
@@ -363,7 +383,7 @@ const Voice = () => {
                             body: JSON.stringify({
                                 keyword: data.serviceParams.keyword,
                                 count: voiceCount-1,
-                                chktype1: data.serviceParams.chktype1,
+                                chktype1: region1===region2?filteredChktype1:data.serviceParams.chktype1,
                                 sidocode: data.serviceParams.sidocode,
                                 svccd: data.serviceParams.svccd,
                                 voice: 1
@@ -397,7 +417,7 @@ const Voice = () => {
                             body: JSON.stringify({
                                 keyword: data.serviceParams.keyword,
                                 count: 0,
-                                chktype1: data.serviceParams.chktype1,
+                                chktype1: region1===region2?filteredChktype1:data.serviceParams.chktype1,
                                 sidocode: data.serviceParams.sidocode,
                                 svccd: data.serviceParams.svccd,
                                 voice: 1
