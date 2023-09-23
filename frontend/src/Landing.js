@@ -94,9 +94,9 @@ const Landing = () => {
                 </Box>
                 
                 <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '60vh'}}>
-                            {titleText('신청할 수 있는')}
-                            {titleText('지원금 제도를')}
-                            {titleText('쉽게 찾아드립니다.')}
+                            {titleText('지미와 함께')}
+                            {titleText('나에게 맞는 지원금을')}
+                            {titleText('찾아보세요!')}
                             {subTitleText('정부 보조금 24 기반의 모든 지원금 제공', true)}
                             {subTitleText('시각장애인을 위한 음성 지원', false)}
                             {subTitleText('지원금 검색부터 질의응답까지 한번에', false)}
