@@ -401,7 +401,8 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
             # except:
             #     get_service_params['siGunGuArea'] = sub_region_code[get_service_params['sidocode']]["전체"]
             get_service_params['sidocode'] = [get_service_params['sidocode']+" "+get_service_params['siGunGuArea']]
-            get_service_params['chktype1'] = ["생활안정", "주거·자립", "보육·교육", "고용·창업", "보건·의료", "행정·안전", "임신·출산", "보호·돌봄", "문화·환경", "농림축산어업"]
+            # get_service_params['chktype1'] = ["생활안정", "주거·자립", "보육·교육", "고용·창업", "보건·의료", "행정·안전", "임신·출산", "보호·돌봄", "문화·환경", "농림축산어업"]
+            get_service_params['chktype1'] = [get_service_params['chktype1']]
             get_service_params['svccd'] = [get_service_params['svccd']] 
         elif function_name == 'get_number':
             get_chat_params = params
