@@ -119,9 +119,10 @@ description of the '지미' service:
 VOICE_FUNCTIONS = [
     {
         "name": "get_api_service_list",
+        #This function allows you to search for government subsidies and obtain related information.
         "description": f"""
-        This function allows you to search for government subsidies and obtain related information.
-        사용자가 "다음" 혹은 "이전"이라고 말하는 경우에도 이 함수를 호출해야함.
+        
+        This function can only be called when the user has mentioned their current location and the situation in which they need assistance.
         you must generate all parameters.
         """,
         "parameters": {
