@@ -12,6 +12,8 @@ import { SET_ANSWER, SET_COUNT, SET_SUPPORT_LIST, SET_VOICE_COUNT, SET_SUMMARY, 
 // import { getSpeech } from './tts';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
+import VoiceOverOffIcon from '@mui/icons-material/VoiceOverOff';
+
 import { subRegionList } from './Intro';
 
 const Voice = () => {
@@ -48,6 +50,7 @@ const Voice = () => {
     const jimi = useSelector((state)=>state.jimi)
     
     const [isSpeechOnEnd, setIsSpeechOnEnd] = useState(false)
+    const [isUserOff, setIsUserOff] = useState(false)
 
     const messageContainerRef = useRef();
 
@@ -173,6 +176,7 @@ const Voice = () => {
           if (text){
             utterThis.onstart = () => {
                 setIsSpeechOnEnd(false)
+                setIsUserOff(false)
             }
             utterThis.onend = () => {
                 //onRecAudio()
@@ -258,6 +262,31 @@ const Voice = () => {
         );
     };
 
+    const offRecAudio = async() => {
+        // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
+        media.ondataavailable = function (e) {
+            setAudioUrl(e.data);
+            setOnRec(true);
+        };
+    
+        // 모든 트랙에서 stop()을 호출해 오디오 스트림을 정지
+        stream.getAudioTracks().forEach(function (track) {
+            track.stop();
+        });
+        SpeechRecognition.stopListening()
+    
+        // 미디어 캡처 중지
+        media.stop();
+        
+        // 메서드가 호출 된 노드 연결 해제
+        analyser.disconnect();
+        source.disconnect();
+        setAudioState(1)
+        setIsUserOff(true)
+        // setIsAudioEnd(true)
+        
+    };
+
     const userTextChange = (userTextData) => {
         // console.log(jimi)
         // console.log(jimi.slice(0,-1), userTextData)
@@ -272,7 +301,7 @@ const Voice = () => {
         if (jimi.length>0){
             console.log(jimi.slice(-1)[0])
         }
-        if (jimi.length> 0 && jimi.slice(-1)[0].sender === 'bot' && isSpeechOnEnd){
+        if (jimi.length> 0 && jimi.slice(-1)[0].sender === 'bot' && isSpeechOnEnd && !isUserOff){
             setIsSpeechOnEnd(false)
             onRecAudio()
         }
@@ -335,7 +364,9 @@ const Voice = () => {
                         if (regionInfo) {
                             const subRegions = regionInfo.map(obj => Object.keys(obj)[0]);
                             // "서울특별시"를 앞에 붙여서 결과 어레이에 추가
-                            const formattedSubRegions = subRegions.map(subRegion => `${region1} ${subRegion}`);
+                            const formattedSubRegions = subRegions
+                                .filter(subRegion => subRegion !== "전체") // "전체"인 경우 필터링
+                                .map(subRegion => `${region1} ${subRegion}`);
                             filteredChktype1.push(...formattedSubRegions);
                         }
                     }
@@ -372,7 +403,7 @@ const Voice = () => {
                             })
 
                             getSpeech(data.voiceAnswer)
-                            setAudioState(1)
+                            setAudioState(4)
                         })    
                     } else if (data.serviceParams.prevPage){
                         fetch(`${apiEndPoint}/api/service_list`,{
@@ -406,7 +437,7 @@ const Voice = () => {
                                 data: [...jimi, {textArray: data.supportArray, sender: 'bot', text: data.voiceAnswer}]
                             })
                             getSpeech(data.voiceAnswer)
-                            setAudioState(1)
+                            setAudioState(4)
                         })    
                     } else {
                         fetch(`${apiEndPoint}/api/service_list`,{
@@ -440,7 +471,7 @@ const Voice = () => {
                                 data: [...jimi, {textArray: data.supportArray, sender: 'bot', text: data.voiceAnswer}]
                             })
                             getSpeech(data.voiceAnswer)
-                            setAudioState(1)
+                            setAudioState(4)
                         })                 
                     }
                 } else if (data.function === 'get_api_chat') {
@@ -459,7 +490,7 @@ const Voice = () => {
                             data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
                         })
                         getSpeech(data.voiceAnswer)
-                        setAudioState(1)
+                        setAudioState(4)
                     })
                 } else if (data.function === 'post_api_chat') {
                     const modifiedJimi = jimi.filter(item => !item.support).map(item => {
@@ -488,7 +519,7 @@ const Voice = () => {
                             data: [...jimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}]
                         })
                         getSpeech(data.voiceAnswer)
-                        setAudioState(1)
+                        setAudioState(4)
                     })
                 } else if (data.voiceAnswer) {
                     
@@ -497,7 +528,7 @@ const Voice = () => {
                         data: [...jimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}]
                     })
                     getSpeech(data.voiceAnswer)
-                    setAudioState(1)
+                    setAudioState(4)
                 }
                 // setJimi((existingJimi) => [...existingJimi, {text: data.transcript, sender: 'bot'}])
                 // console.log('가져온 값:', data.transcript);
@@ -576,6 +607,15 @@ const Voice = () => {
             //   color='secondary'
             //   disabled
             ><GraphicEqIcon fontSize='large'sx={{mr: 1}}/>답변 생성 중</Button>}
+
+            {audioState === 4 &&<Button
+                fullWidth
+                variant="contained"
+                sx={{height: '100%', fontSize: '3vh'}}
+                onClick={offRecAudio}
+                color='error'
+              ><VoiceOverOffIcon fontSize='large' sx={{mr: 1}}/>대화 멈추기</Button>
+            }
             
               
       
