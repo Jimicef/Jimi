@@ -152,22 +152,23 @@ VOICE_FUNCTIONS = [
                 "keyword": {
                     "type": "string",
                     "description": f"""This variable is used as a keyword for conducting subsidy searches.
-                    Extract the key words from the user's question.
+                    you must Extract the key words from the user's question.
                     For example, if the question is 'Tell me about '장애인 지원금',' the key word is '장애인'.
 
-                    In order to conduct a subsidy search, there must be relevant search keywords related to the following topics.
                     
-                    TOPICS:
-                        생활안정, 주거·자립, 보육·교육, 고용·창업, 보건·의료, 행정·안전, 임신·출산, 보호·돌봄, 문화·환경 , 농림축산어업
                     """
                 },
+                # In order to conduct a subsidy search, there must be relevant search keywords related to the following topics.
+                    
+                #     TOPICS:
+                #         생활안정, 주거·자립, 보육·교육, 고용·창업, 보건·의료, 행정·안전, 임신·출산, 보호·돌봄, 문화·환경 , 농림축산어업
                 "chktype1": {
                     "type": "string",
                     "description": f"""chktype1 is a variable representing the service category. 
-                    you must generate this parameter.
-                    you must choose the service category in the chktype1 code below.
+                    You must extract the service category from the user's query.
                     
-                    CHKTYPE1_CODE:
+                    
+                    service category:
                         {chktype1_code}
                     """
                 },
