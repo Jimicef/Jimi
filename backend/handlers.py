@@ -376,11 +376,12 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
         )
     os.remove(file.filename)
     
-    messages = [{"role": "system", "content" : "If it's unclear which function to use, you should ask the user for the required function arguments again."},
-                {"role": "system", "content" : "The function call should prioritize the user's content with the highest weight, which is the last one."}
-                ]
+    # messages = [{"role": "system", "content" : "If it's unclear which function to use, you should ask the user for the required function arguments again."},
+    #             {"role": "system", "content" : "The function call should prioritize the user's content with the highest weight, which is the last one."}
+    #             ]
+    messages = [{"role": "system", "content" : VOICE_FUNCTION_CALL_PROMPT},]
     
-    #messages = [{"role": "system", "content" : "you must function call post_api_chat If you determine that it is not the appropriate time to call the 'get_api_service_list' or 'get_api_chat' functions"},]
+    # messages = [{"role": "system", "content" : "you must function call post_api_chat If you determine that it is not the appropriate time to call the 'get_api_service_list' or 'get_api_chat' functions"},]
     messages.extend(chat_history)
     messages.append({"role": "user","content": transcript["text"]})
 
@@ -431,13 +432,6 @@ async def get_voice_chat():
         "voiceAnswer": "안녕하세요! 저는 지원금 찾기 도우미, 지미입니다. 현재 거주하고 계신 지역과 지원받고 싶은 상황에 대해 아래 버튼을 누르고 말씀해주세요"
     }
 
-# keyword : str = Query(None,description = "검색 키워드"),
-# count : int = Query(0,description = "페이지 번호"),
-# chktype1 : str = Query(None,description = "서비스 분야"),#배열 리스트에 담아서 줘야함 생활안정|주거·자립 이렇게 줘야함
-# siGunGuArea : str = Query(None,description = "시/군/구 코드"),
-# sidocode : str = Query(None,description = "시/도 코드"),#["대전광역시 유성구"]
-# svccd : str = Query(None,description = "사용자 구분"),
-# voice : bool = Query(None,description = "시각 장애인 자막 생성 여부")
                            
 async def post_opensearch_service_list(data: Annotated[dict,{
     "keyword" : str,

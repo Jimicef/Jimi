@@ -13,6 +13,50 @@ Guidelines for generating responses:
 2. avoiding unnecessary symbols.
 """
 
+# VOICE_FUNCTION_CALL_PROMPT = """
+# 이 함수들은 보조금 관련 정보를 가지고 채팅을 하는 서비스에 사용되는 함수들이야.
+# 함수들에 대해 설명해줄게.
+# - "get_api_service_list": 이 함수는 사용자가 보조금 리스트에 대해서 얻고 싶을 때 사용하는 함수야, 사용자가 사는 지역과 보조금 키워드를 입력받아서 보조금 리스트를 얻을 수 있어, 
+# 이때 사용자는 원하는 보조금 리스트가 없으면 "다음" 혹은 "이전"이라고 말해서 "다음페이지" 혹은 "이전페이지"에 대헤 재검색을 할 수 있어
+
+# - "get_number": 이 함수는 사용자가 "get_api_service_list" 함수를 호출해서 얻은 6개의 보조금 리스트 중에서 선택한 번호를 추출하는 함수야, 사용자가 3번 보조금에 대해서 알려달라고 하면 3을 추출할 수 있어.
+
+# - "post_api_chat": 이 함수는 사용자가 "get_api_service_list","get_number" 함수들을 통해 6개의 보조금 중에서 선택한 하나의 보조금에 대해서 질의응답하는 함수야. 사용자가 특정 보조금 관련 질문을 하면 이 함술를 통해서 답변을 얻을 수 있어
+
+# 일반적인 함수 호출 시나리오는 다음과 같아
+
+# 먼저, "get_api_service_list"를 호출해서 6개의 보조금 리스트를 받아온다.
+# 그 다음, 사용자가 6개의 보조금 중에서 몇 번인지 번호를 말해주면 "get_number"를 호출해서 그 번호를 정수로 추출한다.
+# 마지막으로, "post_api_chat"를 호출해서 사용자가 선택한 하나의 보조금 정보에 대해 질의응답을 할 수 있어.
+
+# 추가적으로 이런 시나리오도 가능하지.
+# 먼저, "get_api_service_list"를 호출해서 6개의 보조금 리스트를 받아온다. 하지만 사용자는 원하는 보조금이 6개 중에 없어서 "다음 페이지"라고 입력할 수 있어
+# 그러면 다시 "get_api_service_list"를 호출해서 다음 페이지에 있는 6개의 보조금 리스트를 받아온다.
+# 그 다음, 사용자가 6개의 보조금 중에서 몇 번인지 번호를 말해주면 "get_number"를 호출해서 그 번호를 정수로 추출한다.
+# 마지막으로, "post_api_chat"를 호출해서 사용자가 선택한 하나의 보조금 정보에 대해 질의응답을 할 수 있어.
+
+# """
+VOICE_FUNCTION_CALL_PROMPT = """
+These functions are used in a chat service that interacts with subsidy-related information. Let me explain the functions:
+
+- "get_api_service_list": This function is used when a user wants to obtain a list of subsidies. It takes the user's location and subsidy keywords as input and returns a list of subsidies. In this case, if the user doesn't find the desired subsidy list, they can say "next" or "previous" to perform a new search for the next or previous page.
+
+- "get_number": This function extracts the chosen number from the 6 subsidy options obtained when the user calls the "get_api_service_list" function. For example, if the user asks for information about subsidy number 3, this function can extract the number 3.
+
+- "post_api_chat": This function allows the user to query and receive answers about one of the subsidies they selected from the 6 options using the "get_api_service_list" and "get_number" functions. When the user asks specific questions related to a particular subsidy, this function provides answers.
+
+A typical function call scenario goes like this:
+
+First, call "get_api_service_list" to fetch the list of 6 subsidies.
+Next, when the user specifies the number of the subsidy they are interested in, call "get_number" to extract that number as an integer.
+Finally, call "post_api_chat" to allow the user to engage in a Q&A session about the selected subsidy.
+
+Additionally, another scenario is possible:
+
+Start by calling "get_api_service_list" to fetch the initial list of 6 subsidies. However, if the user doesn't find the desired subsidy among these 6, they can input "next page." In response, call "get_api_service_list" again to retrieve the next page with another 6 subsidies.
+Then, when the user specifies the number of the desired subsidy, call "get_number" to extract that number as an integer.
+Finally, call "post_api_chat" to enable the user to ask questions and receive answers about the selected subsidy.
+"""
 PLUGIN_SELECT_PROMPT = """
 You are API caller plugin. Based on the user input, you will call an relevant API path with relevent query.
 Generate relevent query for the best results for the API path. 
@@ -93,37 +137,13 @@ chktype1_code = [
 # chktype1_code = {
 #         "생활안정": "NB0301","주거·자립": "NB0302", "보육·교육": "NB0303", "고용·창업": "NB0304", "보건·의료": "NB0305", "행정·안전": "NB0306", "임신·출산": "NB0307", "보호·돌봄": "NB0308", "문화·환경": "NB0309", "농림축산어업": "NB0310"
 # }
-VOICE_CHAT_PROMPT = f"""
-
-"You are a helpful assistant for the '지미' service. 
-This audio file contains a voice query from a '지미' service user. 
-Please refer to the description of the '지미' service below and create subtitles in Korean."
-
-
-description of the '지미' service:
-
-"지미"에서는 신청자별 맞춤 안내를 위해 행정기관에서 보유하고 있는 연령ㆍ소득 등의 정보와 개인이 입력하는 개인ㆍ가구 특성 정보 등을 고려해 신청자를 위한 지원제도 맞춤 안내 서비스를 제공 합니다. 
-사용자는 아래와 같은 정보를 입력하여 서비스를 이용합니다.
-
-- 지역
-{sub_region_names}
-
-- 서비스 분야(중복 선택 가능)
-전체,생활안정,주거·자립,보육·교육,고용·창업,보건·의료,행정·안전,임신·출산,보호·돌봄,문화·환경,농림축산어업
-
-- 사용자 구분
-개인(가구), 소상공인, 법인
-
-"""
 
 VOICE_FUNCTIONS = [
     {
         "name": "get_api_service_list",
         #This function allows you to search for government subsidies and obtain related information.
         "description": f"""
-        
-        This function can only be called when the user has mentioned their current location and the situation in which they need assistance.
-        you must generate all parameters.
+        This function is used when a user wants to obtain a list of subsidies. It takes the user's location and subsidy keywords as input and returns a list of subsidies. In this case, if the user doesn't find the desired subsidy list, they can say "next" or "previous" to perform a new search for the next or previous page.
         """,
         "parameters": {
             "type": "object",
@@ -144,7 +164,7 @@ VOICE_FUNCTIONS = [
                     "type": "string",
                     "description": f"""chktype1 is a variable representing the service category. 
                     you must generate this parameter.
-                    Choose the service category in the chktype1 code below.
+                    you must choose the service category in the chktype1 code below.
                     
                     CHKTYPE1_CODE:
                         {chktype1_code}
@@ -212,16 +232,8 @@ VOICE_FUNCTIONS = [
     {
         "name": "get_number",
         "description": f"""
-        사용자가 대화중에 1번,2번,3번,4번,5번,6번 중 하나를 언급하면 이 함수를 반드시 호출해야함
-        If the user mentions numbers "1", "2", "3","4",""5","6" ,This function returns a number based on user input.
-        This function allows you to search for government subsidies and obtain related information.
-            for example, 
-            "1번" -> 1
-            "2번" -> 2
-            "3번" -> 3
-            "4번" -> 4
-            "5번" -> 5
-            "6번" -> 6
+        This function extracts the chosen number from the 6 subsidy options obtained when the user calls the "get_api_service_list" function. For example, if the user asks for information about subsidy number 3, this function can extract the number 3.
+
         """,
         "parameters": {
             "type": "object",
@@ -238,11 +250,10 @@ VOICE_FUNCTIONS = [
     },
     {
         "name": "post_api_chat",
-        "description": """This function allows users to engage in a question-and-answer session related to the selected subsidy service.
+        "description": """
+        This function allows the user to query and receive answers about one of the subsidies they selected from the 6 options using the "get_api_service_list" and "get_number" functions. When the user asks specific questions related to a particular subsidy, this function provides answers.
+
             """,
-            #It can only be called after the 'get_api_service_list' function has been executed.
-            #This function can be used to generate answers to questions related to the following keywords.
-            #keywords: 신청기한,접수센터,서비스이름,선정기준,담당기관,지원대상,지원내용,접수센터,지원형태,제출서류,서비스,보조금,지원금
         "parameters": {
             "type": "object",
             "properties": {
