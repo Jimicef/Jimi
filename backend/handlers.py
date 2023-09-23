@@ -246,6 +246,8 @@ async def post_chat(data: Annotated[dict,{
         
         full_message = first_response["choices"][0]
         if full_message["message"]["function_call"]["name"] == "answer_with_service_info":
+            # parsed_output = json.loads(full_message["message"]["function_call"]["arguments"])
+            result[0]['link'] = data['summary']['url']
             messages=[
                     {"role": "system", "content": MAIN_PROMPT},
                     {"role": "user", "content": CHAT_PROMPT},
