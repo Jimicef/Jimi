@@ -310,6 +310,7 @@ export const Intro = () => {
                                 />
                     </ThemeProvider>
                 </Box>
+                <ThemeProvider theme={theme}>
             <Box sx={{my: 2, p:3, bgcolor: "white", borderRadius: '30px', boxShadow: '5px 5px 10px grey'}}>
                 <Typography sx={{fontWeight: 'bold'}}>지역</Typography>
                 <Box sx={{display: 'flex', m: 1, mb: 2}}>
@@ -322,6 +323,7 @@ export const Intro = () => {
                             id="demo-simple-select"
                             value={region}
                             label="Region"
+                            
                             onChange={handleChangeRegion}
                             >
                             {regionList.map((re, idx) => (
@@ -408,14 +410,17 @@ export const Intro = () => {
                     />
                 </Box> */}
             </Box>
+            </ThemeProvider>
             </Box>
             </Box>
+            
             <ThemeProvider theme={theme}>
                 <Box sx={{display: 'flex', justifyContent: 'flex-end', m:2}}>
                     {isLoading?<Button disabled variant='contained' color="deepDarkViolet" sx={{color: 'white'}}>지원금 추천받기</Button>:<Button variant='contained' color="deepDarkViolet" onClick={handleSubmit} sx={{color: 'white'}}>지원금 추천받기</Button>}
                 </Box>
             </ThemeProvider>
             </Box>
+            
     </BasicCard>
   )
 }
