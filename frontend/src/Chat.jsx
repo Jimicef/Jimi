@@ -84,7 +84,7 @@ function Chat() {
 
   const handleQuestion = async(quest) => {
     setJimi((existingJimi) => [...existingJimi, {text: quest, sender: 'user'}])
-    setJimi((existingJimi) => [...existingJimi, {text: '입력을 받았습니다', sender: 'user', system: true}])
+    // setJimi((existingJimi) => [...existingJimi, {text: '입력을 받았습니다', sender: 'user', system: true}])
         //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
         setIsLoading(true)
         setInput("")

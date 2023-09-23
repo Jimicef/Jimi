@@ -357,10 +357,9 @@ const Voice = () => {
                     // 첫 번째 아이템을 스페이스로 분할
                     const [region1, region2] = firstItem.split(' ');
 
-                    if (region1 === region2) {
+                    if (region1 === region2 || region2 === '전체') {
                     // 앞과 뒤의 내용이 같으면 해당 지역의 정보를 가져와서 결과에 추가
                         const regionInfo = subRegionList[region1];
-                        
                         if (regionInfo) {
                             const subRegions = regionInfo.map(obj => Object.keys(obj)[0]);
                             // "서울특별시"를 앞에 붙여서 결과 어레이에 추가
@@ -456,7 +455,6 @@ const Voice = () => {
                         })
                         .then(response => response.json())
                         .then(data => {
-                            
                             dispatch({
                                 type: SET_VOICE_COUNT,
                                 data: 0
@@ -613,13 +611,9 @@ const Voice = () => {
                 variant="contained"
                 sx={{height: '100%', fontSize: '3vh'}}
                 onClick={offRecAudio}
-                color='error'
+                color='yellow'
               ><VoiceOverOffIcon fontSize='large' sx={{mr: 1}}/>대화 멈추기</Button>
             }
-            
-              
-      
-              
             </ThemeProvider>
           </Box>
           </Box>

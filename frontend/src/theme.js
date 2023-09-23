@@ -16,6 +16,9 @@ export const theme = createTheme({
     },
     deepDarkViolet: {
       main: '#795baf'
+    },
+    yellow: {
+      main: '#f5d2b3'
     }
   },
   typography: {
