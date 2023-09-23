@@ -79,9 +79,7 @@ FUNCTIONS = [
     {
         "name": "answer_with_service_info",
         "description": f"""
-        "Through this function, users can obtain answers to questions related to specific subsidies. 
-        However, if the user asks a question that is not related to a specific subsidy or inquires about information not present in the subsidy service, this function cannot be used."
-        """,
+        "This function is called only for questions related to the content found in ***subsidy service information***; otherwise, it is never called.""",
         "parameters": {
             "type": "object",
             "properties": {
