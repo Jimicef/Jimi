@@ -234,6 +234,7 @@ async def post_chat(data: Annotated[dict,{
         {"role": "system", "content": f"You can use this service information {data['summary']}"},
         {"role": "user","content": f"user query : {data['question']}"}
     ]
+    messages.extend(data['history'])
 
     first_response = openai.ChatCompletion.create(
         model=MODEL,
@@ -371,11 +372,13 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
         transcript = openai.Audio.transcribe(
             file=f,
             model=AUDIO_MODEL,
-            prompt="",
+            prompt="This conversation is in Korean",
         )
     os.remove(file.filename)
     
-    messages = [{"role": "system", "content" : "If it's unclear which function to use, you should ask the user for the required function arguments again."},]
+    messages = [{"role": "system", "content" : "If it's unclear which function to use, you should ask the user for the required function arguments again."},
+                {"role": "system", "content" : "The function call should prioritize the user's content with the highest weight, which is the last one."}
+                ]
     
     #messages = [{"role": "system", "content" : "you must function call post_api_chat If you determine that it is not the appropriate time to call the 'get_api_service_list' or 'get_api_chat' functions"},]
     messages.extend(chat_history)
