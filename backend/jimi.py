@@ -10,6 +10,7 @@ app = FastAPI()
 
 origins = [
     "https://d2cbtv7b4u1taw.cloudfront.net",
+    "https://*.jimi-bot.net",
     "https://jimi-bot.net",
     "https://be.jimi-bot.net",
     "http://jimi4-alb2-755561355.ap-northeast-2.elb.amazonaws.com",
