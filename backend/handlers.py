@@ -426,7 +426,7 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
 
 async def get_voice_chat():
     return {
-        "voiceAnswer": "안녕하세요! 👋 저는 지원금 찾기 도우미, 지미입니다. 현재 거주하고 계신 지역과 지원받고 싶은 상황에 대해 아래 버튼을 누르고 말씀해주세요"
+        "voiceAnswer": "안녕하세요! 저는 지원금 찾기 도우미, 지미입니다. 현재 거주하고 계신 지역과 지원받고 싶은 상황에 대해 아래 버튼을 누르고 말씀해주세요"
     }
 
 # keyword : str = Query(None,description = "검색 키워드"),
