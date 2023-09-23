@@ -323,7 +323,7 @@ const Voice = () => {
                     const filteredChktype1 = [];
 
                     // chktype1 어레이의 첫 번째 아이템 가져오기
-                    const firstItem = data.serviceParams.chktype1[0];
+                    const firstItem = data.serviceParams.sidocode[0];
 
                     // 첫 번째 아이템을 스페이스로 분할
                     const [region1, region2] = firstItem.split(' ');
@@ -348,8 +348,8 @@ const Voice = () => {
                             body: JSON.stringify({
                                 keyword: data.serviceParams.keyword,
                                 count: voiceCount+1,
-                                chktype1: region1===region2?filteredChktype1:data.serviceParams.chktype1,
-                                sidocode: data.serviceParams.sidocode,
+                                chktype1: data.serviceParams.chktype1,
+                                sidocode: region1===region2?filteredChktype1:data.serviceParams.sidocode,
                                 svccd: data.serviceParams.svccd,
                                 voice: 1
                             })
@@ -383,8 +383,8 @@ const Voice = () => {
                             body: JSON.stringify({
                                 keyword: data.serviceParams.keyword,
                                 count: voiceCount-1,
-                                chktype1: region1===region2?filteredChktype1:data.serviceParams.chktype1,
-                                sidocode: data.serviceParams.sidocode,
+                                chktype1: data.serviceParams.chktype1,
+                                sidocode: region1===region2?filteredChktype1:data.serviceParams.sidocode,
                                 svccd: data.serviceParams.svccd,
                                 voice: 1
                             })
@@ -417,8 +417,8 @@ const Voice = () => {
                             body: JSON.stringify({
                                 keyword: data.serviceParams.keyword,
                                 count: 0,
-                                chktype1: region1===region2?filteredChktype1:data.serviceParams.chktype1,
-                                sidocode: data.serviceParams.sidocode,
+                                chktype1: data.serviceParams.chktype1,
+                                sidocode: region1===region2?filteredChktype1:data.serviceParams.sidocode,
                                 svccd: data.serviceParams.svccd,
                                 voice: 1
                             })
