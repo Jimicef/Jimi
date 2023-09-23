@@ -12,6 +12,7 @@ import { SET_ANSWER, SET_COUNT, SET_SUPPORT_LIST, SET_VOICE_COUNT, SET_SUMMARY, 
 // import { getSpeech } from './tts';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
+import { subRegionList } from './Intro';
 
 const Voice = () => {
 
@@ -347,7 +348,7 @@ const Voice = () => {
                             // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
                             dispatch({
                                 type: SET_JIMI,
-                                data: [...jimi, {textArray: data.supportArray, sender: 'bot'}]
+                                data: [...jimi, {textArray: data.supportArray, sender: 'bot', text: data.voiceAnswer}]
                             })
 
                             getSpeech(data.voiceAnswer)
@@ -382,7 +383,7 @@ const Voice = () => {
                             // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
                             dispatch({
                                 type: SET_JIMI,
-                                data: [...jimi, {textArray: data.supportArray, sender: 'bot'}]
+                                data: [...jimi, {textArray: data.supportArray, sender: 'bot', text: data.voiceAnswer}]
                             })
                             getSpeech(data.voiceAnswer)
                             setAudioState(1)
@@ -416,7 +417,7 @@ const Voice = () => {
                             // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
                             dispatch({
                                 type: SET_JIMI,
-                                data: [...jimi, {textArray: data.supportArray, sender: 'bot'}]
+                                data: [...jimi, {textArray: data.supportArray, sender: 'bot', text: data.voiceAnswer}]
                             })
                             getSpeech(data.voiceAnswer)
                             setAudioState(1)
