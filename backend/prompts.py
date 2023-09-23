@@ -144,6 +144,7 @@ VOICE_FUNCTIONS = [
         #This function allows you to search for government subsidies and obtain related information.
         "description": f"""
         This function is used when a user wants to obtain a list of subsidies. It takes the user's location and subsidy keywords as input and returns a list of subsidies. In this case, if the user doesn't find the desired subsidy list, they can say "next" or "previous" to perform a new search for the next or previous page.
+        you MUST generate all parameters below.
         """,
         "parameters": {
             "type": "object",
@@ -233,7 +234,7 @@ VOICE_FUNCTIONS = [
         "name": "get_number",
         "description": f"""
         This function extracts the chosen number from the 6 subsidy options obtained when the user calls the "get_api_service_list" function. For example, if the user asks for information about subsidy number 3, this function can extract the number 3.
-
+        you MUST generate all parameters below.
         """,
         "parameters": {
             "type": "object",
@@ -252,7 +253,7 @@ VOICE_FUNCTIONS = [
         "name": "post_api_chat",
         "description": """
         This function allows the user to query and receive answers about one of the subsidies they selected from the 6 options using the "get_api_service_list" and "get_number" functions. When the user asks specific questions related to a particular subsidy, this function provides answers.
-
+        you MUST generate all parameters below.
             """,
         "parameters": {
             "type": "object",
