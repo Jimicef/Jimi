@@ -500,6 +500,7 @@ async def post_opensearch_service_list(data: Annotated[dict,{
                 voice_answer += f"{i+1}번: {card_data_list[i]['title']}\n"
             except:
                 print(i,len(card_data_list))
+        voice_answer += "다음 정보를 알고 싶으시면, 다음이라고 말해주세요"
 
     if (data['count']+1)*6 >= response['hits']['total']['value']:
         last_page = True
