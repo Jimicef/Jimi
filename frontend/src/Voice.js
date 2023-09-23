@@ -472,7 +472,7 @@ const Voice = () => {
                             setAudioState(4)
                         })                 
                     }
-                } else if (data.function === 'get_api_chat') {
+                } else if (data.function === 'get_number') {
                     // console.log(supports)
                     fetch(`${apiEndPoint}/api/chat?serviceId=${supports[data.getChatParams.serviceNumber-1].serviceId}&voice=1`)
                     .then(response => response.json())
