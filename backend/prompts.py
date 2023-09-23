@@ -154,9 +154,9 @@ VOICE_FUNCTIONS = [
                     
                     for example, If the user's 'sidocode' value is "서울특별시" (Seoul), then the 'siGunGuArea' value should be selected from the following options:
 
-                    default : '전체'
+                    
 
-                    ['전체','강남구','강동구', '강북구', '강서구','관악구','광진구','구로구','금천구','노원구','도봉구','동대문구','동작구','마포구','서대문구','서초구','성동구','성북구','송파구','양천구','영등포구','용산구','은평구','종로구', '중구', '중랑구']
+                    ['강남구','강동구', '강북구', '강서구','관악구','광진구','구로구','금천구','노원구','도봉구','동대문구','동작구','마포구','서대문구','서초구','성동구','성북구','송파구','양천구','영등포구','용산구','은평구','종로구', '중구', '중랑구']
                     
                     SUB-REGION NAMES:
                         {sub_region_names}
@@ -175,9 +175,9 @@ VOICE_FUNCTIONS = [
                 "svccd": {
                     "type": "string",
                     "description": f""""This variable represents user specificity and is only categorized into three types as follows:
-                        If the user is an individual, the variable is set to 'indiv'
-                        If the user is a small business owner, the variable is set to 'business'
-                        If the user is a corporate entity, the variable is set to 'owner'
+                        If the user is an individual, the variable is set to '개인'
+                        If the user is a small business owner, the variable is set to '소상공인'
+                        If the user is a corporate entity, the variable is set to '법인/시설/단체'
                         
                     """
                 },
