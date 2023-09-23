@@ -2,8 +2,9 @@ from fastapi import Query, UploadFile
 from typing import Annotated
 from bs4 import BeautifulSoup
 import requests
-from prompts import MAIN_PROMPT, CHAT_PROMPT, GET_CHAT_PROMPT, FUNCTIONS, MODEL, VOICE_FUNCTIONS, AUDIO_MODEL
+from prompts import *
 from utils import *
+from opensearchpy import OpenSearch
 
 from fastapi.responses import StreamingResponse
 
@@ -15,6 +16,19 @@ import os
 openai.api_key = os.environ["OPENAI_API_KEY"]
 Google_API_KEY = os.environ["Google_API_KEY"]
 Google_SEARCH_ENGINE_ID = os.environ["Google_SEARCH_ENGINE_ID"]
+
+opensearch_url = os.environ["OPENSEARCH_URL"]
+auth = (os.environ["OPENSEARCH_ID"], os.environ["OPENSEARCH_PW"])
+
+client = OpenSearch(
+    opensearch_url,
+    http_compress=True,  # enables gzip compression for request bodies
+    http_auth=auth,
+    use_ssl=False,
+    verify_certs=False,
+    ssl_assert_hostname=False,
+    ssl_show_warn=False,
+)
 
 async def get_service_list(keyword : str = Query(None,description = "검색 키워드"),
                            count : int = Query(0,description = "페이지 번호"),
@@ -413,4 +427,75 @@ async def post_voice_chat(file: UploadFile, history: UploadFile):
 async def get_voice_chat():
     return {
         "voiceAnswer": "지원금을 빠르고 간편하게 찾아보세요! 현재 거주하고 계신 지역과 지원받고 싶은 상황에 대해 아래 버튼을 누르고 말씀해주세요"
+    }
+
+
+async def get_opensearch_service_list(keyword : str = Query(None,description = "검색 키워드"),
+                           count : int = Query(0,description = "페이지 번호"),
+                           chktype1 : str = Query(None,description = "서비스 분야"),
+                           siGunGuArea : str = Query(None,description = "시/군/구 코드"),
+                           sidocode : str = Query(None,description = "시/도 코드"),
+                           svccd : str = Query(None,description = "사용자 구분"),
+                           voice : bool = Query(None,description = "시각 장애인 자막 생성 여부")
+                           ):
+
+    last_page = False
+    voice_answer = ""
+    low_query = {
+        "query": {
+            "bool": {
+            "must": [
+                { "term": { "소관기관명.keyword": "대전광역시 유성구" } }
+            ],
+            "should": [
+                { "match": { "서비스명": keyword } },
+                { "term": { "사용자구분.keyword": "개인" } },
+                { "term": { "사용자구분.keyword": "가구" } }
+            ]
+            }
+        }
+    }
+
+
+    query = {
+        "size" : 6,
+        "from" : 6*count,
+        "query": low_query['query']
+    }
+
+    response = client.search(
+        body = query,
+        index = 'jimi-index'
+    )
+
+    card_data_list = []
+
+    for hit in response['hits']['hits']:
+        card_info = {}
+        card_info["institution"] = hit['_source']['소관기관명']
+        card_info["serviceId"] = hit['_source']['서비스ID']
+        card_info["title"] = hit['_source']['서비스명']
+        card_info["description"] = hit['_source']['지원내용']
+        card_info["dueDate"] = hit['_source']['신청기한']
+        card_info["rcvInstitution"] = hit['_source']['부서명']
+        card_info["phone"] = hit['_source']['전화문의']
+        card_info["format"] = hit['_source']['지원유형']
+        card_data_list.append(card_info)
+    
+    if keyword:
+        message = f"{keyword}에 대한 {response['hits']['total']['value']}개의 통합검색 결과입니다."
+    else:
+        message = f"선택한 조건에 대한 {response['hits']['total']['value']}개의 통합검색 결과입니다."
+    if voice:
+        for i in range(6):
+            try:
+                voice_answer += f"{i+1}번: {card_data_list[i]['title']}\n"
+            except:
+                print(i,len(card_data_list))
+
+    return {
+        "answer" : message,
+        "support" : card_data_list,
+        "lastpage" : last_page,
+        "voiceAnswer" : voice_answer
     }

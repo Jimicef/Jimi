@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
 
 
-from handlers import get_service_list, get_chat, post_chat, post_voice_chat, get_voice_chat
+from handlers import get_service_list, get_chat, post_chat, post_voice_chat, get_voice_chat, get_opensearch_service_list
 
 app = FastAPI()
 
@@ -31,7 +31,7 @@ async def root():
     return {"message": "Hello World"}
 
 @app.get("/api/service_list")
-async def api_get_service_list(result: Annotated[dict,Depends(get_service_list)]):
+async def api_get_service_list(result: Annotated[dict,Depends(get_opensearch_service_list)]):
     return result
 
 
