@@ -1,4 +1,4 @@
-import { SET_VIEW_MORE, SET_ANSWER, SET_COUNT, SET_GO_TO_CHAT, SET_INPUT, SET_IS_LAST_PAGE, SET_REGION, SET_SERVICES, SET_SUBREGION, SET_SUMMARY, SET_SUPPORT_LIST, SET_USER, SET_MIN_TWENTY, SET_VOICE_COUNT, SET_FIRST_JIMI, SET_JIMI } from "../action/action";
+import { SET_VIEW_MORE, SET_ANSWER, SET_COUNT, SET_GO_TO_CHAT, SET_INPUT, SET_IS_LAST_PAGE, SET_REGION, SET_SERVICES, SET_SUBREGION, SET_SUMMARY, SET_SUPPORT_LIST, SET_USER, SET_MIN_TWENTY, SET_VOICE_COUNT, SET_FIRST_JIMI, SET_JIMI, SET_SIDOCODEARRAY, SET_USERARRAY } from "../action/action";
 
 // export type TextState = {
 //     answer: string;
@@ -23,7 +23,9 @@ const initState = {
     minTwenty: '',
     voiceCount: 0,
     firstJimi: "",
-    jimi: []
+    jimi: [],
+    sidoCodeArray: [],
+    userArray: []
 }
 
 export const reducer = (state = initState, action) => {
@@ -107,6 +109,16 @@ export const reducer = (state = initState, action) => {
             return {
                 ...state,
                 jimi: action.data
+            }
+        case SET_SIDOCODEARRAY:
+            return {
+                ...state,
+                sidoCodeArray: action.data
+            }
+        case SET_USERARRAY:
+            return {
+                ...state,
+                userArray: action.data
             }
         default:
             return state;

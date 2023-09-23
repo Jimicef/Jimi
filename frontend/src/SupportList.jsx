@@ -43,6 +43,8 @@ export const SupportList = () => {
     const region = useSelector((state) => state.region)
     const subRegion = useSelector((state) => state.subRegion)
     const user = useSelector((state) => state.user)
+    const userArray = useSelector((state) => state.userArray)
+    const sidoCodeArray = useSelector((state) => state.sidoCodeArray)
     const dispatch = useDispatch()
     var apiEndPoint;
     if (process.env.NODE_ENV == 'development') {
@@ -53,7 +55,22 @@ export const SupportList = () => {
     }
     const handleNextPage = () => {
         setIsLoadingPage(true)
-        fetch(`${apiEndPoint}/api/service_list?keyword=${input}&count=${count+1}&chktype1=${services}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]}&svccd=${user}&voice=0`)
+    
+        
+        fetch(`${apiEndPoint}/api/service_list`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                keyword: input,
+                count: count+1,
+                chktype1: services,
+                sidocode: sidoCodeArray,
+                svccd: userArray,
+                voice: 0
+            })
+        })
         .then(response => response.json())
         .then(data => {
             // setSupportList(data.support)
@@ -83,7 +100,22 @@ export const SupportList = () => {
     }
     const handlePrevPage = () => {
         setIsLoadingPage(true)
-        fetch(`${apiEndPoint}/api/service_list?keyword=${input}&count=${count-1}&chktype1=${services}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]}&svccd=${user}`)
+        
+        
+        fetch(`${apiEndPoint}/api/service_list`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                keyword: input,
+                count: count-1,
+                chktype1: services,
+                sidocode: sidoCodeArray,
+                svccd: userArray,
+                voice: 0
+            })
+        })
         .then(response => response.json())
         .then(data => {
             // setSupportList(data.support)
