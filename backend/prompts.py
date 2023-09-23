@@ -205,7 +205,10 @@ VOICE_FUNCTIONS = [
     },
     {
         "name": "get_api_chat",
-        "description": f"""This function returns a number based on user input.
+        "description": f"""
+        If the user mentions numbers 1, 2, 3, etc., this function must be executed 
+        This function returns a number based on user input.
+        This function allows you to search for government subsidies and obtain related information.
             for example, 
             "1번" -> 1
             "2번" -> 2
