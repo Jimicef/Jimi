@@ -205,7 +205,15 @@ VOICE_FUNCTIONS = [
     },
     {
         "name": "get_api_chat",
-        "description": f"""This function returns a number based on user input.""",
+        "description": f"""This function returns a number based on user input.
+            for example, 
+            "1번" -> 1
+            "2번" -> 2
+            "3번" -> 3
+            "4번" -> 4
+            "5번" -> 5
+            "6번" -> 6
+        """,
         "parameters": {
             "type": "object",
             "properties": {
