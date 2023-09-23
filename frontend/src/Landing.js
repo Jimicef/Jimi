@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Button, Card, Avatar, Typography, ThemeProvider } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -12,10 +12,12 @@ import { useDispatch } from 'react-redux';
 import { SET_FIRST_JIMI, SET_JIMI } from './action/action';
 import { getSpeech } from './tts';
 import { theme } from './theme';
+import NonVoice from './NonVoice';
 
 const Landing = () => {
 
     const [isEnd, setIsEnd] = useState(false)
+    const [isNonVoiceEnd, setNonVoiceEnd] = useState(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -35,6 +37,7 @@ const Landing = () => {
 
     const handleVoiceButtonClick = () => {
         setIsEnd(true)
+        setNonVoiceEnd(false)
         getSpeech('')
         fetch(`${apiEndPoint}/api/voice/chat`)
             .then(response => response.json())
@@ -48,6 +51,18 @@ const Landing = () => {
                 window.scrollTo({top: window.innerHeight, behavior: 'smooth' })
             })
     }
+    
+    const handleNonVoiceButtonClick = () => {
+        setNonVoiceEnd(true)
+        setIsEnd(false)
+        
+    }
+    useEffect(() => {
+        if (isNonVoiceEnd) {
+            window.scrollTo({top: window.innerHeight, behavior: 'smooth' })
+            // setNonVoiceEnd(false)
+        }
+    }, [isNonVoiceEnd])
 
     const buttonStyle = {
         margin: '0 auto', // 가로 방향으로 중앙 정렬
@@ -117,7 +132,7 @@ const Landing = () => {
                 <ThemeProvider theme={theme}>
                     <Box sx={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', mb:3 }}>
                         <Button variant='contained' color='violet' onClick={handleVoiceButtonClick} sx={buttonStyle}><KeyboardVoiceIcon fontSize='large' sx={{mr: 1}}/>시각 장애인을 위한 음성 기반 챗봇</Button>
-                        <Button variant='contained' color= 'darkViolet' onClick={()=>navigate('/nonvoice')} sx={buttonStyle}><FaceIcon fontSize='large' sx={{mr: 1}}/>텍스트 기반 챗봇</Button>
+                        <Button variant='contained' color= 'darkViolet' onClick={handleNonVoiceButtonClick} sx={buttonStyle}><FaceIcon fontSize='large' sx={{mr: 1}}/>텍스트 기반 챗봇</Button>
                     </Box>
                 </ThemeProvider>
                 
@@ -125,6 +140,7 @@ const Landing = () => {
                 </BasicCard>
                 </Box>
                 {isEnd && <Box sx={{height: "100vh"}}><Voice/></Box>}
+                {isNonVoiceEnd && <Box sx={{height: "300vh"}}><NonVoice/></Box>}
             </Box>
         </div>
     )

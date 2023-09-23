@@ -54,7 +54,7 @@ const NonVoice = () => {
   
     React.useEffect(()=> {
       if(supportList === null){
-        window.scrollTo({top: 0, behavior: 'smooth' })
+        window.scrollTo({top: window.innerHeight, behavior: 'smooth' })
         alert("검색 결과가 없습니다.")
         dispatch({
           type: SET_SUPPORT_LIST,
@@ -62,7 +62,7 @@ const NonVoice = () => {
       })
       }
       else if (supportList.length > 0){
-        window.scrollTo({top: window.innerHeight, behavior: 'smooth' })
+        window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
         //window.location.href = '/#sectionTwo'
         //window.location.href = '/supportlist'
       } else if(supportList === {}){
@@ -72,7 +72,7 @@ const NonVoice = () => {
   
     React.useEffect(()=> {
       if (summary !==""){
-        window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
+        window.scrollTo({top: window.innerHeight*3, behavior: 'smooth' })
         //window.location.href = '/#sectionTwo'
         //window.location.href = '/supportlist'
     } 

@@ -63,7 +63,7 @@ function Chat() {
         handleQuestion(input)
         
     }
-        window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
+        window.scrollTo({top: window.innerHeight*3, behavior: 'smooth' })
         
     
     };
@@ -186,7 +186,7 @@ function Chat() {
             // setminTwenty('')
         }
         // initMinTwenty()
-        window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
+        window.scrollTo({top: window.innerHeight*3, behavior: 'smooth' })
     };
 
   
