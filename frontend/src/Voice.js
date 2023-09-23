@@ -611,13 +611,9 @@ const Voice = () => {
                 variant="contained"
                 sx={{height: '100%', fontSize: '3vh'}}
                 onClick={offRecAudio}
-                color='error'
+                color='yellow'
               ><VoiceOverOffIcon fontSize='large' sx={{mr: 1}}/>대화 멈추기</Button>
             }
-            
-              
-      
-              
             </ThemeProvider>
           </Box>
           </Box>
