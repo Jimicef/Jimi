@@ -429,15 +429,23 @@ async def get_voice_chat():
         "voiceAnswer": "지원금을 빠르고 간편하게 찾아보세요! 현재 거주하고 계신 지역과 지원받고 싶은 상황에 대해 아래 버튼을 누르고 말씀해주세요"
     }
 
-
-async def get_opensearch_service_list(keyword : str = Query(None,description = "검색 키워드"),
-                           count : int = Query(0,description = "페이지 번호"),
-                           chktype1 : str = Query(None,description = "서비스 분야"),#배열 리스트에 담아서 줘야함 생활안정|주거·자립 이렇게 줘야함
-                           siGunGuArea : str = Query(None,description = "시/군/구 코드"),
-                           sidocode : str = Query(None,description = "시/도 코드"),#["대전광역시 유성구"]
-                           svccd : str = Query(None,description = "사용자 구분"),
-                           voice : bool = Query(None,description = "시각 장애인 자막 생성 여부")
-                           ):
+# keyword : str = Query(None,description = "검색 키워드"),
+# count : int = Query(0,description = "페이지 번호"),
+# chktype1 : str = Query(None,description = "서비스 분야"),#배열 리스트에 담아서 줘야함 생활안정|주거·자립 이렇게 줘야함
+# siGunGuArea : str = Query(None,description = "시/군/구 코드"),
+# sidocode : str = Query(None,description = "시/도 코드"),#["대전광역시 유성구"]
+# svccd : str = Query(None,description = "사용자 구분"),
+# voice : bool = Query(None,description = "시각 장애인 자막 생성 여부")
+                           
+async def get_opensearch_service_list(data: Annotated[dict,{
+    "keyword" : str,
+    "count" : int,
+    "chktype1" : list,
+    "siGunGuArea" : str,
+    "sidocode" : list,
+    "svccd" : str,
+    "voice" : int
+}]):
 
     last_page = False
     voice_answer = ""
@@ -445,12 +453,12 @@ async def get_opensearch_service_list(keyword : str = Query(None,description = "
         "query": {
             "bool": {
             "must": [
-                { "terms": { "소관기관명.keyword": sidocode } }
+                { "terms": { "소관기관명.keyword": data['sidocode'] } }
             ],
             "should": [
-                { "match": { "서비스명": keyword } },
+                { "match": { "서비스명": data['keyword'] } },
                 { "terms": { "사용자구분.keyword": ["개인","가구"] } },
-                { "terms": { "서비스분야.keyword": chktype1 } },#생활안정|주거·자립 이렇게 줘야함
+                { "terms": { "서비스분야.keyword": data['chktype1'] } },#생활안정|주거·자립 이렇게 줘야함
             ]
             }
         }
@@ -459,7 +467,7 @@ async def get_opensearch_service_list(keyword : str = Query(None,description = "
 
     query = {
         "size" : 6,
-        "from" : 6*count,
+        "from" : 6*data['count'],
         "query": low_query['query']
     }
 
@@ -482,18 +490,18 @@ async def get_opensearch_service_list(keyword : str = Query(None,description = "
         card_info["format"] = hit['_source']['지원유형']
         card_data_list.append(card_info)
     
-    if keyword:
-        message = f"{keyword}에 대한 {response['hits']['total']['value']}개의 통합검색 결과입니다."
+    if data['keyword']:
+        message = f"{data['keyword']}에 대한 {response['hits']['total']['value']}개의 통합검색 결과입니다."
     else:
         message = f"선택한 조건에 대한 {response['hits']['total']['value']}개의 통합검색 결과입니다."
-    if voice:
+    if data['voice']:
         for i in range(6):
             try:
                 voice_answer += f"{i+1}번: {card_data_list[i]['title']}\n"
             except:
                 print(i,len(card_data_list))
 
-    if (count+1)*6 >= response['hits']['total']['value']:
+    if (data['count']+1)*6 >= response['hits']['total']['value']:
         last_page = True
 
     return {
