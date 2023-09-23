@@ -140,7 +140,7 @@ const Landing = () => {
                 </BasicCard>
                 </Box>
                 {isEnd && <Box sx={{height: "100vh"}}><Voice/></Box>}
-                {isNonVoiceEnd && <Box sx={{height: "300vh"}}><NonVoice/></Box>}
+                {isNonVoiceEnd && <Box><NonVoice/></Box>}
             </Box>
         </div>
     )
