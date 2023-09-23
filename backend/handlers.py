@@ -231,7 +231,7 @@ async def post_chat(data: Annotated[dict,{
     result = [{'link':None},{'link':None},{'link':None}]
 
     messages = [
-        {"role": "system", "content": f"You can use this service information {data['summary']}"},
+        {"role": "system", "content": f"You can use this subsidy service information {data['summary']}"},
         {"role": "user","content": f"user query : {data['question']}"}
     ]
     messages.extend(data['history'])

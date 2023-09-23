@@ -79,7 +79,8 @@ FUNCTIONS = [
     {
         "name": "answer_with_service_info",
         "description": f"""
-        This function is available when the user asks what is in the service information, otherwise it is not available.
+        "Through this function, users can obtain answers to questions related to specific subsidies. 
+        However, if the user asks a question that is not related to a specific subsidy or inquires about information not present in the subsidy service, this function cannot be used."
         """,
         "parameters": {
             "type": "object",
@@ -97,7 +98,7 @@ FUNCTIONS = [
     },
     {
         "name": "get_search_info",
-        "description": "If it is difficult to answer, select a keyword from the question and make it search.",
+        "description": "Through this function, users can obtain Google search results. In cases where the 'answer_with_service_info' function cannot be called, this function can be used to answer the user's queries.",
         "parameters": {
             "type": "object",
             "properties": {
