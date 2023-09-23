@@ -118,6 +118,7 @@ VOICE_FUNCTIONS = [
         "name": "get_api_service_list",
         "description": f"""
         This function allows you to search for government subsidies and obtain related information.
+        사용자가 "다음" 혹은 "이전"이라고 말하는 경우에도 이 함수를 호출해야함.
         you must generate all parameters.
         """,
         "parameters": {
