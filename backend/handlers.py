@@ -257,7 +257,7 @@ async def post_chat(data: Annotated[dict,{
                     "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
                     You will follow the conversation and respond to the queries asked by the 'user's content. You will act as the assistant.
                     you don't have to provide links(e.g. [링크](https://obank.kbstar.com/quics?page=C016613&cc=b061496:b061645&isNew=N&prcode=DP01000935)) in the response. 
-                    
+
                     User query: {data['question']}
                     service information:\n{data['summary']}\nAnswer:\n""",
                 }
@@ -497,7 +497,7 @@ async def post_opensearch_service_list(data: Annotated[dict,{
         message = f"선택한 조건에 대한 {response['hits']['total']['value']}개의 통합검색 결과입니다."
     if data['voice']:
         
-        for i, card in card_data_list:
+        for i, card in enumerate(card_data_list):
             voice_answer += f"{i+1}번: {card['title']}\n"
         # for i in range(6):
         #     try:
