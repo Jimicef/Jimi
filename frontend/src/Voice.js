@@ -319,7 +319,20 @@ const Voice = () => {
                 getSpeech('')
                 if (data.function === 'get_api_service_list') {
                     if (data.serviceParams.nextPage) {
-                        fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount+1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
+                        fetch(`${apiEndPoint}/api/service_list`,{
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                keyword: data.serviceParams.keyword,
+                                count: voiceCount+1,
+                                chktype1: data.serviceParams.chktype1,
+                                sidocode: data.serviceParams.sidocode,
+                                svccd: data.serviceParams.svccd,
+                                voice: 1
+                            })
+                        })
                         .then(response => response.json())
                         .then(data => {
                             
@@ -334,14 +347,27 @@ const Voice = () => {
                             // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
                             dispatch({
                                 type: SET_JIMI,
-                                data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
+                                data: [...jimi, {textArray: data.supportArray, sender: 'bot'}]
                             })
 
                             getSpeech(data.voiceAnswer)
                             setAudioState(1)
                         })    
                     } else if (data.serviceParams.prevPage){
-                        fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount-1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
+                        fetch(`${apiEndPoint}/api/service_list`,{
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                keyword: data.serviceParams.keyword,
+                                count: voiceCount-1,
+                                chktype1: data.serviceParams.chktype1,
+                                sidocode: data.serviceParams.sidocode,
+                                svccd: data.serviceParams.svccd,
+                                voice: 1
+                            })
+                        })
                         .then(response => response.json())
                         .then(data => {
                             
@@ -356,18 +382,31 @@ const Voice = () => {
                             // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
                             dispatch({
                                 type: SET_JIMI,
-                                data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
+                                data: [...jimi, {textArray: data.supportArray, sender: 'bot'}]
                             })
                             getSpeech(data.voiceAnswer)
                             setAudioState(1)
                         })    
                     } else {
-                        fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=0&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
+                        fetch(`${apiEndPoint}/api/service_list`,{
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                keyword: data.serviceParams.keyword,
+                                count: 0,
+                                chktype1: data.serviceParams.chktype1,
+                                sidocode: data.serviceParams.sidocode,
+                                svccd: data.serviceParams.svccd,
+                                voice: 1
+                            })
+                        })
                         .then(response => response.json())
                         .then(data => {
                             
                             dispatch({
-                                type: SET_COUNT,
+                                type: SET_VOICE_COUNT,
                                 data: 0
                             })
                             dispatch({
@@ -377,7 +416,7 @@ const Voice = () => {
                             // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, sender: 'bot'}])
                             dispatch({
                                 type: SET_JIMI,
-                                data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
+                                data: [...jimi, {textArray: data.supportArray, sender: 'bot'}]
                             })
                             getSpeech(data.voiceAnswer)
                             setAudioState(1)
