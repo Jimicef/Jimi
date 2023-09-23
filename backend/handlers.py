@@ -235,7 +235,7 @@ async def post_chat(data: Annotated[dict,{
         {"role": "user","content": f"user query : {data['question']}"}
     ]
     
-    messages.extend(data['history'])
+    # messages.extend(data['history'])
     # print(data['history'])
 
     first_response = openai.ChatCompletion.create(
