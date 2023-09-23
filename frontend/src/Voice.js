@@ -9,7 +9,7 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import { Message } from "./message";
 import { useDispatch, useSelector } from 'react-redux';
 import { SET_ANSWER, SET_COUNT, SET_SUPPORT_LIST, SET_VOICE_COUNT, SET_SUMMARY, SET_JIMI } from './action/action';
-import { getSpeech } from './tts';
+// import { getSpeech } from './tts';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 
@@ -45,6 +45,8 @@ const Voice = () => {
     const summary = useSelector((state) => state.summary)
     const firstJimi = useSelector((state) => state.firstJimi)
     const jimi = useSelector((state)=>state.jimi)
+    
+    const [isSpeechOnEnd, setIsSpeechOnEnd] = useState(false)
 
     const messageContainerRef = useRef();
 
@@ -81,7 +83,7 @@ const Voice = () => {
 
     useEffect(()=> {
         // const lastItem = existingJimi
-
+        
         setUserText(transcript)
         // console.log("hihi:", transcript)
         if (transcript && listening){ //transcript 없어진후 -> listening: false
@@ -102,6 +104,7 @@ const Voice = () => {
     }, [transcript])
 
     useEffect(()=>{
+        //console.log('yehe')
         if (userText && !listening) {
             // setJimi((existingJimi) => [...existingJimi.slice(0, -1), {text: userText, sender: 'user'}])
             stream.getAudioTracks().forEach(function (track) {
@@ -127,6 +130,61 @@ const Voice = () => {
         }
     }, [listening])
 
+    const getSpeech = (text) => {
+        let voices = [];
+      
+        //디바이스에 내장된 voice를 가져온다.
+        const setVoiceList = () => {
+          voices = window.speechSynthesis.getVoices();
+        };
+      
+        setVoiceList();
+    
+        //console.log(voices)
+      
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+          //voice list에 변경됐을때, voice를 다시 가져온다.
+          window.speechSynthesis.onvoiceschanged = setVoiceList;
+        }
+      
+        const speech = (txt) => {
+          const lang = "ko-KR";
+          const utterThis = new SpeechSynthesisUtterance(txt);
+      
+          utterThis.lang = lang;
+          utterThis.rate = 0.9;
+      
+          /* 한국어 vocie 찾기
+             디바이스 별로 한국어는 ko-KR 또는 ko_KR로 voice가 정의되어 있다.
+          */
+          const kor_voice = voices.find(
+            (elem) => elem.lang === lang || elem.lang === lang.replace("-", "_")
+          );
+      
+          //힌국어 voice가 있다면 ? utterance에 목소리를 설정한다 : 리턴하여 목소리가 나오지 않도록 한다.
+          if (kor_voice) {
+            utterThis.voice = kor_voice;
+            //console.log('yes!')
+          } else {
+            //console.log('no!')
+            return;
+          }
+          if (text){
+            utterThis.onstart = () => {
+                setIsSpeechOnEnd(false)
+            }
+            utterThis.onend = () => {
+                //onRecAudio()
+                setIsSpeechOnEnd(true)
+            }
+          }
+          //utterance를 재생(speak)한다.
+          window.speechSynthesis.speak(utterThis);
+        };
+      
+        speech(text);
+      };
+
 
     const onRecAudio = () => {
         // setIsAudioEnd(true)
@@ -134,6 +192,7 @@ const Voice = () => {
         startAudio.play()
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         // setJimi((existingJimi) => [...existingJimi, {text: '', sender: 'user'}])
+        console.log(jimi)
         dispatch({
             type: SET_JIMI,
             data: [...jimi, {text: '', sender: 'user'}]
@@ -171,24 +230,52 @@ const Voice = () => {
             setStream(stream);
             setMedia(mediaRecorder);
         
-
             makeSound(stream);
 
             setAudioCtx(audioCtx)
+            analyser.onaudioprocess = function (e) {
+                // 3분(180초) 지나면 자동으로 음성 저장 및 녹음 중지
+                if (e.playbackTime > 15) {
+                    stream.getAudioTracks().forEach(function (track) {
+                        track.stop();
+                    });
+                    mediaRecorder.stop();
+                    // 메서드가 호출 된 노드 연결 해제
+                    analyser.disconnect();
+                    audioCtx.createMediaStreamSource(stream).disconnect();
             
+                    mediaRecorder.ondataavailable = function (e) {
+                        setAudioUrl(e.data);
+                        setOnRec(true);
+                    };
+                    setAudioState(3)
+                    endAudio.play()
+                } 
+            }
             setAudioState(2)
             }
         );
     };
 
     const userTextChange = (userTextData) => {
+        // console.log(jimi)
+        // console.log(jimi.slice(0,-1), userTextData)
         dispatch({
             type: SET_JIMI,
             data: [...jimi.slice(0,-1), {text: userTextData, sender: 'user'}]
         })
+        console.log(jimi)
     }
 
-    
+    useEffect(()=> {
+        if (jimi.length>0){
+            console.log(jimi.slice(-1)[0])
+        }
+        if (jimi.length> 0 && jimi.slice(-1)[0].sender === 'bot' && isSpeechOnEnd){
+            setIsSpeechOnEnd(false)
+            onRecAudio()
+        }
+    }, [jimi, isSpeechOnEnd])
     
     useEffect(() => {
         if (audioUrl){
@@ -228,13 +315,14 @@ const Voice = () => {
             })
             if (response.ok) {
                 const data = await response.json();
+                userTextChange(data.userText)
                 getSpeech('')
                 if (data.function === 'get_api_service_list') {
                     if (data.serviceParams.nextPage) {
                         fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount+1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
                         .then(response => response.json())
                         .then(data => {
-                            userTextChange(data.userText)
+                            
                             dispatch({
                                 type: SET_VOICE_COUNT,
                                 data: voiceCount+1
@@ -248,6 +336,7 @@ const Voice = () => {
                                 type: SET_JIMI,
                                 data: [...jimi, {text: data.voiceAnswer, sender: 'bot'}]
                             })
+
                             getSpeech(data.voiceAnswer)
                             setAudioState(1)
                         })    
@@ -255,7 +344,7 @@ const Voice = () => {
                         fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount-1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
                         .then(response => response.json())
                         .then(data => {
-                            userTextChange(data.userText)
+                            
                             dispatch({
                                 type: SET_VOICE_COUNT,
                                 data: voiceCount-1
@@ -276,7 +365,7 @@ const Voice = () => {
                         fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=0&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
                         .then(response => response.json())
                         .then(data => {
-                            userTextChange(data.userText)
+                            
                             dispatch({
                                 type: SET_COUNT,
                                 data: 0
@@ -295,11 +384,11 @@ const Voice = () => {
                         })                 
                     }
                 } else if (data.function === 'get_api_chat') {
-                    console.log(supports)
+                    // console.log(supports)
                     fetch(`${apiEndPoint}/api/chat?serviceId=${supports[data.getChatParams.serviceNumber-1].serviceId}&voice=1`)
                     .then(response => response.json())
                     .then(data => {
-                        userTextChange(data.userText)
+                        
                         dispatch({
                             type: SET_SUMMARY,
                             data: data.summary
@@ -333,7 +422,7 @@ const Voice = () => {
                     }).then(response => response.json())
                     .then(data => {
                         // setJimi((existingJimi) => [...existingJimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}])
-                        userTextChange(data.userText)
+                        
                         dispatch({
                             type: SET_JIMI,
                             data: [...jimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}]
@@ -342,7 +431,7 @@ const Voice = () => {
                         setAudioState(1)
                     })
                 } else if (data.voiceAnswer) {
-                    userTextChange(data.userText)
+                    
                     dispatch({
                         type: SET_JIMI,
                         data: [...jimi, {text: data.voiceAnswer, link: data.links, sender: 'bot'}]
@@ -375,7 +464,7 @@ const Voice = () => {
         <Button variant='outlined' onClick={onSubmitAudioFile}>결과 확인 </Button> */}
         {/* <p>{transcript}</p>
         <p>{listening?"듣는중":"멈췄음"}</p> */}
-        <p>{console.log("여기서는?", listening)}</p>
+        {/* <p>{console.log("여기서는?", listening)}</p> */}
         <BasicCard>
         <Box sx={{ flexGrow: 1, overflow: "auto", p: 2, minWidth: 120 }} 
         ref={messageContainerRef}
@@ -399,16 +488,16 @@ const Voice = () => {
             />
           </Box> */}
           <Box sx={{width: '100%', height: '13vh'}}>
-            {/* <ThemeProvider theme={theme}> */}
+            <ThemeProvider theme={theme}>
 
               {
                 audioState === 1 &&
                 <Button
                 fullWidth
                 variant="contained"
-                sx={{height: '100%', fontSize: '3vh'}}
+                sx={{height: '100%', fontSize: '3vh', color: 'white'}}
                 onClick={onRecAudio}
-                color='secondary'
+                color='deepDarkViolet'
               ><KeyboardVoiceIcon fontSize='large'/>시작</Button>}
 
                 {audioState === 2 && <Button
@@ -417,7 +506,7 @@ const Voice = () => {
                 sx={{height: '100%', fontSize: '3vh'}}
                 // onClick={offRecAudio}
                 color='success'
-              ><RecordVoiceOverIcon fontSize='large' sx={{mr: 1}}/>답변 받는 중</Button>}
+              ><RecordVoiceOverIcon fontSize='large' sx={{mr: 1}}/>음성 듣는 중</Button>}
 
               {audioState === 3 && 
               <Button
@@ -431,7 +520,7 @@ const Voice = () => {
               
       
               
-            {/* </ThemeProvider> */}
+            </ThemeProvider>
           </Box>
           </Box>
         </BasicCard>

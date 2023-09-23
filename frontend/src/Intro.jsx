@@ -1,4 +1,4 @@
-import { Box, Card, Avatar, Typography, InputLabel, MenuItem, FormControl, Select, TextField, Button } from '@mui/material'
+import { Box, Card, Avatar, Typography, InputLabel, MenuItem, FormControl, Select, TextField, Button, ThemeProvider } from '@mui/material'
 import React, { useState, useRef, useEffect} from 'react'
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { SET_SUPPORT_LIST, SET_ANSWER, SET_IS_LAST_PAGE, SET_INPUT, SET_COUNT, SET_SERVICES, SET_REGION, SET_SUBREGION, SET_USER } from './action/action';
 import BasicCard from './layout/BasicCard';
+import { theme } from './theme';
 
 
 export const Intro = () => {
@@ -103,9 +104,63 @@ export const Intro = () => {
     }
 
     const handleSubmit = () => {
-        const selectedSupports = Object.keys(support).filter(key => key!=="전체" && support[key]).map(key => chktype1Code[key]).join("|");
+        console.log(support)
+        const support1 = support
+        console.log(support1)
+        const allFalse = Object.values(support1).every(value => value === false);
+
+        if (allFalse) {
+            for (const key in support1) {
+                support1[key] = true;
+            }
+        }
+        console.log(support1)
+        const selectedSupports = Object.keys(support1).filter(key => key!=="전체" && support1[key]);
         setIsLoading(true)
-        fetch(`${apiEndPoint}/api/service_list?keyword=${input}&count=0&chktype1=${selectedSupports}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]?sidoCode[region]:""}&svccd=${user}&voice=0`)
+        
+        let userArray
+        if (!user) {
+            userArray = ["개인", "가구", "소상공인", "법인/시설/단체"]
+        } else if (user === '개인, 가구') {
+            userArray = ['개인', '가구']
+        } else if (user === '소상공인') {
+            userArray = ['소상공인']
+        } else {
+            userArray = ["법인/시설/단체"]
+        }
+
+        let sidoCodeArray
+        if (!region) {
+            sidoCodeArray = Object.keys(subRegionList)
+                .flatMap(regionName => {
+                    const subregions = subRegionList[regionName];
+                    return subregions
+                        .filter(item => Object.keys(item)[0] !== '전체')
+                        .map(item => `${regionName} ${Object.keys(item)[0]}`);
+                });
+        } else if (subRegion === '전체' || (!subRegion && region)) {
+            sidoCodeArray = subRegionList[region]
+                .filter(item => Object.keys(item)[0] !== '전체')
+                .map(item => region + " " + Object.keys(item)[0]);
+        } else {
+            sidoCodeArray = [region+" "+subRegion]
+        }
+        
+        fetch(`${apiEndPoint}/api/service_list?keyword=${input}&count=0&chktype1=${selectedSupports}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]?sidoCode[region]:""}&svccd=${user}&voice=0`, 
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                keyword: input,
+                count: 0,
+                chktype1: selectedSupports,
+                sidocode: sidoCodeArray,
+                svccd: userArray,
+                voice: 0
+            })
+        })
         .then(response => response.json())
         .then(data => {
             //console.log(data)
@@ -210,7 +265,7 @@ export const Intro = () => {
 
   return (
     <BasicCard>
-            <Box sx={{display: 'flex', alignItems: 'center', m:3}}>    
+            <Box sx={{display: 'flex', alignItems: 'center', m:3, mb: 1, fontWeight: '500'}}>    
                 <Avatar sx={{ bgcolor: "#8977AD" ,mr: 1}}>
                     <ChatIcon sx={{fontSize: "23px"}}/>
                 </Avatar>
@@ -219,14 +274,36 @@ export const Intro = () => {
                 </Typography>
             </Box>
             <Box sx={{}}>
-            <Typography variant='body1' sx={{m: 4}}>
-                사용자님이 신청할 수 있는 지원금 제도를 쉽게 찾아드려요! <br/><br/>
+            <Typography variant='body1' sx={{mt: 3, ml: 8, mr:3,  mb:7, fontWeight: '410'}}>
                 먼저, 지원금을 빠르고 간편하게 찾아보세요!<br/>
-                지역, 서비스 분야, 사용자 구분, 검색어를 선택적으로 입력하시면 관련된 지원금 제도를 찾아드릴게요.
+                검색어, 지역, 서비스 분야, 사용자 구분을 선택적으로 입력하시면 관련된 지원금 제도를 찾아드릴게요.
             </Typography>
             <Box>
-            <Box sx={{height: ["40%", "50%", "60%"], display: 'flex', alignItems:'center', m: 2}}>
-            <Box sx={{m: 2, p:3, bgcolor: "white", borderRadius: '30px', boxShadow: '5px 5px 10px grey'}}>
+            <Box sx={{height: ["40%", "50%", "60%"], display: 'flex', flexDirection: 'column', alignItems:'center', m: 2, mx: 5}}>
+                <Box sx={{width: ['140%', '100%', '100%'], display: 'flex', justifyContent: 'center'}}>
+                    <ThemeProvider theme={theme}>
+                        <TextField
+                                size="small"
+                                fullWidth
+                                label="찾는 보조금 명 또는 원하는 검색어를 입력해주세요"
+                                variant="filled"
+                                color='deepDarkViolet'
+                                value={input}
+                                onChange={(event)=>dispatch({
+                                    type: SET_INPUT,
+                                    data: event.target.value
+                                })
+                                }
+                                onKeyDown={handleEnter}
+                                sx={{
+                                    mx: 10,
+                                    bgColor: 'white',
+                                    mb: 1
+                                }}
+                                />
+                    </ThemeProvider>
+                </Box>
+            <Box sx={{my: 2, p:3, bgcolor: "white", borderRadius: '30px', boxShadow: '5px 5px 10px grey'}}>
                 <Typography sx={{fontWeight: 'bold'}}>지역</Typography>
                 <Box sx={{display: 'flex', m: 1, mb: 2}}>
                     
@@ -265,7 +342,7 @@ export const Intro = () => {
                                 </MenuItem>} */}
                             {subRegionList[region] && subRegionList[region].map((re, idx) => {
                                 const regionName = Object.keys(re)[0]
-                                return <MenuItem value={re[regionName]} key={idx}>{regionName}</MenuItem>
+                                return <MenuItem value={regionName} key={idx}>{regionName}</MenuItem>
 })}
                             
                             </Select>
@@ -299,13 +376,13 @@ export const Intro = () => {
                             value={user}
                             onChange={handleChangeUser}
                         >
-                            <FormControlLabel value={userCode["개인(가구)"]} control={<Radio />} label="개인(가구)"/>
-                            <FormControlLabel value={userCode["소상공인"]} control={<Radio />} label="소상공인"/>
-                            <FormControlLabel value={userCode["법인"]} control={<Radio />} label="법인"/>
+                            <FormControlLabel value="개인, 가구" control={<Radio />} label="개인(가구)"/>
+                            <FormControlLabel value="소상공인" control={<Radio />} label="소상공인"/>
+                            <FormControlLabel value="법인" control={<Radio />} label="법인"/>
                         </RadioGroup>
                     </FormControl>
                 </Box>
-                <hr/>
+                {/* <hr/>
                 <Box>
                     <Typography sx={{mb: 1, fontWeight: 'bold'}}>검색어</Typography>
                     <TextField
@@ -322,13 +399,15 @@ export const Intro = () => {
                     }
                     onKeyDown={handleEnter}
                     />
+                </Box> */}
+            </Box>
+            </Box>
+            </Box>
+            <ThemeProvider theme={theme}>
+                <Box sx={{display: 'flex', justifyContent: 'flex-end', m:2}}>
+                    {isLoading?<Button disabled variant='contained' color="deepDarkViolet" sx={{color: 'white'}}>지원금 추천받기</Button>:<Button variant='contained' color="deepDarkViolet" onClick={handleSubmit} sx={{color: 'white'}}>지원금 추천받기</Button>}
                 </Box>
-            </Box>
-            </Box>
-            </Box>
-            <Box sx={{display: 'flex', justifyContent: 'flex-end', m:2}}>
-                {isLoading?<Button disabled variant='contained' color="secondary">지원금 추천받기</Button>:<Button variant='contained' color="secondary" onClick={handleSubmit}>지원금 추천받기</Button>}
-            </Box>
+            </ThemeProvider>
             </Box>
     </BasicCard>
   )

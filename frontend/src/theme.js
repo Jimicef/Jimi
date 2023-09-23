@@ -11,6 +11,12 @@ export const theme = createTheme({
       dark: alpha(violetBase, 0.9),
       contrastText: getContrastRatio(violetMain, '#fff') > 4.5 ? '#fff' : '#111',
     },
+    darkViolet: {
+      main: '#af9dcf'
+    },
+    deepDarkViolet: {
+      main: '#795baf'
+    }
   },
   typography: {
     fontFamily: "'Noto Sans KR', serif",

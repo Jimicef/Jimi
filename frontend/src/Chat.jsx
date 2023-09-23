@@ -84,6 +84,7 @@ function Chat() {
 
   const handleQuestion = async(quest) => {
     setJimi((existingJimi) => [...existingJimi, {text: quest, sender: 'user'}])
+    setJimi((existingJimi) => [...existingJimi, {text: '입력을 받았습니다', sender: 'user', system: true}])
         //fetch(`${process.env.REACT_APP_SWAGGER_API}/api/qa`, {
         setIsLoading(true)
         setInput("")
@@ -101,6 +102,8 @@ function Chat() {
             });
 
             //console.log(modifiedJimi)
+            setJimi((existingJimi) => [...existingJimi, {text: '답변을 생성중입니다', sender: 'user', system: true}])
+            
             
             const response = await fetch(`${apiEndPoint}/api/chat`,
             {
@@ -230,6 +233,7 @@ function Chat() {
       </Box>
       <Box sx={{display:'flex', p: 2, backgroundColor: "background.default", minWidth: 120 }}>
         {/* <Grid container spacing={2}> */}
+            <ThemeProvider theme={theme}>
           <Box sx={{width: "90%", mr: 2}}>
             <TextField
               size="small"
@@ -239,10 +243,10 @@ function Chat() {
               value={input}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
+              color="deepDarkViolet"
             />
           </Box>
           <Box >
-            <ThemeProvider theme={theme}>
 
               {isLoading?<Button
                 fullWidth
@@ -259,8 +263,8 @@ function Chat() {
               />}
       
               
-            </ThemeProvider>
           </Box>
+            </ThemeProvider>
         {/* </Grid> */}
       </Box>
       </BasicCard>
