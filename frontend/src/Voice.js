@@ -332,7 +332,7 @@ const Voice = () => {
             return { content, role}; // 여기서 link도 함께 복사하거나 유지합니다.
         });
 
-        const jsonData = modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi
+        const jsonData = modifiedJimi.length>11?modifiedJimi.slice(-11,-1):modifiedJimi.slice(0,-1)
 
         const formData = new FormData();
         formData.append("file", sound)
@@ -504,7 +504,7 @@ const Voice = () => {
                         body: JSON.stringify({
                             username: localStorage.getItem("username"),
                             question: data.postChatParams.question,
-                            history: modifiedJimi.length>10?modifiedJimi.slice(-10):modifiedJimi,
+                            history: modifiedJimi.length>11?modifiedJimi.slice(-11, -1):modifiedJimi.slice(0, -1),
                             summary: summary,
                             voice: 1
                         })
