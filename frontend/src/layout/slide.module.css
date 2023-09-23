@@ -1,0 +1,32 @@
+.iconContainer {
+    flex: 0 0 auto;
+  }
+  
+  .textContainer {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .slideIn {
+    animation: slideRight 2s linear;
+    white-space: nowrap;
+  }
+  
+  @keyframes slideRight {
+    from {
+      transform: opacity(0);
+    }
+    to {
+      transform: opacity(1);
+    }
+  }
+
+  .fadeIn {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  .fadeIn.visible {
+    opacity: 1;
+  }

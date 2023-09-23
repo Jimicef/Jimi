@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+
 export const getSpeech = (text) => {
     let voices = [];
   
@@ -37,6 +39,11 @@ export const getSpeech = (text) => {
         //console.log('no!')
         return;
       }
+      // if (onRecAudio) {
+      //   utterThis.onend = () => {
+      //     onRecAudio()
+      //   }
+      // }
       
       //utterance를 재생(speak)한다.
       window.speechSynthesis.speak(utterThis);

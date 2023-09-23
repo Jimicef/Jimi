@@ -21,7 +21,7 @@ const BasicCard = (props) => {
             display: "flex",
             flexDirection: "column",
             bgcolor: "grey.200",
-            overflow: "auto"
+            overflow: "auto",
         }}
         > 
             {props.children}
