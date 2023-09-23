@@ -432,9 +432,9 @@ async def get_voice_chat():
 
 async def get_opensearch_service_list(keyword : str = Query(None,description = "검색 키워드"),
                            count : int = Query(0,description = "페이지 번호"),
-                           chktype1 : str = Query(None,description = "서비스 분야"),
+                           chktype1 : str = Query(None,description = "서비스 분야"),#배열 리스트에 담아서 줘야함 생활안정|주거·자립 이렇게 줘야함
                            siGunGuArea : str = Query(None,description = "시/군/구 코드"),
-                           sidocode : str = Query(None,description = "시/도 코드"),
+                           sidocode : str = Query(None,description = "시/도 코드"),#["대전광역시 유성구"]
                            svccd : str = Query(None,description = "사용자 구분"),
                            voice : bool = Query(None,description = "시각 장애인 자막 생성 여부")
                            ):
@@ -445,12 +445,12 @@ async def get_opensearch_service_list(keyword : str = Query(None,description = "
         "query": {
             "bool": {
             "must": [
-                { "term": { "소관기관명.keyword": "대전광역시 유성구" } }
+                { "terms": { "소관기관명.keyword": sidocode } }
             ],
             "should": [
                 { "match": { "서비스명": keyword } },
-                { "term": { "사용자구분.keyword": "개인" } },
-                { "term": { "사용자구분.keyword": "가구" } }
+                { "terms": { "사용자구분.keyword": ["개인","가구"] } },
+                { "terms": { "서비스분야.keyword": chktype1 } },#생활안정|주거·자립 이렇게 줘야함
             ]
             }
         }
@@ -492,6 +492,9 @@ async def get_opensearch_service_list(keyword : str = Query(None,description = "
                 voice_answer += f"{i+1}번: {card_data_list[i]['title']}\n"
             except:
                 print(i,len(card_data_list))
+
+    if (count+1)*6 >= response['hits']['total']['value']:
+        last_page = True
 
     return {
         "answer" : message,
