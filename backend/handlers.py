@@ -437,13 +437,12 @@ async def get_voice_chat():
 # svccd : str = Query(None,description = "사용자 구분"),
 # voice : bool = Query(None,description = "시각 장애인 자막 생성 여부")
                            
-async def get_opensearch_service_list(data: Annotated[dict,{
+async def post_opensearch_service_list(data: Annotated[dict,{
     "keyword" : str,
     "count" : int,
     "chktype1" : list,
-    "siGunGuArea" : str,
     "sidocode" : list,
-    "svccd" : str,
+    "svccd" : list,
     "voice" : int
 }]):
 
@@ -457,8 +456,8 @@ async def get_opensearch_service_list(data: Annotated[dict,{
             ],
             "should": [
                 { "match": { "서비스명": data['keyword'] } },
-                { "terms": { "사용자구분.keyword": ["개인","가구"] } },
-                { "terms": { "서비스분야.keyword": data['chktype1'] } },#생활안정|주거·자립 이렇게 줘야함
+                { "terms": { "사용자구분.keyword": data['svccd'] } },
+                { "terms": { "서비스분야.keyword": data['chktype1'] } },#["생활안정","주거·자립"] 이렇게 줘야함
             ]
             }
         }
