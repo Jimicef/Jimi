@@ -323,7 +323,8 @@ async def post_chat(data: Annotated[dict,{
                         "content": f"""Please generate your response by referring specifically to google search result's key-value pairs that directly relate to the user's query.
                         You will follow the conversation and respond to the queries asked by the 'user's content. You will act as the assistant
                         you don't have to provide links(e.g. [링크](https://obank.kbstar.com/quics?page=C016613&cc=b061496:b061645&isNew=N&prcode=DP01000935)) in the response. 
-                        
+                        please answer in korean.
+
                         User query: {data['question']}
                         Google search result:\n{result}\nAnswer:\n""",
                     }
