@@ -9,7 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { SET_SUPPORT_LIST, SET_ANSWER, SET_IS_LAST_PAGE, SET_INPUT, SET_COUNT, SET_SERVICES, SET_REGION, SET_SUBREGION, SET_USER } from './action/action';
+import { SET_SUPPORT_LIST, SET_ANSWER, SET_IS_LAST_PAGE, SET_INPUT, SET_COUNT, SET_SERVICES, SET_REGION, SET_SUBREGION, SET_USER, SET_SIDOCODEARRAY, SET_USERARRAY } from './action/action';
 import BasicCard from './layout/BasicCard';
 import { theme } from './theme';
 
@@ -104,9 +104,7 @@ export const Intro = () => {
     }
 
     const handleSubmit = () => {
-        console.log(support)
         const support1 = support
-        console.log(support1)
         const allFalse = Object.values(support1).every(value => value === false);
 
         if (allFalse) {
@@ -114,7 +112,6 @@ export const Intro = () => {
                 support1[key] = true;
             }
         }
-        console.log(support1)
         const selectedSupports = Object.keys(support1).filter(key => key!=="전체" && support1[key]);
         setIsLoading(true)
         
@@ -146,7 +143,7 @@ export const Intro = () => {
             sidoCodeArray = [region+" "+subRegion]
         }
         
-        fetch(`${apiEndPoint}/api/service_list?keyword=${input}&count=0&chktype1=${selectedSupports}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]?sidoCode[region]:""}&svccd=${user}&voice=0`, 
+        fetch(`${apiEndPoint}/api/service_list`, 
         {
             method: "POST",
             headers: {
@@ -192,6 +189,14 @@ export const Intro = () => {
             dispatch({
                 type: SET_SERVICES,
                 data: selectedSupports
+            })
+            dispatch({
+                type: SET_SIDOCODEARRAY,
+                data: sidoCodeArray
+            })
+            dispatch({
+                type: SET_USERARRAY,
+                data: userArray
             })
             // setServices(selectedSupports)
         })

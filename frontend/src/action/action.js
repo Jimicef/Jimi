@@ -29,3 +29,7 @@ export const SET_VOICE_COUNT = "SET_VOICE_COUNT"
 export const SET_FIRST_JIMI = "SET_FIRST_JIMI"
 
 export const SET_JIMI = "SET_JIMI"
+
+export const SET_SIDOCODEARRAY = "SET_SIDOCODEARRAY"
+
+export const SET_USERARRAY = "SET_USERARRARY"
