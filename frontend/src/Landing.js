@@ -114,7 +114,7 @@ const Landing = () => {
                             {titleText('나에게 맞는 지원금을')}
                             {titleText('찾아보세요!')}
                             {subTitleText('정부 보조금 24 기반의 모든 지원금 제공', true)}
-                            {subTitleText('시각장애인을 위한 음성 지원', false)}
+                            {subTitleText('시각장애인을 위한 음성 기능 지원', false)}
                             {subTitleText('지원금 검색부터 질의응답까지 한번에', false)}
                 </Box>
                 {/* 정부 24 지원금 14682개
