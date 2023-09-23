@@ -502,10 +502,11 @@ async def post_opensearch_service_list(data: Annotated[dict,{
 
     if (data['count']+1)*6 >= response['hits']['total']['value']:
         last_page = True
-
+    support_array = [card_data_list[i]['title'] for i in range(6)]
     return {
         "answer" : message,
         "support" : card_data_list,
         "lastpage" : last_page,
-        "voiceAnswer" : voice_answer
+        "voiceAnswer" : voice_answer,
+        "supportArray" : support_array
     }
