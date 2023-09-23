@@ -449,14 +449,13 @@ async def post_opensearch_service_list(data: Annotated[dict,{
     low_query = {
         "query": {
             "bool": {
-            # "must": [
-                
-            # ],
+            "must": [
+                { "terms": { "소관기관명.keyword": data['sidocode'] } }
+            ],
             "should": [
                 { "match": { "서비스명": data['keyword'] } },
                 { "terms": { "사용자구분.keyword": data['svccd'] } },
                 { "terms": { "서비스분야.keyword": data['chktype1'] } },#["생활안정","주거·자립"] 이렇게 줘야함
-                { "terms": { "소관기관명.keyword": data['sidocode'] } }
             ]
             }
         }
