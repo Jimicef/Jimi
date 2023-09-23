@@ -250,8 +250,16 @@ async def post_chat(data: Annotated[dict,{
                     {"role": "system", "content": MAIN_PROMPT},
                     {"role": "user", "content": CHAT_PROMPT},
             ]
-            messages.extend(data['history'])
+            # messages.extend(data['history'])
             messages.append(
+                {
+                    "role": "user",
+                    "content": f"""
+                    "Please generate a response based on the chat history below, but focus on the last user query when creating the answer."
+                    CHAT_HISTORY:
+                    {data['history']}
+                    """
+                },
                 {
                     "role": "user",
                     "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
@@ -296,9 +304,18 @@ async def post_chat(data: Annotated[dict,{
                         {"role": "user", "content": CHAT_PROMPT},
             ]
 
-            messages.extend(data['history'])
+            # messages.extend(data['history'])
 
             messages.append(
+                {
+                    "role": "user",
+                    "content": f"""
+                    "Please generate a response based on the chat history below, but focus on the last user query when creating the answer."
+                    CHAT_HISTORY:
+                    {data['history']}
+                    """
+                }
+                ,
                 {
                         "role": "user",
                         "content": f"""Please generate your response by referring specifically to google search result's key-value pairs that directly relate to the user's query.
