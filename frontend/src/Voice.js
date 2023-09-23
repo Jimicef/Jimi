@@ -197,7 +197,6 @@ const Voice = () => {
         startAudio.play()
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         // setJimi((existingJimi) => [...existingJimi, {text: '', sender: 'user'}])
-        console.log(jimi)
         dispatch({
             type: SET_JIMI,
             data: [...jimi, {text: '', sender: 'user'}]
@@ -294,13 +293,10 @@ const Voice = () => {
             type: SET_JIMI,
             data: [...jimi.slice(0,-1), {text: userTextData, sender: 'user'}]
         })
-        console.log(jimi)
     }
 
     useEffect(()=> {
-        if (jimi.length>0){
-            console.log(jimi.slice(-1)[0])
-        }
+
         if (jimi.length> 0 && jimi.slice(-1)[0].sender === 'bot' && isSpeechOnEnd && !isUserOff){
             setIsSpeechOnEnd(false)
             onRecAudio()
