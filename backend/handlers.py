@@ -249,10 +249,7 @@ async def post_chat(data: Annotated[dict,{
             messages=[
                     {"role": "system", "content": MAIN_PROMPT},
                     {"role": "user", "content": CHAT_PROMPT},
-            ]
-            # messages.extend(data['history'])
-            messages.append(
-                {
+                    {
                     "role": "user",
                     "content": f"""
                     "Please generate a response based on the chat history below, but focus on the last user query when creating the answer."
@@ -260,9 +257,14 @@ async def post_chat(data: Annotated[dict,{
                     {data['history']}
                     """
                 },
+            ]
+            # messages.extend(data['history'])
+            del data['summary']['url']
+            messages.append(
                 {
                     "role": "user",
                     "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
+                    
                     You will follow the conversation and respond to the queries asked by the 'user's content. You will act as the assistant.
                     you NEVER include links(e.g. [링크](https://obank.kbstar.com/quics?page=C016613&cc=b061496:b061645&isNew=N&prcode=DP01000935)) in the response. 
 
@@ -302,20 +304,20 @@ async def post_chat(data: Annotated[dict,{
             messages=[
                         {"role": "system", "content": MAIN_PROMPT},
                         {"role": "user", "content": CHAT_PROMPT},
+                        {
+                            "role": "user",
+                            "content": f"""
+                            "Please generate a response based on the chat history below, but focus on the last user query when creating the answer."
+                            CHAT_HISTORY:
+                            {data['history']}
+                            """
+                        }
             ]
 
             # messages.extend(data['history'])
 
             messages.append(
-                {
-                    "role": "user",
-                    "content": f"""
-                    "Please generate a response based on the chat history below, but focus on the last user query when creating the answer."
-                    CHAT_HISTORY:
-                    {data['history']}
-                    """
-                }
-                ,
+                
                 {
                         "role": "user",
                         "content": f"""Please generate your response by referring specifically to google search result's key-value pairs that directly relate to the user's query.
