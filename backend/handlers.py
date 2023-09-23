@@ -248,7 +248,7 @@ async def post_chat(data: Annotated[dict,{
         if full_message["message"]["function_call"]["name"] == "answer_with_service_info":
             messages=[
                     {"role": "system", "content": MAIN_PROMPT},
-                    {"role": "system", "content": CHAT_PROMPT},
+                    {"role": "user", "content": CHAT_PROMPT},
             ]
             messages.extend(data['history'])
             messages.append(
@@ -257,7 +257,7 @@ async def post_chat(data: Annotated[dict,{
                     "content": f"""Please generate your response by referring specifically to the service information's key-value pairs that directly relate to the user's query.
                     You will follow the conversation and respond to the queries asked by the 'user's content. You will act as the assistant.
                     you NEVER include links(e.g. [링크](https://obank.kbstar.com/quics?page=C016613&cc=b061496:b061645&isNew=N&prcode=DP01000935)) in the response. 
-                    
+
                     User query: {data['question']}
                     service information:\n{data['summary']}\nAnswer:\n""",
                 }
@@ -293,7 +293,7 @@ async def post_chat(data: Annotated[dict,{
 
             messages=[
                         {"role": "system", "content": MAIN_PROMPT},
-                        {"role": "system", "content": CHAT_PROMPT},
+                        {"role": "user", "content": CHAT_PROMPT},
             ]
 
             messages.extend(data['history'])
@@ -504,7 +504,10 @@ async def post_opensearch_service_list(data: Annotated[dict,{
         #         voice_answer += f"{i+1}번: {card_data_list[i]['title']}\n"
         #     except:
         #         print(i,len(card_data_list))
-        voice_answer += "또 다른 정보를 알고 싶으시면, 다음이라고 말해주세요"
+        if len(card_data_list) == 0:
+            voice_answer += "검색 결과가 없습니다! 다른 키워드를 검색해주세요"
+        else:
+            voice_answer += "자세히 알고싶은 지원금 있다면, 번호를 말씀해주세요! 없다면, 다음이라고 말해주세요!"
 
     if (data['count']+1)*6 >= response['hits']['total']['value']:
         last_page = True
