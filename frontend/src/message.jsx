@@ -68,6 +68,8 @@ export const Message = ({ message, handleQuestion, handleTarget, handleContent, 
           return (
             <><TextSnippetIcon sx={{color: '#795baf', fontSize: '15px'}}/>{text}</>
           )
+        default:
+          return "error"
       }
     }
 

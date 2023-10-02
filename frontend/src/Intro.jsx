@@ -124,61 +124,11 @@ export const Intro = () => {
     }
 
     const handleSubmit = () => {
-        const support1 = support
-        const allFalse = Object.values(support1).every(value => value === false);
-
-        if (allFalse) {
-            for (const key in support1) {
-                support1[key] = true;
-            }
-        }
-        const selectedSupports = Object.keys(support1).filter(key => key!=="전체" && support1[key]);
+        const selectedSupports = Object.keys(support).filter(key => key!=="전체" && support[key]).map(key => chktype1Code[key]).join("|");
         setIsLoading(true)
         
-        let userArray
-        if (!user) {
-            userArray = ["개인", "가구", "소상공인", "법인/시설/단체"]
-        } else if (user === '개인, 가구') {
-            userArray = ['개인', '가구']
-        } else if (user === '소상공인') {
-            userArray = ['소상공인']
-        } else {
-            userArray = ["법인/시설/단체"]
-        }
-
-        let sidoCodeArray
-        if (!region) {
-            sidoCodeArray = Object.keys(subRegionList)
-                .flatMap(regionName => {
-                    const subregions = subRegionList[regionName];
-                    return subregions
-                        .filter(item => Object.keys(item)[0] !== '전체')
-                        .map(item => `${regionName} ${Object.keys(item)[0]}`);
-                });
-        } else if (subRegion === '전체' || (!subRegion && region)) {
-            sidoCodeArray = subRegionList[region]
-                .filter(item => Object.keys(item)[0] !== '전체')
-                .map(item => region + " " + Object.keys(item)[0]);
-        } else {
-            sidoCodeArray = [region+" "+subRegion]
-        }
-        
-        fetch(`${apiEndPoint}/api/service_list`, 
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                keyword: input,
-                count: 0,
-                chktype1: selectedSupports,
-                sidocode: sidoCodeArray,
-                svccd: userArray,
-                voice: 0
-            })
-        })
-        .then(response => response.json())
+        fetch(`${apiEndPoint}/api/service_list?keyword=${input}&count=0&chktype1=${selectedSupports}&siGunGuArea=${subRegion}&sidocode=${sidoCode[region]?sidoCode[region]:""}&svccd=${user}&voice=0`)
+        .then(response => response.json()) 
         .then(data => {
             //console.log(data)
             dispatch({
@@ -209,14 +159,6 @@ export const Intro = () => {
             dispatch({
                 type: SET_SERVICES,
                 data: selectedSupports
-            })
-            dispatch({
-                type: SET_SIDOCODEARRAY,
-                data: sidoCodeArray
-            })
-            dispatch({
-                type: SET_USERARRAY,
-                data: userArray
             })
             // setServices(selectedSupports)
         })
@@ -351,7 +293,7 @@ export const Intro = () => {
                                 </MenuItem>} */}
                             {subRegionList[region] && subRegionList[region].map((re, idx) => {
                                 const regionName = Object.keys(re)[0]
-                                return <MenuItem value={regionName} key={idx}>{regionName}</MenuItem>
+                                return <MenuItem value={re[regionName]} key={idx}>{regionName}</MenuItem>
 })}
                             
                             </Select>
@@ -385,9 +327,9 @@ export const Intro = () => {
                             value={user}
                             onChange={handleChangeUser}
                         >
-                            <FormControlLabel value="개인, 가구" control={<Radio />} label="개인(가구)"/>
-                            <FormControlLabel value="소상공인" control={<Radio />} label="소상공인"/>
-                            <FormControlLabel value="법인" control={<Radio />} label="법인"/>
+                            <FormControlLabel value={userCode["개인(가구)"]} control={<Radio />} label="개인(가구)"/>
+                            <FormControlLabel value={userCode["소상공인"]} control={<Radio />} label="소상공인"/>
+                            <FormControlLabel value={userCode["법인"]} control={<Radio />} label="법인"/>
                         </RadioGroup>
                     </FormControl>
                 </Box>
