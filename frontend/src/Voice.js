@@ -353,33 +353,20 @@ const Voice = () => {
                     // 첫 번째 아이템을 스페이스로 분할
                     const [region1, region2] = firstItem.split(' ');
 
-                    if (region1 === region2 || region2 === '전체') {
-                    // 앞과 뒤의 내용이 같으면 해당 지역의 정보를 가져와서 결과에 추가
-                        const regionInfo = subRegionList[region1];
-                        if (regionInfo) {
-                            const subRegions = regionInfo.map(obj => Object.keys(obj)[0]);
-                            // "서울특별시"를 앞에 붙여서 결과 어레이에 추가
-                            const formattedSubRegions = subRegions
-                                .filter(subRegion => subRegion !== "전체") // "전체"인 경우 필터링
-                                .map(subRegion => `${region1} ${subRegion}`);
-                            filteredChktype1.push(...formattedSubRegions);
-                        }
-                    }
+                    // if (region1 === region2 || region2 === '전체') {
+                    // // 앞과 뒤의 내용이 같으면 해당 지역의 정보를 가져와서 결과에 추가
+                    //     const regionInfo = subRegionList[region1];
+                    //     if (regionInfo) {
+                    //         const subRegions = regionInfo.map(obj => Object.keys(obj)[0]);
+                    //         // "서울특별시"를 앞에 붙여서 결과 어레이에 추가
+                    //         const formattedSubRegions = subRegions
+                    //             .filter(subRegion => subRegion !== "전체") // "전체"인 경우 필터링
+                    //             .map(subRegion => `${region1} ${subRegion}`);
+                    //         filteredChktype1.push(...formattedSubRegions);
+                    //     }
+                    // }
                     if (data.serviceParams.nextPage) {
-                        fetch(`${apiEndPoint}/api/service_list`,{
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                keyword: data.serviceParams.keyword,
-                                count: voiceCount+1,
-                                chktype1: data.serviceParams.chktype1,
-                                sidocode: region1===region2?filteredChktype1:data.serviceParams.sidocode,
-                                svccd: data.serviceParams.svccd,
-                                voice: 1
-                            })
-                        })
+                        fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount+1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
                         .then(response => response.json())
                         .then(data => {
                             
@@ -401,20 +388,7 @@ const Voice = () => {
                             setAudioState(4)
                         })    
                     } else if (data.serviceParams.prevPage){
-                        fetch(`${apiEndPoint}/api/service_list`,{
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                keyword: data.serviceParams.keyword,
-                                count: voiceCount-1,
-                                chktype1: data.serviceParams.chktype1,
-                                sidocode: region1===region2?filteredChktype1:data.serviceParams.sidocode,
-                                svccd: data.serviceParams.svccd,
-                                voice: 1
-                            })
-                        })
+                        fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=${voiceCount-1}&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
                         .then(response => response.json())
                         .then(data => {
                             
@@ -435,20 +409,7 @@ const Voice = () => {
                             setAudioState(4)
                         })    
                     } else {
-                        fetch(`${apiEndPoint}/api/service_list`,{
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                keyword: data.serviceParams.keyword,
-                                count: 0,
-                                chktype1: data.serviceParams.chktype1,
-                                sidocode: region1===region2?filteredChktype1:data.serviceParams.sidocode,
-                                svccd: data.serviceParams.svccd,
-                                voice: 1
-                            })
-                        })
+                        fetch(`${apiEndPoint}/api/service_list?keyword=${data.serviceParams.keyword}&count=0&chktype1=${data.serviceParams.chktype1}&siGunGuArea=${data.serviceParams.siGunGuArea}&sidocode=${data.serviceParams.sidocode}&svccd=${data.serviceParams.svccd}&voice=1`)
                         .then(response => response.json())
                         .then(data => {
                             dispatch({

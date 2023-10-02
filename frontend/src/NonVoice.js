@@ -65,9 +65,7 @@ const NonVoice = () => {
         window.scrollTo({top: window.innerHeight*2, behavior: 'smooth' })
         //window.location.href = '/#sectionTwo'
         //window.location.href = '/supportlist'
-      } else if(supportList === {}){
-        alert("검색 결과가 없습니다.")
-      } 
+      }
     }, [supportList])
   
     React.useEffect(()=> {
