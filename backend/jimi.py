@@ -30,6 +30,10 @@ app.add_middleware(
 async def root():
     return {"message": "Hello World"}
 
+@app.get("/api/service_list")
+async def api_get_service_list(result: Annotated[dict,Depends(get_service_list)]):
+    return result
+
 @app.post("/api/service_list")
 async def api_post_service_list(result: Annotated[dict,Depends(post_opensearch_service_list)]):
     return result

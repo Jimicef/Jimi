@@ -142,7 +142,7 @@ chktype1_code = [
 VOICE_FUNCTIONS = [
     {
         "name": "get_api_service_list",
-        #This function allows you to search for government subsidies and obtain related information.
+    
         "description": f"""
         This function is used when a user wants to obtain a list of subsidies. It takes the user's location and subsidy keywords as input and returns a list of subsidies. In this case, if the user doesn't find the desired subsidy list, they can say "next" or "previous" to perform a new search for the next or previous page.
         you MUST generate all parameters below.
@@ -159,10 +159,7 @@ VOICE_FUNCTIONS = [
                     
                     """
                 },
-                # In order to conduct a subsidy search, there must be relevant search keywords related to the following topics.
-                    
-                #     TOPICS:
-                #         생활안정, 주거·자립, 보육·교육, 고용·창업, 보건·의료, 행정·안전, 임신·출산, 보호·돌봄, 문화·환경 , 농림축산어업
+
                 "chktype1": {
                     "type": "string",
                     "description": f"""chktype1 is a variable representing the service category. 
@@ -173,8 +170,7 @@ VOICE_FUNCTIONS = [
                         {chktype1_code}
                     """
                 },
-                #match user's desired service category to a key in chktype1_code and set the code value as the variable's value.
-                #For example, if a user wants the service category to be "Housing Support," then "NB0302" with the key "주거·자립" in chktype1_code is set as the value of chktype1.
+                
                 "siGunGuArea": {
                     "type": "string",
                     "description": f"""This variable signifies the sub-region of your residence. 
