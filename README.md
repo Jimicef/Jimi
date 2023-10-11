@@ -4,7 +4,7 @@
 <img src="https://github.com/Jimicef/Jimi/assets/81891345/5d55a8b7-4427-41f0-9765-928523d474c6"  width="150">
 
 ## 사이트 URL
-
+📎[지미 웹 사이트 바로 가기](https://jimi-bot.net)
 📎[지미 웹 사이트 바로 가기](http://jimi-bucket.s3-website.ap-northeast-2.amazonaws.com/)
 
 ## 소개
